@@ -1,0 +1,51 @@
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+
+## Intermediate documents:
+*.dvi
+*.xdv
+*-converted-to.*
+# %&% TEMPORARY/OS X %&%
+.DS_Store
+
+## Bibliography auxiliary files (bibtex/biblatex/biber):
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+
+## Build tool auxiliary files:
+*.fdb_latexmk
+*.synctex
+*.synctex(busy)
+*.synctex.gz
+*.pdfsync
+
+## Usage reports:
+*.brf
+
+## Glossaries:
+*.glg
+*.glo
+*.gls
+*.ist
+
+## Pythontex:
+*.pytxcode
+pythontex-files-*/
+
+## Business:
+*.pdf
