@@ -1,0 +1,42 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage{geometry}
+\usepackage{siunitx}
+\usepackage{appendix}
+\usepackage{pdfpages}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{minted}
+\usepackage{booktabs}
+\geometry{a4paper, margin=1in}
+
+\usepackage{graphicx}
+\usepackage{setspace}
+\doublespacing
+
+\usepackage[style=numeric, backend=biber, sortcites=true, sorting=nyt]{biblatex}
+\addbibresource{references.bib}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[L]{Fancy Head} 
+\fancyhead[R]{\thepage} 
+\fancyfoot{} % Clear all footer settings
+\renewcommand{\headrulewidth}{0pt}
+
+\begin{document}
+
+\include{sections/title_page}
+\include{sections/abstract}
+\include{sections/introduction}
+\include{sections/methodology}
+\include{sections/experiments}
+\include{sections/results}
+\include{sections/discussion}
+\include{sections/future_work}
+\include{sections/conclusions}
+\include{sections/appendix}
+
+\printbibliography
+
+\end{document}

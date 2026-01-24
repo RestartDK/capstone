@@ -1,0 +1,200 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nyt/global//global/global/global}
+    \entry{Bieniek2024GenerativeAI}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=2b45c58bcb8e1c32dd8828d4f6c54c4e}{%
+           family={Bieniek},
+           familyi={B\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod}}}%
+        {{hash=5b556f9cfa8e4ba25fb234f626946bc6}{%
+           family={Rahouti},
+           familyi={R\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=a91c6df7096254e1afda9eb1071f8e41}{%
+           family={Verma},
+           familyi={V\bibinitperiod},
+           given={D.\bibnamedelimi C.},
+           giveni={D\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \strng{namehash}{37c62ea0bcd123c43d0de0c8c7af08df}
+      \strng{fullhash}{37c62ea0bcd123c43d0de0c8c7af08df}
+      \strng{fullhashraw}{37c62ea0bcd123c43d0de0c8c7af08df}
+      \strng{bibnamehash}{37c62ea0bcd123c43d0de0c8c7af08df}
+      \strng{authorbibnamehash}{37c62ea0bcd123c43d0de0c8c7af08df}
+      \strng{authornamehash}{37c62ea0bcd123c43d0de0c8c7af08df}
+      \strng{authorfullhash}{37c62ea0bcd123c43d0de0c8c7af08df}
+      \strng{authorfullhashraw}{37c62ea0bcd123c43d0de0c8c7af08df}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2411.10234}
+      \field{title}{Generative AI in Multimodal User Interfaces: Trends, Challenges, and Cross-Platform Adaptability}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://arxiv.org/pdf/2411.10234
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/pdf/2411.10234
+      \endverb
+    \endentry
+    \entry{Cheng2024Biscuit}{inproceedings}{}{}
+      \name{author}{5}{}{%
+        {{hash=1d4e1bf474b308463e8775df06df6497}{%
+           family={Cheng},
+           familyi={C\bibinitperiod},
+           given={Ruijia},
+           giveni={R\bibinitperiod}}}%
+        {{hash=35cfef79c76c7fc9c7abd145a7c518d6}{%
+           family={Barik},
+           familyi={B\bibinitperiod},
+           given={Titus},
+           giveni={T\bibinitperiod}}}%
+        {{hash=a1560c015bec18e585fea60a89b9d254}{%
+           family={Leung},
+           familyi={L\bibinitperiod},
+           given={Alan},
+           giveni={A\bibinitperiod}}}%
+        {{hash=9789c33a2de8cd14c04042b512e9b81b}{%
+           family={Hohman},
+           familyi={H\bibinitperiod},
+           given={Fred},
+           giveni={F\bibinitperiod}}}%
+        {{hash=11727e366013ca6eb87bbc9841d7c105}{%
+           family={Nichols},
+           familyi={N\bibinitperiod},
+           given={Jeffrey},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{61d434ecb9b2d708fdc131f22f6f525c}
+      \strng{fullhash}{f035a09ebeec0d0ffbf1104ed5c37b9f}
+      \strng{fullhashraw}{f035a09ebeec0d0ffbf1104ed5c37b9f}
+      \strng{bibnamehash}{61d434ecb9b2d708fdc131f22f6f525c}
+      \strng{authorbibnamehash}{61d434ecb9b2d708fdc131f22f6f525c}
+      \strng{authornamehash}{61d434ecb9b2d708fdc131f22f6f525c}
+      \strng{authorfullhash}{f035a09ebeec0d0ffbf1104ed5c37b9f}
+      \strng{authorfullhashraw}{f035a09ebeec0d0ffbf1104ed5c37b9f}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{IEEE Symposium on Visual Languages and Human-Centric Computing (VL/HCC)}
+      \field{title}{BISCUIT: Scaffolding LLM-Generated Code with Ephemeral UIs in Computational Notebooks}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://arxiv.org/pdf/2404.07387
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/pdf/2404.07387
+      \endverb
+    \endentry
+    \entry{Leviathan2025GenerativeUI}{article}{}{}
+      \name{author}{12}{}{%
+        {{hash=9db8822626a6a2b5ab6b81e3c6943d22}{%
+           family={Leviathan},
+           familyi={L\bibinitperiod},
+           given={Yaniv},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=cf83542a488014df4e9848d7d2bcab13}{%
+           family={Valevski},
+           familyi={V\bibinitperiod},
+           given={Dani},
+           giveni={D\bibinitperiod}}}%
+        {{hash=fc8076b399a7ab602c60752158eb4d34}{%
+           family={Kalman},
+           familyi={K\bibinitperiod},
+           given={Matan},
+           giveni={M\bibinitperiod}}}%
+        {{hash=801ac69ed0653ce4d5b25b84ca4f568f}{%
+           family={Lumen},
+           familyi={L\bibinitperiod},
+           given={Danny},
+           giveni={D\bibinitperiod}}}%
+        {{hash=2c5d38639d952407ec78fc34deb341f8}{%
+           family={Segalis},
+           familyi={S\bibinitperiod},
+           given={Eyal},
+           giveni={E\bibinitperiod}}}%
+        {{hash=b9f6f12bdc81282a0c894ab52288a0a7}{%
+           family={Molad},
+           familyi={M\bibinitperiod},
+           given={Eyal},
+           giveni={E\bibinitperiod}}}%
+        {{hash=1ac61cb472ccdf3968d9ef81b1bf1b56}{%
+           family={Pasternak},
+           familyi={P\bibinitperiod},
+           given={Shlomi},
+           giveni={S\bibinitperiod}}}%
+        {{hash=a2f86cd3aa169b9528943180d579c40d}{%
+           family={Natchu},
+           familyi={N\bibinitperiod},
+           given={Vishnu},
+           giveni={V\bibinitperiod}}}%
+        {{hash=b7470c06728bfe0b3dc08d5cbae676a4}{%
+           family={Nygaard},
+           familyi={N\bibinitperiod},
+           given={Valerie},
+           giveni={V\bibinitperiod}}}%
+        {{hash=24a2c962b8b84d06818d891ee1140c37}{%
+           family={Venkatachar},
+           familyi={V\bibinitperiod},
+           given={Srinivasan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=e456d570ec236cee82b8cf83a29db39f}{%
+           family={Manyika},
+           familyi={M\bibinitperiod},
+           given={James},
+           giveni={J\bibinitperiod}}}%
+        {{hash=46fb71a11e070da3ec8e9ff62a75ddef}{%
+           family={Matias},
+           familyi={M\bibinitperiod},
+           given={Yossi},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{bc790a7260807b52531ab8d458096e41}
+      \strng{fullhash}{768a4c01504004798e20781e08c67942}
+      \strng{fullhashraw}{768a4c01504004798e20781e08c67942}
+      \strng{bibnamehash}{bc790a7260807b52531ab8d458096e41}
+      \strng{authorbibnamehash}{bc790a7260807b52531ab8d458096e41}
+      \strng{authornamehash}{bc790a7260807b52531ab8d458096e41}
+      \strng{authorfullhash}{768a4c01504004798e20781e08c67942}
+      \strng{authorfullhashraw}{768a4c01504004798e20781e08c67942}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2410.11354}
+      \field{title}{Generative UI: LLMs are Effective UI Generators}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://generativeui.github.io/static/pdfs/paper.pdf
+      \endverb
+      \verb{url}
+      \verb https://generativeui.github.io/static/pdfs/paper.pdf
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

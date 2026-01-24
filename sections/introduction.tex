@@ -1,0 +1,16 @@
+\section{Introduction}
+
+% TODO: Below is mainly ai generated I think, make a list of what should be said in the intro and reformulate this
+
+The interaction between users and AI is currently limited as adaptive large language models are constrained by static interfaces that force users into either unstructured chat windows or rigid, pre-built applications. While recent innovations allow LLMs to generate entire webpages, these interfaces disrupt workflow by completely replacing the user's current context. Real-world tasks require assistance that augments, rather than replaces, the active application. Users need intermediate UI elements like sliders or tables to allow them to explore variables and make decisions without constant, open-ended re-prompting.
+
+Research in computational notebooks has already validated the utility of ``ephemeral UIs'' as effective scaffolds for generative tasks. Studies show that these temporary interfaces significantly aid users in understanding generative outputs by offering visual representations of code variables. Furthermore, they reduce the cognitive load of prompt engineering by allowing users to customize parameters through direct manipulation rather than complex text description, fostering a ``learning by doing'' approach. However, a generalized framework for applying these benefits to broader productivity tools remains unexplored.
+
+This proposal introduces \textbf{Ephemeral Interfaces}: temporary, task-scoped UI components generated on-demand within existing applications that persist only for the duration of a specific task. To operationalize and evaluate this concept, I will follow a Design Science Research methodology to develop a conceptual design framework and a custom React library (\texttt{react-ephemeral-experimental}) as a research instrument. This artifact will support a user study evaluating how transient, generative UIs impact task efficiency and user mental models compared to static alternatives.
+
+\subsection{Literature Review}
+Recent advances in generative AI have established two distinct precedents. LLMs can robustly generate high-quality, full-page interfaces \cite{Leviathan2025GenerativeUI}, while others argue that hybrid GUI-chat approaches are necessary to overcome the limitations of pure text interaction \cite{Bieniek2024GenerativeAI}.
+
+Bridging these concepts in the domain of programming research introduced ``ephemeral UIs''---dynamic scaffolds serving as an intermediate stage between user prompts and final code generation \cite{Cheng2024Biscuit}. Their study confirmed that these transient interfaces allow users to ``learn by doing'' through exploration and significantly reduce the cognitive load of prompt engineering by enabling visual manipulation of parameters.
+
+However, a clear gap remains. some research focuses on full-page replacements \cite{Leviathan2025GenerativeUI}, whil others restrict their findings to computational notebooks \cite{Cheng2024Biscuit}. This research builds upon validation of the ``ephemeral'' workflow and generalizes it to create task-scoped generative patterns for everyday productivity applications.
