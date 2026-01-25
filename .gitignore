@@ -46,6 +46,3 @@
 ## Pythontex:
 *.pytxcode
 pythontex-files-*/
-
-## Business:
-*.pdf
