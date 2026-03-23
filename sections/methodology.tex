@@ -1,14 +1,48 @@
-\pagestyle{fancy} 
+\pagestyle{fancy}
 \section{Methodology}
 
-This is your methodology section. This is a the example of a figure.
+\subsection{Research Design}
+% 1-2 paragraphs: DSR, framework → artifact → comparative evaluation
 
-\begin{figure}[tbh]
+\subsection{Conceptual Framework}
+% Taxonomy, lifecycle, design principles
+
+\subsection{Artifact Development}
+% Website, ephemeral vs. normal conditions, implementation
+
+\subsection{Evaluation Design}
+
+\subsubsection{Experimental Design}
+% Within-subjects, counterbalancing, conditions
+
+\subsubsection{Participants}
+% Sample size, recruitment, criteria
+
+\subsubsection{Materials and Procedure}
+% Tasks, flow, duration
+
+\subsubsection{Measures}
+% Table of dependent variables + collection method
+
+\begin{table}[htbp]
     \centering
-    \includegraphics[width=0.5\columnwidth]{graphics/SST.png}
-    \caption{Example of a figure caption.}
-    \label{fig:figure}
-\end{figure}
+    \caption{Dependent measures and collection methods.}
+    \label{tab:measures}
+    \begin{tabular}{@{}llll@{}}
+        \toprule
+        Measure & Type & Collection & Analysis \\
+        \midrule
+        Task completion rate & Binary & Event logging & McNemar/$\chi^2$ \\
+        Task completion time & Continuous & Timestamps & Paired $t$-test \\
+        Interaction count & Discrete & Click counter & Paired $t$-test \\
+        Intrusiveness & Ordinal (1--7) & Likert items & Paired $t$-test \\
+        Preference & Nominal & Forced choice & Binomial test \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
-This is how you reference a figure: Fig.~\ref{fig:figure}.
+\subsubsection{Data Collection}
+% Event logging, survey, linking
 
+\subsubsection{Analysis Plan}
+% Statistical tests, significance level
