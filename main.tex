@@ -8,16 +8,20 @@
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage{minted}
 \usepackage{booktabs}
+\setlength{\marginparwidth}{2cm}
+\usepackage{todonotes}
 \geometry{a4paper, margin=1in}
 
 \usepackage{graphicx}
 \usepackage{setspace}
 \doublespacing
 
-\usepackage[style=numeric, backend=biber, sortcites=true, sorting=nyt]{biblatex}
+\usepackage[backend=biber, style=apa]{biblatex}
+\DeclareLanguageMapping{english}{english-apa}
 \addbibresource{references.bib}
 \usepackage{titlesec}
 \usepackage{fancyhdr}
+\setlength{\headheight}{14.5pt}
 \pagestyle{fancy}
 \fancyhead[L]{Fancy Head} 
 \fancyhead[R]{\thepage} 
