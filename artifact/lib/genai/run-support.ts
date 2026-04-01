@@ -1,40 +1,27 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateObject } from "ai";
-import { z } from "zod";
 
+import { buildSupportSystemPrompt, buildSupportUserPrompt } from "@/lib/prompts";
 import {
-  buildSupportSystemPrompt,
-  buildSupportUserPrompt,
-  SUPPORT_PROMPT_VERSION,
-} from "@/lib/prompts";
-import {
-  buildFallbackSupport,
-  looseSupportObjectSchema,
-  parseSupportPayloadForScenario,
-  SUPPORT_EFFECT_TYPES,
-  type SupportPayload,
+  buildFallbackSpec,
+  CATALOG_VERSION,
+  type ValidatedSupport,
+  parseSpecForScenario,
 } from "@/lib/support-schema";
+import { ephemeralSpecSchemaForModel } from "@/lib/ephemeral/spec";
 import type { TaskState } from "@/lib/task-state";
 
 const DEFAULT_MODEL = "gemini-2.0-flash";
 
-/** Schema passed to the model (effect enum); target validated per scenario after parse. */
-const supportObjectSchemaForModel = z.object({
-  targetId: z.string().min(1).max(120),
-  effectType: z.enum(SUPPORT_EFFECT_TYPES),
-  message: z.string().min(1).max(400),
-  dismissible: z.boolean(),
-});
-
 export type SupportGenResult = {
-  payload: SupportPayload;
-  promptVersion: string;
+  result: ValidatedSupport;
+  catalogVersion: string;
   modelName: string;
-  rawText: string;
+  rawOutput: unknown;
   usedFallback: boolean;
 };
 
-function getGoogleApiKey(): string | undefined {
+function getGoogleApiKey() {
   return process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? process.env.GEMINI_API_KEY;
 }
 
@@ -44,13 +31,14 @@ export async function generateValidatedSupport(
 ): Promise<SupportGenResult> {
   const apiKey = getGoogleApiKey();
   const modelId = process.env.GEMINI_MODEL ?? DEFAULT_MODEL;
+
   if (!apiKey) {
-    const payload = buildFallbackSupport(scenarioId);
+    const result = buildFallbackSpec(scenarioId);
     return {
-      payload,
-      promptVersion: SUPPORT_PROMPT_VERSION,
+      result,
+      catalogVersion: CATALOG_VERSION,
       modelName: "none",
-      rawText: JSON.stringify(payload),
+      rawOutput: result.spec,
       usedFallback: true,
     };
   }
@@ -60,31 +48,40 @@ export async function generateValidatedSupport(
   try {
     const { object } = await generateObject({
       model: google(modelId),
-      schema: supportObjectSchemaForModel,
-      schemaName: "EphemeralSupport",
+      schema: ephemeralSpecSchemaForModel,
+      schemaName: "EphemeralSpec",
       schemaDescription:
-        "Bounded on-screen assistance: one target, one effect, short message, dismissible.",
+        "Tree-shaped ephemeral UI spec: a root node with typed children, each targeting allowed page elements.",
       system: buildSupportSystemPrompt(scenarioId),
       prompt: buildSupportUserPrompt(taskState),
     });
 
-    const validated = parseSupportPayloadForScenario(scenarioId, object);
-    const coerced = looseSupportObjectSchema.safeParse(object);
-    const payload = validated ?? buildFallbackSupport(scenarioId);
+    const validated = parseSpecForScenario(scenarioId, object);
+    if (validated) {
+      return {
+        result: validated,
+        catalogVersion: CATALOG_VERSION,
+        modelName: modelId,
+        rawOutput: object,
+        usedFallback: false,
+      };
+    }
+
+    const fallback = buildFallbackSpec(scenarioId);
     return {
-      payload,
-      promptVersion: SUPPORT_PROMPT_VERSION,
+      result: fallback,
+      catalogVersion: CATALOG_VERSION,
       modelName: modelId,
-      rawText: JSON.stringify(coerced.success ? coerced.data : object),
-      usedFallback: validated == null,
+      rawOutput: object,
+      usedFallback: true,
     };
   } catch {
-    const payload = buildFallbackSupport(scenarioId);
+    const fallback = buildFallbackSpec(scenarioId);
     return {
-      payload,
-      promptVersion: SUPPORT_PROMPT_VERSION,
+      result: fallback,
+      catalogVersion: CATALOG_VERSION,
       modelName: modelId,
-      rawText: JSON.stringify(payload),
+      rawOutput: null,
       usedFallback: true,
     };
   }

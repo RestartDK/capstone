@@ -15,6 +15,13 @@
       "when": 1743609600000,
       "tag": "0001_instruction_ack",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1743696000000,
+      "tag": "0002_drop_support_outputs_prompt_version",
+      "breakpoints": true
     }
   ]
 }

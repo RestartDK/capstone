@@ -38,12 +38,14 @@ export default function ConsentPage(): React.ReactElement {
       <h1 className="text-lg font-medium">Welcome</h1>
       <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
         <p>
-          In this study, you will complete a series of short interface tasks. During some tasks, the
+          In this study you will complete several short interface tasks across different scenarios.
+          Each task asks you to review an interface and make a decision. During some tasks the
           interface may provide additional temporary assistance.
         </p>
         <p>
-          Please complete each task as naturally as possible. You may ignore or dismiss any
-          assistance if you do not find it useful.
+          After every task you will answer three brief rating questions. The whole session takes
+          roughly 8&nbsp;minutes. Please complete each task as naturally as possible. You may ignore
+          or dismiss any assistance if you do not find it useful.
         </p>
         <p>Your responses are used for research. Do not include personally identifying information.</p>
       </div>

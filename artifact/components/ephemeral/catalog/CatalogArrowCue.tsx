@@ -1,8 +1,15 @@
 "use client";
 
-export function ArrowCue(props: { rect: DOMRect }): React.ReactElement {
-  const left = props.rect.left - 28;
-  const top = props.rect.top + props.rect.height / 2 - 6;
+import { useTargetRect } from "../useTargetRect";
+
+export function CatalogArrowCue(props: { targetId: string }) {
+  const rect = useTargetRect(props.targetId);
+
+  if (!rect) return null;
+
+  const left = rect.left - 28;
+  const top = rect.top + rect.height / 2 - 6;
+
   return (
     <div
       className="pointer-events-none absolute text-amber-500 drop-shadow-sm"

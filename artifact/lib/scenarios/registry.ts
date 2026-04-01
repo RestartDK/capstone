@@ -8,6 +8,8 @@ export type ScenarioRegistryEntry = {
   taxonomy: ScenarioTaxonomy;
   correctAnswerId: string;
   ephemeralTargets: readonly string[];
+  /** Neutral 1–2 sentence context shown before the task question. No hints toward the answer. */
+  scenarioPreamble: string;
   /** First line for participant UI; second line is usually shared study copy. */
   taskHeading: string;
   /** Instructions for the model: what “good” support should help with. */
@@ -26,6 +28,8 @@ export const SCENARIO_REGISTRY: Record<ScenarioId, ScenarioRegistryEntry> = {
       "customer-sentiment-card",
       "alerts-strip",
     ],
+    scenarioPreamble:
+      "You are looking at a team operations dashboard during a weekday morning check-in. Several metrics and alerts have updated overnight.",
     taskHeading: "Which area needs the most immediate attention on this dashboard?",
     supportUserPromptPreamble:
       "Scenario: dashboard triage. Task: help the user notice which area likely needs the most immediate attention based on the state below.",
@@ -53,6 +57,8 @@ export const SCENARIO_REGISTRY: Record<ScenarioId, ScenarioRegistryEntry> = {
       "slide-cta-card",
       "deck-context-bar",
     ],
+    scenarioPreamble:
+      "You are preparing a short slide deck for a stakeholder readout tomorrow. Below is the current outline — you can edit any slide's content before deciding which one needs the most work.",
     taskHeading:
       "Stakeholder review is tomorrow. Which slide should you strengthen first so the narrative holds up?",
     supportUserPromptPreamble:
@@ -95,6 +101,8 @@ export const SCENARIO_REGISTRY: Record<ScenarioId, ScenarioRegistryEntry> = {
       "sprint-goal-strip",
       "backlog-column-header",
     ],
+    scenarioPreamble:
+      "You are a product manager joining a sprint-planning handoff. The sprint goal and a set of backlog tickets are shown below. Review the details before choosing which item to prioritise.",
     taskHeading:
       "Sprint goal: restore reliable payouts by Friday. Which backlog item should move to In progress first?",
     supportUserPromptPreamble:

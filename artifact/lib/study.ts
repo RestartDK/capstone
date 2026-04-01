@@ -263,6 +263,7 @@ export type StudyStateResponse = {
   baselineIsVersionA: boolean | null;
   /** Latest trial row (by index); useful for logging events after all trials complete. */
   lastTrialId: string | null;
+  totalTrials: number;
 };
 
 export async function resolveStudyState(participantId: string): Promise<StudyStateResponse> {
@@ -271,6 +272,8 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
     const last = list[list.length - 1];
     return last?.id ?? null;
   }
+
+  const total = TRIAL_SCHEDULE_LENGTH;
 
   const [p] = await db.select().from(participants).where(eq(participants.id, participantId)).limit(1);
   if (!p) {
@@ -281,6 +284,7 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
       postTrialTrialId: null,
       baselineIsVersionA: null,
       lastTrialId: null,
+      totalTrials: total,
     };
   }
   if (!p.ageRange || !p.occupation || p.webAppFamiliarity == null || p.aiToolFamiliarity == null) {
@@ -291,6 +295,7 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
       postTrialTrialId: null,
       baselineIsVersionA: p.baselineIsVersionA,
       lastTrialId: null,
+      totalTrials: total,
     };
   }
 
@@ -304,6 +309,7 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
         postTrialTrialId: null,
         baselineIsVersionA: p.baselineIsVersionA,
         lastTrialId: null,
+        totalTrials: total,
       };
     }
   }
@@ -319,6 +325,7 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
       postTrialTrialId: null,
       baselineIsVersionA: p.baselineIsVersionA,
       lastTrialId: lt,
+      totalTrials: total,
     };
   }
 
@@ -331,6 +338,7 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
       postTrialTrialId: pendingPost,
       baselineIsVersionA: p.baselineIsVersionA,
       lastTrialId: lt,
+      totalTrials: total,
     };
   }
 
@@ -342,6 +350,7 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
       postTrialTrialId: null,
       baselineIsVersionA: p.baselineIsVersionA,
       lastTrialId: lt,
+      totalTrials: total,
     };
   }
 
@@ -352,5 +361,6 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
     postTrialTrialId: null,
     baselineIsVersionA: p.baselineIsVersionA,
     lastTrialId: lt,
+    totalTrials: total,
   };
 }

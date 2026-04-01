@@ -116,12 +116,11 @@ export async function exportStudyCsvs(): Promise<{
 
   const sRows = await db.select().from(supportOutputs).orderBy(asc(supportOutputs.id));
   const sCsv = rowsToCsv(
-    ["id", "trial_id", "created_at", "prompt_version", "model_name", "input_state", "output"],
+    ["id", "trial_id", "created_at", "model_name", "input_state", "output"],
     sRows.map((s) => ({
       id: s.id,
       trial_id: s.trialId,
       created_at: s.createdAt.toISOString(),
-      prompt_version: s.promptVersion,
       model_name: s.modelName,
       input_state: JSON.stringify(s.inputState),
       output: JSON.stringify(s.output),

@@ -88,7 +88,6 @@ export const supportOutputs = pgTable(
       .notNull()
       .references(() => trials.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-    promptVersion: text("prompt_version").notNull(),
     inputState: jsonb("input_state").notNull(),
     modelName: text("model_name").notNull(),
     output: jsonb("output").notNull(),

@@ -1,53 +1,31 @@
-import { z } from "zod";
-
+import {
+  allowlistWalk,
+  parseEphemeralSpec,
+  type EphemeralSpec,
+} from "./ephemeral/spec";
 import { getScenarioEntry } from "./scenarios/registry";
 
 export type Condition = "baseline" | "ephemeral";
 
-export const SUPPORT_EFFECT_TYPES = [
-  "arrow",
-  "highlight",
-  "inline_bubble",
-  "arrow-highlight",
-] as const;
-
-export type SupportEffectType = (typeof SUPPORT_EFFECT_TYPES)[number];
-
-export type SupportPayload = {
-  targetId: string;
-  effectType: SupportEffectType;
-  message: string;
-  dismissible: boolean;
+export type ValidatedSupport = {
+  spec: EphemeralSpec;
+  componentTypes: string[];
 };
 
-/** Loose shape for model output; targets validated per scenario. */
-export const looseSupportObjectSchema = z.object({
-  targetId: z.string().min(1).max(120),
-  effectType: z.enum(SUPPORT_EFFECT_TYPES),
-  message: z.string().min(1).max(400),
-  dismissible: z.boolean(),
-});
-
-function isAllowedTarget(scenarioId: string, targetId: string): boolean {
-  const entry = getScenarioEntry(scenarioId);
-  if (!entry) {
-    return false;
-  }
-  return (entry.ephemeralTargets as readonly string[]).includes(targetId);
-}
-
-export function parseSupportPayloadForScenario(
+export function parseSpecForScenario(
   scenarioId: string,
   raw: unknown,
-): SupportPayload | null {
-  const parsed = looseSupportObjectSchema.safeParse(raw);
-  if (!parsed.success || !isAllowedTarget(scenarioId, parsed.data.targetId)) {
-    return null;
-  }
-  return parsed.data;
+): ValidatedSupport | null {
+  const spec = parseEphemeralSpec(raw);
+  if (!spec) return null;
+  const entry = getScenarioEntry(scenarioId);
+  if (!entry) return null;
+  const walk = allowlistWalk(spec, entry.ephemeralTargets);
+  if (!walk.valid) return null;
+  return { spec, componentTypes: walk.componentTypes };
 }
 
-export function buildFallbackSupport(scenarioId: string): SupportPayload {
+export function buildFallbackSpec(scenarioId: string): ValidatedSupport {
   const entry = getScenarioEntry(scenarioId);
   const targetId = entry?.ephemeralTargets[0] ?? "payments-backlog-card";
   const messages: Record<string, string> = {
@@ -55,10 +33,24 @@ export function buildFallbackSupport(scenarioId: string): SupportPayload {
     "slides-outline-refine": "Strengthen the weakest narrative slide before adding polish elsewhere.",
     "pm-sprint-handoff": "Protect the sprint goal by pulling the item that unblocks reliability first.",
   };
+  const body = messages[scenarioId] ?? "Here is a small hint for this task.";
+  const spec: EphemeralSpec = {
+    version: 1,
+    root: {
+      type: "Stack",
+      props: { gap: "sm" },
+      children: [
+        { type: "HighlightRing", props: { targetId } },
+        { type: "ArrowCue", props: { targetId } },
+        { type: "AnchoredTooltip", props: { targetId, body, placement: "bottom" } },
+      ],
+    },
+    meta: { dismissible: true, autoHideMs: null },
+  };
   return {
-    targetId,
-    effectType: "arrow-highlight",
-    message: messages[scenarioId] ?? "Here is a small hint for this task.",
-    dismissible: true,
+    spec,
+    componentTypes: ["Stack", "HighlightRing", "ArrowCue", "AnchoredTooltip"],
   };
 }
+
+export { CATALOG_VERSION } from "./ephemeral/catalog";

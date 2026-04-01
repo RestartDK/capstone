@@ -13,6 +13,7 @@ const bodySchema = z.object({
   participantId: z.string().uuid(),
   trialId: z.string().uuid(),
   scenarioId: z.string().min(1),
+  trigger: z.enum(["initial", "hesitation"]).optional(),
 });
 
 export async function POST(req: Request): Promise<Response> {
@@ -22,7 +23,7 @@ export async function POST(req: Request): Promise<Response> {
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
-  const { participantId, trialId, scenarioId } = parsed.data;
+  const { participantId, trialId, scenarioId, trigger } = parsed.data;
   if (!participantIdCookie || participantIdCookie !== participantId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -48,14 +49,25 @@ export async function POST(req: Request): Promise<Response> {
 
   await db.insert(supportOutputs).values({
     trialId,
-    promptVersion: gen.promptVersion,
     inputState: taskState as unknown as Record<string, unknown>,
     modelName: gen.modelName,
-    output: gen.payload as unknown as Record<string, unknown>,
+    output: {
+      catalogVersion: gen.catalogVersion,
+      spec: gen.result.spec,
+      componentTypes: gen.result.componentTypes,
+      trigger: trigger ?? "initial",
+      usedFallback: gen.usedFallback,
+    } as unknown as Record<string, unknown>,
   });
 
   return NextResponse.json({
-    support: gen.payload,
-    meta: { usedFallback: gen.usedFallback, modelName: gen.modelName },
+    spec: gen.result.spec,
+    meta: {
+      usedFallback: gen.usedFallback,
+      modelName: gen.modelName,
+      catalogVersion: gen.catalogVersion,
+      componentTypes: gen.result.componentTypes,
+      trigger: trigger ?? "initial",
+    },
   });
 }

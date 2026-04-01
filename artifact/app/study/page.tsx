@@ -8,18 +8,29 @@ import { ScenarioDashboard } from "@/components/study/ScenarioDashboard";
 import { ScenarioPmSprint } from "@/components/study/ScenarioPmSprint";
 import { ScenarioSlides } from "@/components/study/ScenarioSlides";
 import { Button } from "@/components/ui/button";
+import type { EphemeralSpec } from "@/lib/ephemeral/spec";
 import { pathForStudyStep } from "@/lib/study-routes";
 import type { StudyStateResponse } from "@/lib/study";
 import { getScenarioEntry } from "@/lib/scenarios/registry";
 import { isScenarioId } from "@/lib/scenarios/ids";
-import type { SupportPayload } from "@/lib/support-schema";
 import { trackEvent } from "@/lib/track";
+
+type SupportApiResponse = {
+  spec: EphemeralSpec;
+  meta: {
+    usedFallback: boolean;
+    modelName: string;
+    catalogVersion: string;
+    componentTypes: string[];
+    trigger: string;
+  };
+};
 
 export default function StudyPage(): React.ReactElement {
   const router = useRouter();
   const [state, setState] = React.useState<StudyStateResponse | null>(null);
   const [selected, setSelected] = React.useState<string | null>(null);
-  const [support, setSupport] = React.useState<SupportPayload | null>(null);
+  const [spec, setSpec] = React.useState<EphemeralSpec | null>(null);
   const [loadingSupport, setLoadingSupport] = React.useState(false);
   const [submitting, setSubmitting] = React.useState(false);
   const startedRef = React.useRef<string | null>(null);
@@ -77,18 +88,21 @@ export default function StudyPage(): React.ReactElement {
               participantId: pid,
               trialId: tid,
               scenarioId: trial.scenarioId,
+              trigger: "initial",
             }),
           });
           if (res.ok) {
-            const data = (await res.json()) as { support: SupportPayload };
-            setSupport(data.support);
+            const data = (await res.json()) as SupportApiResponse;
+            setSpec(data.spec);
             await trackEvent({
               participantId: pid,
               trialId: tid,
               eventType: "support_shown",
               payload: {
-                targetId: data.support.targetId,
-                effectType: data.support.effectType,
+                componentTypes: data.meta.componentTypes,
+                catalogVersion: data.meta.catalogVersion,
+                trigger: data.meta.trigger,
+                usedFallback: data.meta.usedFallback,
               },
             });
           }
@@ -96,14 +110,14 @@ export default function StudyPage(): React.ReactElement {
           setLoadingSupport(false);
         }
       } else {
-        setSupport(null);
+        setSpec(null);
       }
     })();
   }, [trial, state?.participantId, state?.step]);
 
   React.useEffect(() => {
     setSelected(null);
-    setSupport(null);
+    setSpec(null);
     startedRef.current = null;
   }, [trial?.id]);
 
@@ -143,14 +157,34 @@ export default function StudyPage(): React.ReactElement {
     }
   }
 
+  const editTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastEditSlideRef = React.useRef<string | null>(null);
+
+  function onSlideEdit(slideId: string) {
+    if (!trial || state?.step !== "study") return;
+    if (lastEditSlideRef.current === slideId && editTimerRef.current) return;
+    lastEditSlideRef.current = slideId;
+    if (editTimerRef.current) clearTimeout(editTimerRef.current);
+    editTimerRef.current = setTimeout(() => {
+      lastEditSlideRef.current = null;
+      editTimerRef.current = null;
+    }, 2000);
+    void trackEvent({
+      participantId: state.participantId,
+      trialId: trial.id,
+      eventType: "outline_edited",
+      payload: { slideId },
+    });
+  }
+
   function onDismissSupport(): void {
-    if (!trial || !state || !support) return;
-    setSupport(null);
+    if (!trial || !state || !spec) return;
+    setSpec(null);
     void trackEvent({
       participantId: state.participantId,
       trialId: trial.id,
       eventType: "support_dismissed",
-      payload: { targetId: support.targetId },
+      payload: {},
     });
   }
 
@@ -165,22 +199,30 @@ export default function StudyPage(): React.ReactElement {
   const sid = trial.scenarioId;
   const entry = isScenarioId(sid) ? getScenarioEntry(sid) : null;
   const taskHeading = entry?.taskHeading ?? "Complete the task using the interface below.";
+  const preamble = entry?.scenarioPreamble ?? null;
+  const taskNumber = trial.trialIndex + 1;
+  const totalTrials = state.totalTrials;
 
   const taskUi = !isScenarioId(sid) ? null : sid === "dashboard-priority" ? (
     <ScenarioDashboard selectedId={selected} onSelect={(id) => void onSelect(id)} />
   ) : sid === "slides-outline-refine" ? (
-    <ScenarioSlides selectedId={selected} onSelect={(id) => void onSelect(id)} />
+    <ScenarioSlides selectedId={selected} onSelect={(id) => void onSelect(id)} onEdit={onSlideEdit} />
   ) : (
     <ScenarioPmSprint selectedId={selected} onSelect={(id) => void onSelect(id)} />
   );
 
   return (
     <div className="relative mx-auto max-w-3xl space-y-6 p-6 pb-24">
-      <EphemeralLayer support={support} onDismiss={onDismissSupport} />
+      <EphemeralLayer spec={spec} onDismiss={onDismissSupport} />
       <div className="space-y-2">
-        <p className="text-xs text-muted-foreground">Task</p>
+        <p className="text-xs text-muted-foreground">
+          Task {taskNumber} of {totalTrials}
+        </p>
+        {preamble ? (
+          <p className="text-sm leading-relaxed text-muted-foreground">{preamble}</p>
+        ) : null}
         <h1 className="text-lg font-medium leading-snug">{taskHeading}</h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           The interface may show temporary assistance. You can dismiss it or ignore it.
         </p>
       </div>
