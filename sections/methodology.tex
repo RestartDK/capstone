@@ -11,11 +11,76 @@ This study develops a conceptual framework for ephemeral, task-scoped generative
 
 The first element is a taxonomy of component roles. Rather than classifying components by visual form, such as whether they appear as a panel, popover, or inline element, the taxonomy classifies them by the function they serve within the workflow. Three roles are distinguished. \emph{Interpretive support} helps users understand context, available options, outputs, or likely consequences before acting. \emph{Refinement support} helps users steer or configure an intended action before commitment, for example by comparing alternatives or adjusting parameters. \emph{Task-execution support} helps users complete a bounded subtask inside the surrounding application without replacing the broader workflow. Framing these roles as a taxonomy is methodologically useful because it makes explicit what kind of assistance is being introduced in each scenario and avoids treating ephemeral behaviour as a single undifferentiated interface style.
 
+\begin{figure}[htbp]
+    \centering
+    \resizebox{0.95\textwidth}{!}{%
+    \begin{tikzpicture}[
+        font=\small,
+        box/.style={
+            draw,
+            rounded corners,
+            align=center,
+            text width=0.22\textwidth,
+            minimum height=2.2cm,
+            inner sep=6pt
+        },
+        topbox/.style={
+            draw,
+            rounded corners,
+            align=center,
+            minimum width=0.42\textwidth,
+            minimum height=1.2cm,
+            inner sep=6pt
+        }
+    ]
+
+    \node[topbox] (root) {Ephemeral, task-scoped\\generative support};
+
+    \node[box, below left=1.8cm and 2.75cm of root] (interpretive) {\textbf{Interpretive support}\\Helps users understand\\context, outputs, or\\likely consequences};
+    \node[box, below=1.8cm of root] (refinement) {\textbf{Refinement support}\\Helps users compare or\\adjust options before\\commitment};
+    \node[box, below right=1.8cm and 2.75cm of root] (execution) {\textbf{Task-execution support}\\Helps users complete a\\bounded subtask within\\the existing workflow};
+
+    \draw[-] (root.south west) -- (interpretive.north);
+    \draw[-] (root.south) -- (refinement.north);
+    \draw[-] (root.south east) -- (execution.north);
+
+    \end{tikzpicture}
+    }
+    \caption{Taxonomy of ephemeral, task-scoped generative support roles.}
+    \label{fig:taxonomy}
+\end{figure}
+
 The second element is a lifecycle describing how an ephemeral component enters and leaves use. Alternative stage patterns can be found in the literature, ranging from the minimal logic of temporary appearance and disappearance to more scaffolded models in which users configure support before committing to an outcome. For this study, the most appropriate synthesis is a four-stage lifecycle of \emph{trigger}, \emph{instantiation}, \emph{interaction}, and \emph{dismissal}. A component is triggered when a clear user goal or contextual need is detected that is not adequately supported by the persistent interface alone. That trigger may be explicit, such as a user request for help, or inferred from local behavioural and contextual signals, but only when the resulting support remains low-risk, relevant, and easy to dismiss. The component is then instantiated as a temporary interface element embedded within the existing application rather than replacing the surrounding interface. During interaction, users inspect, steer, or complete the immediate subtask while remaining oriented within the primary workflow. Finally, the component is dismissed once the task is completed, abandoned, or no longer contextually relevant. This lifecycle was selected because it retains the conceptual clarity of ephemerality while remaining concrete enough to implement as a state-based interaction model in the artifact.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.78\textwidth]{graphics/lifecycle.png}
+    \resizebox{0.95\textwidth}{!}{%
+    \begin{tikzpicture}[
+        font=\small,
+        stage/.style={
+            draw,
+            rounded corners,
+            align=center,
+            text width=0.18\textwidth,
+            minimum height=2.0cm,
+            inner sep=6pt
+        }
+    ]
+
+    \node[draw, rounded corners, align=center, minimum width=3.4cm, minimum height=1.2cm] (core) at (0,0) {\textbf{Ephemeral component}\\lifecycle};
+
+    \node[stage] (trigger) at (0,3.4) {\textbf{Trigger}\\A user goal or\\contextual need is\\detected};
+    \node[stage] (instantiation) at (4.8,0) {\textbf{Instantiation}\\Temporary support is\\embedded within the\\existing interface};
+    \node[stage] (interaction) at (0,-3.4) {\textbf{Interaction}\\The user inspects,\\steers, or completes\\the immediate subtask};
+    \node[stage] (dismissal) at (-4.8,0) {\textbf{Dismissal}\\Support disappears\\once the task is done\\or no longer relevant};
+
+    \draw[->] (trigger.east) to[out=0,in=90] (instantiation.north);
+    \draw[->] (instantiation.south) to[out=-90,in=0] (interaction.east);
+    \draw[->] (interaction.west) to[out=180,in=-90] (dismissal.south);
+    \draw[->] (dismissal.north) to[out=90,in=180] (trigger.west);
+
+    \end{tikzpicture}
+    }
     \caption{Lifecycle of an ephemeral, task-scoped generative UI component: trigger, instantiation, interaction, and dismissal.}
     \label{fig:lifecycle}
 \end{figure}
@@ -27,7 +92,7 @@ The artifact developed in this project is a website used as a research instrumen
 
 To operationalise the framework, the website will implement two interface conditions: an original condition representing the baseline experience and an ephemeral condition in which temporary, task-scoped components are introduced according to the taxonomy, lifecycle, and design principles defined above. The original condition will present the underlying tasks using a conventional persistent interface, whereas the ephemeral condition will surface temporary interface elements only when a user reaches a context in which additional guidance, refinement, or task support is needed. In this way, the comparison isolates the effect of ephemeral augmentation against the non-ephemeral alternative.
 
-The website will present users with three specific scenarios that represent bounded productivity-oriented tasks within the application. Each scenario is designed to foreground one of the three taxonomy roles: interpretive support, refinement support, and task-execution support. The scenarios are taxonomy-led rather than lifecycle-led: the lifecycle of trigger, instantiation, interaction, and dismissal is implemented in every scenario as a common interaction logic, while the scenarios themselves vary the primary support role being studied. This makes the comparison analytically clearer because the study examines different forms of ephemeral support without changing the underlying temporal model of how the support appears and recedes.
+The website will present users with three specific scenarios that represent bounded productivity tasks within the application. Each scenario is designed to foreground one of the three taxonomy roles: interpretive support, refinement support, and task-execution support. The scenarios are taxonomy-led rather than lifecycle-led: the lifecycle of trigger, instantiation, interaction, and dismissal is implemented in every scenario as a common interaction logic, while the scenarios themselves vary the primary support role being studied. This makes the comparison analytically clearer because the study examines different forms of ephemeral support without changing the underlying temporal model of how the support appears and recedes.
 
 The first scenario is a dashboard interpretation task representing \emph{interpretive support}. Participants review a project dashboard and must identify the issue that requires the most immediate attention on the basis of the displayed metrics and status indicators. In the ephemeral condition, temporary support may summarise relevant signals, annotate unusual values, preview likely consequences, or highlight relationships between metrics before the user commits to an interpretation. Success is defined as correctly identifying the priority issue.
 
