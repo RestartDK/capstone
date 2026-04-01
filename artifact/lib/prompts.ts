@@ -1,11 +1,13 @@
-import { DASHBOARD_EPHEMERAL_TARGETS, SUPPORT_EFFECT_TYPES } from "./support-schema";
+import { getScenarioEntry } from "./scenarios/registry";
+import { SUPPORT_EFFECT_TYPES } from "./support-schema";
 
-import type { DashboardTaskState } from "./task-state";
+import type { TaskState } from "./task-state";
 
-export const SUPPORT_PROMPT_VERSION = "support-v1";
+export const SUPPORT_PROMPT_VERSION = "support-v2";
 
-export function buildSupportSystemPrompt(): string {
-  const targets = DASHBOARD_EPHEMERAL_TARGETS.join(", ");
+export function buildSupportSystemPrompt(scenarioId: string): string {
+  const entry = getScenarioEntry(scenarioId);
+  const targets = entry?.ephemeralTargets.join(", ") ?? "";
   const effects = SUPPORT_EFFECT_TYPES.join(", ");
   return [
     "You generate bounded ephemeral interface support for a research prototype.",
@@ -19,6 +21,8 @@ export function buildSupportSystemPrompt(): string {
   ].join("\n");
 }
 
-export function buildSupportUserPrompt(taskState: DashboardTaskState): string {
-  return `Scenario: dashboard triage. Task: help the user notice which area likely needs the most immediate attention based on the state below.\n\n${JSON.stringify(taskState)}`;
+export function buildSupportUserPrompt(taskState: TaskState): string {
+  const entry = getScenarioEntry(taskState.scenarioId);
+  const preamble = entry?.supportUserPromptPreamble ?? "Help the user with the task below.";
+  return `${preamble}\n\n${JSON.stringify(taskState)}`;
 }

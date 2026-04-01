@@ -5,11 +5,16 @@ import { useRouter } from "next/navigation";
 
 import { EphemeralLayer } from "@/components/ephemeral/EphemeralLayer";
 import { ScenarioDashboard } from "@/components/study/ScenarioDashboard";
+import { ScenarioPmSprint } from "@/components/study/ScenarioPmSprint";
+import { ScenarioSlides } from "@/components/study/ScenarioSlides";
 import { Button } from "@/components/ui/button";
-import { SCENARIO_ID } from "@/lib/constants";
+import { pathForStudyStep } from "@/lib/study-routes";
 import type { StudyStateResponse } from "@/lib/study";
+import { getScenarioEntry } from "@/lib/scenarios/registry";
+import { isScenarioId } from "@/lib/scenarios/ids";
 import type { SupportPayload } from "@/lib/support-schema";
 import { trackEvent } from "@/lib/track";
+
 export default function StudyPage(): React.ReactElement {
   const router = useRouter();
   const [state, setState] = React.useState<StudyStateResponse | null>(null);
@@ -33,21 +38,8 @@ export default function StudyPage(): React.ReactElement {
       const s = await loadState();
       if (!s) return;
       setState(s);
-      if (s.step === "background") {
-        router.replace("/participant");
-        return;
-      }
-      if (s.step === "post_trial") {
-        router.replace(`/questionnaire?trialId=${s.postTrialTrialId}`);
-        return;
-      }
-      if (s.step === "final") {
-        router.replace("/final");
-        return;
-      }
-      if (s.step === "complete") {
-        router.replace("/complete");
-        return;
+      if (s.step !== "study") {
+        router.replace(pathForStudyStep(s));
       }
     })();
   }, [loadState, router]);
@@ -67,7 +59,7 @@ export default function StudyPage(): React.ReactElement {
         participantId: pid,
         trialId: tid,
         eventType: "trial_started",
-        payload: { condition: trial.condition },
+        payload: { condition: trial.condition, scenarioId: trial.scenarioId },
       });
       await trackEvent({
         participantId: pid,
@@ -84,7 +76,7 @@ export default function StudyPage(): React.ReactElement {
             body: JSON.stringify({
               participantId: pid,
               trialId: tid,
-              scenarioId: SCENARIO_ID,
+              scenarioId: trial.scenarioId,
             }),
           });
           if (res.ok) {
@@ -170,14 +162,24 @@ export default function StudyPage(): React.ReactElement {
     );
   }
 
+  const sid = trial.scenarioId;
+  const entry = isScenarioId(sid) ? getScenarioEntry(sid) : null;
+  const taskHeading = entry?.taskHeading ?? "Complete the task using the interface below.";
+
+  const taskUi = !isScenarioId(sid) ? null : sid === "dashboard-priority" ? (
+    <ScenarioDashboard selectedId={selected} onSelect={(id) => void onSelect(id)} />
+  ) : sid === "slides-outline-refine" ? (
+    <ScenarioSlides selectedId={selected} onSelect={(id) => void onSelect(id)} />
+  ) : (
+    <ScenarioPmSprint selectedId={selected} onSelect={(id) => void onSelect(id)} />
+  );
+
   return (
     <div className="relative mx-auto max-w-3xl space-y-6 p-6 pb-24">
       <EphemeralLayer support={support} onDismiss={onDismissSupport} />
       <div className="space-y-2">
         <p className="text-xs text-muted-foreground">Task</p>
-        <h1 className="text-lg font-medium leading-snug">
-          Which area needs the most <em>immediate</em> attention on this dashboard?
-        </h1>
+        <h1 className="text-lg font-medium leading-snug">{taskHeading}</h1>
         <p className="text-sm text-muted-foreground">
           The interface may show temporary assistance. You can dismiss it or ignore it.
         </p>
@@ -185,13 +187,10 @@ export default function StudyPage(): React.ReactElement {
       {trial.condition === "ephemeral" && loadingSupport ? (
         <p className="text-xs text-muted-foreground">Preparing assistance…</p>
       ) : null}
-      <ScenarioDashboard selectedId={selected} onSelect={(id) => void onSelect(id)} />
+      {taskUi}
       <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-background/95 p-4 backdrop-blur">
         <div className="mx-auto flex max-w-3xl justify-end gap-2">
-          <Button
-            disabled={!selected || submitting}
-            onClick={() => void onSubmit()}
-          >
+          <Button disabled={!selected || submitting} onClick={() => void onSubmit()}>
             {submitting ? "Submitting…" : "Submit answer"}
           </Button>
         </div>

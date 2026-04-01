@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { pathForStudyStep } from "@/lib/study-routes";
 import type { StudyStateResponse } from "@/lib/study";
 
 export default function ParticipantPage(): React.ReactElement {
@@ -25,7 +26,7 @@ export default function ParticipantPage(): React.ReactElement {
       }
       const data = (await res.json()) as StudyStateResponse;
       if (data.step !== "background") {
-        router.replace("/study");
+        router.replace(pathForStudyStep(data));
       }
     })();
   }, [router]);
@@ -54,7 +55,7 @@ export default function ParticipantPage(): React.ReactElement {
       if (!res.ok) {
         throw new Error("Save failed");
       }
-      router.push("/study");
+      router.push("/instruction");
       router.refresh();
     } catch {
       setError("Could not save. Try again.");

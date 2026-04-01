@@ -8,6 +8,13 @@
       "when": 1743523200000,
       "tag": "0000_study",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1743609600000,
+      "tag": "0001_instruction_ack",
+      "breakpoints": true
     }
   ]
 }

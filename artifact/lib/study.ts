@@ -1,22 +1,10 @@
 import { and, asc, eq, inArray, isNull, sql } from "drizzle-orm";
 
-import {
-  DASHBOARD_CORRECT_ANSWER,
-  FINAL_QUESTION_KEYS,
-  POST_TRIAL_KEYS,
-  SCENARIO_ID,
-  TRIALS_PER_PARTICIPANT,
-} from "./constants";
+import { FINAL_QUESTION_KEYS, POST_TRIAL_KEYS } from "./constants";
 import { db, participants, questionnaireResponses, trials } from "./db";
 import type { Trial } from "./db/schema";
-
-export function conditionForTrialIndex(trialIndex: number): "baseline" | "ephemeral" {
-  return trialIndex === 0 ? "baseline" : "ephemeral";
-}
-
-export function isAnswerCorrect(answer: string): boolean {
-  return answer === DASHBOARD_CORRECT_ANSWER;
-}
+import { buildTrialPlan, TRIAL_SCHEDULE_LENGTH } from "./scenarios/schedule";
+import { isAnswerCorrectForScenario } from "./scenarios/registry";
 
 export async function createParticipant(consented: boolean): Promise<{ id: string }> {
   const [row] = await db
@@ -48,46 +36,57 @@ export async function updateParticipantBackground(input: {
       aiToolFamiliarity: input.aiToolFamiliarity,
     })
     .where(eq(participants.id, input.participantId));
-
-  await createFirstTrialIfNeeded(input.participantId);
 }
 
-async function createFirstTrialIfNeeded(participantId: string): Promise<void> {
-  const existing = await db
-    .select({ id: trials.id })
-    .from(trials)
-    .where(eq(trials.participantId, participantId))
-    .limit(1);
-  if (existing.length > 0) {
-    return;
-  }
-  await db.insert(trials).values({
-    participantId,
-    scenarioId: SCENARIO_ID,
-    condition: conditionForTrialIndex(0),
-    trialIndex: 0,
-  });
+export async function acknowledgeInstruction(participantId: string): Promise<void> {
+  await db
+    .update(participants)
+    .set({ instructionAcknowledgedAt: new Date() })
+    .where(eq(participants.id, participantId));
+  await ensureTrialsUpToDate(participantId, true);
 }
 
-export async function ensureSecondTrial(participantId: string): Promise<void> {
-  const all = await db
-    .select()
-    .from(trials)
-    .where(eq(trials.participantId, participantId))
-    .orderBy(asc(trials.trialIndex));
-  if (all.length >= TRIALS_PER_PARTICIPANT) {
+/**
+ * Ensures trial rows match the participant schedule: first row after instruction; each next row
+ * after the previous trial is completed and post-trial questionnaire is saved.
+ */
+export async function ensureTrialsUpToDate(
+  participantId: string,
+  instructionAcknowledged: boolean,
+): Promise<void> {
+  const plan = buildTrialPlan(participantId);
+  let all = await getTrialsForParticipant(participantId);
+
+  if (all.length === 0) {
+    if (!instructionAcknowledged) {
+      return;
+    }
+    await db.insert(trials).values({
+      participantId,
+      scenarioId: plan[0].scenarioId,
+      condition: plan[0].condition,
+      trialIndex: 0,
+    });
     return;
   }
-  const t0 = all.find((t) => t.trialIndex === 0);
-  if (!t0?.completed) {
-    return;
+
+  while (all.length < plan.length) {
+    const last = all[all.length - 1];
+    if (!last?.completed) {
+      return;
+    }
+    if (!(await hasCompletedPostTrial(participantId, last.id))) {
+      return;
+    }
+    const nextIndex = all.length;
+    await db.insert(trials).values({
+      participantId,
+      scenarioId: plan[nextIndex].scenarioId,
+      condition: plan[nextIndex].condition,
+      trialIndex: nextIndex,
+    });
+    all = await getTrialsForParticipant(participantId);
   }
-  await db.insert(trials).values({
-    participantId,
-    scenarioId: SCENARIO_ID,
-    condition: conditionForTrialIndex(1),
-    trialIndex: 1,
-  });
 }
 
 export async function getTrialsForParticipant(participantId: string): Promise<Trial[]> {
@@ -139,7 +138,7 @@ export async function submitTrialAnswer(input: {
   if (trial.completed) {
     return trial;
   }
-  const correct = isAnswerCorrect(input.answerSubmitted);
+  const correct = isAnswerCorrectForScenario(trial.scenarioId, input.answerSubmitted);
   const endedAt = new Date();
   const durationMs =
     trial.startedAt != null ? endedAt.getTime() - trial.startedAt.getTime() : null;
@@ -196,7 +195,7 @@ export async function findPendingPostTrial(participantId: string): Promise<strin
 
 export async function allTrialsFinished(participantId: string): Promise<boolean> {
   const list = await getTrialsForParticipant(participantId);
-  if (list.length < TRIALS_PER_PARTICIPANT) {
+  if (list.length < TRIAL_SCHEDULE_LENGTH) {
     return false;
   }
   return list.every((t) => t.completed);
@@ -248,7 +247,13 @@ export function shouldIncrementInteraction(eventType: string): boolean {
   return INTERACTION_EVENT_TYPES.has(eventType);
 }
 
-export type StudyStep = "background" | "study" | "post_trial" | "final" | "complete";
+export type StudyStep =
+  | "background"
+  | "instruction"
+  | "study"
+  | "post_trial"
+  | "final"
+  | "complete";
 
 export type StudyStateResponse = {
   participantId: string;
@@ -289,7 +294,21 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
     };
   }
 
-  await ensureSecondTrial(participantId);
+  if (!p.instructionAcknowledgedAt) {
+    const existingTrials = await getTrialsForParticipant(participantId);
+    if (existingTrials.length === 0) {
+      return {
+        participantId,
+        step: "instruction",
+        trial: null,
+        postTrialTrialId: null,
+        baselineIsVersionA: p.baselineIsVersionA,
+        lastTrialId: null,
+      };
+    }
+  }
+
+  await ensureTrialsUpToDate(participantId, true);
   const lt = await lastTrialId();
   const open = await getOpenTrial(participantId);
   if (open) {

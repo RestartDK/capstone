@@ -1,10 +1,8 @@
 import { z } from "zod";
 
-import { SCENARIO_ID } from "./constants";
+import { getScenarioEntry } from "./scenarios/registry";
 
 export type Condition = "baseline" | "ephemeral";
-
-export type ScenarioId = typeof SCENARIO_ID;
 
 export const SUPPORT_EFFECT_TYPES = [
   "arrow",
@@ -15,36 +13,52 @@ export const SUPPORT_EFFECT_TYPES = [
 
 export type SupportEffectType = (typeof SUPPORT_EFFECT_TYPES)[number];
 
-/** Cards and regions the model may reference for dashboard-priority. */
-export const DASHBOARD_EPHEMERAL_TARGETS = [
-  "payments-backlog-card",
-  "engineering-backlog-card",
-  "sla-breaches-card",
-  "customer-sentiment-card",
-  "alerts-strip",
-] as const;
+export type SupportPayload = {
+  targetId: string;
+  effectType: SupportEffectType;
+  message: string;
+  dismissible: boolean;
+};
 
-export type DashboardEphemeralTarget = (typeof DASHBOARD_EPHEMERAL_TARGETS)[number];
-
-export const supportPayloadSchema = z.object({
-  targetId: z.enum(DASHBOARD_EPHEMERAL_TARGETS),
+/** Loose shape for model output; targets validated per scenario. */
+export const looseSupportObjectSchema = z.object({
+  targetId: z.string().min(1).max(120),
   effectType: z.enum(SUPPORT_EFFECT_TYPES),
   message: z.string().min(1).max(400),
   dismissible: z.boolean(),
 });
 
-export type SupportPayload = z.infer<typeof supportPayloadSchema>;
-
-export function parseSupportPayload(raw: unknown): SupportPayload | null {
-  const parsed = supportPayloadSchema.safeParse(raw);
-  return parsed.success ? parsed.data : null;
+function isAllowedTarget(scenarioId: string, targetId: string): boolean {
+  const entry = getScenarioEntry(scenarioId);
+  if (!entry) {
+    return false;
+  }
+  return (entry.ephemeralTargets as readonly string[]).includes(targetId);
 }
 
-export function buildFallbackSupport(): SupportPayload {
+export function parseSupportPayloadForScenario(
+  scenarioId: string,
+  raw: unknown,
+): SupportPayload | null {
+  const parsed = looseSupportObjectSchema.safeParse(raw);
+  if (!parsed.success || !isAllowedTarget(scenarioId, parsed.data.targetId)) {
+    return null;
+  }
+  return parsed.data;
+}
+
+export function buildFallbackSupport(scenarioId: string): SupportPayload {
+  const entry = getScenarioEntry(scenarioId);
+  const targetId = entry?.ephemeralTargets[0] ?? "payments-backlog-card";
+  const messages: Record<string, string> = {
+    "dashboard-priority": "Backlog and SLA risk often need the fastest response.",
+    "slides-outline-refine": "Strengthen the weakest narrative slide before adding polish elsewhere.",
+    "pm-sprint-handoff": "Protect the sprint goal by pulling the item that unblocks reliability first.",
+  };
   return {
-    targetId: "payments-backlog-card",
+    targetId,
     effectType: "arrow-highlight",
-    message: "Backlog and SLA risk often need the fastest response.",
+    message: messages[scenarioId] ?? "Here is a small hint for this task.",
     dismissible: true,
   };
 }

@@ -4,6 +4,7 @@ import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { PostTrialQuestions } from "@/components/study/PostTrialQuestions";
+import { pathForStudyStep } from "@/lib/study-routes";
 import type { StudyStateResponse } from "@/lib/study";
 import { trackEvent } from "@/lib/track";
 
@@ -29,20 +30,8 @@ export function QuestionnaireClient(): React.ReactElement {
       setParticipantId(s.participantId);
       const tid = trialIdParam ?? s.postTrialTrialId;
       if (tid) setTrialId(tid);
-      if (s.step === "study") {
-        router.replace("/study");
-        return;
-      }
-      if (s.step === "final") {
-        router.replace("/final");
-        return;
-      }
-      if (s.step === "background") {
-        router.replace("/participant");
-        return;
-      }
-      if (s.step === "complete") {
-        router.replace("/complete");
+      if (s.step !== "post_trial") {
+        router.replace(pathForStudyStep(s));
         return;
       }
       setLoading(false);

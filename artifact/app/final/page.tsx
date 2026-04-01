@@ -4,6 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 
 import { FinalQuestions } from "@/components/study/FinalQuestions";
+import { pathForStudyStep } from "@/lib/study-routes";
 import type { StudyStateResponse } from "@/lib/study";
 import { trackEvent } from "@/lib/track";
 
@@ -22,20 +23,8 @@ export default function FinalPage(): React.ReactElement {
       }
       const s = (await res.json()) as StudyStateResponse;
       setState(s);
-      if (s.step === "background") {
-        router.replace("/participant");
-        return;
-      }
-      if (s.step === "study") {
-        router.replace("/study");
-        return;
-      }
-      if (s.step === "post_trial") {
-        router.replace(`/questionnaire?trialId=${s.postTrialTrialId}`);
-        return;
-      }
-      if (s.step === "complete") {
-        router.replace("/complete");
+      if (s.step !== "final") {
+        router.replace(pathForStudyStep(s));
         return;
       }
     })();

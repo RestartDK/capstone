@@ -21,6 +21,7 @@ export const participants = pgTable("participants", {
   aiToolFamiliarity: smallint("ai_tool_familiarity"),
   /** If true, baseline condition is labeled "Version A" in final questions; ephemeral is "B". */
   baselineIsVersionA: boolean("baseline_is_version_a"),
+  instructionAcknowledgedAt: timestamp("instruction_acknowledged_at", { withTimezone: true }),
 });
 
 export const trials = pgTable(

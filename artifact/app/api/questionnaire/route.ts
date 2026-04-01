@@ -6,7 +6,7 @@ import { questionnaireResponses } from "@/lib/db/schema";
 import { db } from "@/lib/db";
 import { getParticipantIdFromCookies } from "@/lib/session";
 import {
-  ensureSecondTrial,
+  ensureTrialsUpToDate,
   getTrialByIdForParticipant,
   hasCompletedFinal,
   hasCompletedPostTrial,
@@ -77,7 +77,7 @@ export async function POST(req: Request): Promise<Response> {
   );
 
   if (trialIdOrNull) {
-    await ensureSecondTrial(participantId);
+    await ensureTrialsUpToDate(participantId, true);
   }
 
   return NextResponse.json({ ok: true });

@@ -39,6 +39,7 @@ export async function exportStudyCsvs(): Promise<{
       "web_app_familiarity",
       "ai_tool_familiarity",
       "baseline_is_version_a",
+      "instruction_acknowledged_at",
     ],
     pRows.map((p) => ({
       id: p.id,
@@ -49,6 +50,7 @@ export async function exportStudyCsvs(): Promise<{
       web_app_familiarity: p.webAppFamiliarity ?? "",
       ai_tool_familiarity: p.aiToolFamiliarity ?? "",
       baseline_is_version_a: p.baselineIsVersionA == null ? "" : p.baselineIsVersionA ? "true" : "false",
+      instruction_acknowledged_at: p.instructionAcknowledgedAt?.toISOString() ?? "",
     })),
   );
 

@@ -1,5 +1,6 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateObject } from "ai";
+import { z } from "zod";
 
 import {
   buildSupportSystemPrompt,
@@ -8,13 +9,22 @@ import {
 } from "@/lib/prompts";
 import {
   buildFallbackSupport,
-  parseSupportPayload,
-  supportPayloadSchema,
+  looseSupportObjectSchema,
+  parseSupportPayloadForScenario,
+  SUPPORT_EFFECT_TYPES,
   type SupportPayload,
 } from "@/lib/support-schema";
-import type { DashboardTaskState } from "@/lib/task-state";
+import type { TaskState } from "@/lib/task-state";
 
 const DEFAULT_MODEL = "gemini-2.0-flash";
+
+/** Schema passed to the model (effect enum); target validated per scenario after parse. */
+const supportObjectSchemaForModel = z.object({
+  targetId: z.string().min(1).max(120),
+  effectType: z.enum(SUPPORT_EFFECT_TYPES),
+  message: z.string().min(1).max(400),
+  dismissible: z.boolean(),
+});
 
 export type SupportGenResult = {
   payload: SupportPayload;
@@ -29,12 +39,13 @@ function getGoogleApiKey(): string | undefined {
 }
 
 export async function generateValidatedSupport(
-  taskState: DashboardTaskState,
+  scenarioId: string,
+  taskState: TaskState,
 ): Promise<SupportGenResult> {
   const apiKey = getGoogleApiKey();
   const modelId = process.env.GEMINI_MODEL ?? DEFAULT_MODEL;
   if (!apiKey) {
-    const payload = buildFallbackSupport();
+    const payload = buildFallbackSupport(scenarioId);
     return {
       payload,
       promptVersion: SUPPORT_PROMPT_VERSION,
@@ -49,25 +60,26 @@ export async function generateValidatedSupport(
   try {
     const { object } = await generateObject({
       model: google(modelId),
-      schema: supportPayloadSchema,
+      schema: supportObjectSchemaForModel,
       schemaName: "EphemeralSupport",
       schemaDescription:
         "Bounded on-screen assistance: one target, one effect, short message, dismissible.",
-      system: buildSupportSystemPrompt(),
+      system: buildSupportSystemPrompt(scenarioId),
       prompt: buildSupportUserPrompt(taskState),
     });
 
-    const validated = parseSupportPayload(object);
-    const payload = validated ?? buildFallbackSupport();
+    const validated = parseSupportPayloadForScenario(scenarioId, object);
+    const coerced = looseSupportObjectSchema.safeParse(object);
+    const payload = validated ?? buildFallbackSupport(scenarioId);
     return {
       payload,
       promptVersion: SUPPORT_PROMPT_VERSION,
       modelName: modelId,
-      rawText: JSON.stringify(object),
+      rawText: JSON.stringify(coerced.success ? coerced.data : object),
       usedFallback: validated == null,
     };
   } catch {
-    const payload = buildFallbackSupport();
+    const payload = buildFallbackSupport(scenarioId);
     return {
       payload,
       promptVersion: SUPPORT_PROMPT_VERSION,
