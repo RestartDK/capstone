@@ -1,0 +1,26 @@
+# Local Postgres with the same service/container name as on Dokploy (internal DNS: capstone-postgres-s07tev).
+#
+# From the host (bun dev, health:pg): use 127.0.0.1 and the published host port in DATABASE_URL.
+# From another service added to this file: use host capstone-postgres-s07tev and port 5432.
+
+services:
+  capstone-postgres-s07tev:
+    image: postgres:18
+    container_name: capstone-postgres-s07tev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: postgres
+    ports:
+      - "${POSTGRES_HOST_PORT:-5432}:5432"
+    volumes:
+      - capstone_postgres_s07tev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  capstone_postgres_s07tev_data:

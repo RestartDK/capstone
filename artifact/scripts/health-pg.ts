@@ -1,21 +1,15 @@
-import { sql } from "bun";
+import { sql } from "drizzle-orm";
 
-const databaseUrl = process.env.DATABASE_URL;
-if (!databaseUrl) {
-  console.error("DATABASE_URL is not set");
-  process.exit(1);
-}
+import { closeDb, db } from "../lib/db";
 
 try {
-  const rows = await sql`SELECT 1 AS ok`;
-  const row = rows[0] as { ok: number };
-  if (row?.ok !== 1) {
-    console.error("Unexpected result:", row);
-    process.exit(1);
-  }
-  console.log("ok: connected to PostgreSQL");
-  process.exit(0);
+  await db.execute(sql`select 1 as ok`);
+  console.log("ok: connected to PostgreSQL (Drizzle + postgres.js)");
 } catch (err) {
   console.error("PostgreSQL health check failed:", err);
-  process.exit(1);
+  process.exitCode = 1;
+} finally {
+  await closeDb();
 }
+
+process.exit(process.exitCode ?? 0);
