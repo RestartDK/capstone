@@ -6,7 +6,7 @@ export function pathForStudyStep(s: StudyStateResponse): string {
     case "background":
       return "/participant";
     case "instruction":
-      return "/instruction";
+      return "/study";
     case "study":
       return "/study";
     case "post_trial":

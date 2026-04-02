@@ -4,6 +4,25 @@ import { FINAL_QUESTION_KEYS, POST_TRIAL_KEYS } from "./constants";
 import { db, participants, questionnaireResponses, trials } from "./db";
 import type { Trial } from "./db/schema";
 import { buildTrialPlan, TRIAL_SCHEDULE_LENGTH } from "./scenarios/schedule";
+
+/**
+ * Progress segments from background form through thank-you: background (1) + each trial’s task &
+ * post-trial questionnaire (2×trials) + final questionnaire (1) + thank-you (1).
+ */
+export const STUDY_PROGRESS_TOTAL = 1 + TRIAL_SCHEDULE_LENGTH * 2 + 2;
+
+export type StudyProgress = {
+  current: number;
+  total: number;
+  percent: number;
+};
+
+export function packStudyProgress(current: number): StudyProgress {
+  const total = STUDY_PROGRESS_TOTAL;
+  const c = Math.min(Math.max(0, current), total);
+  const percent = Math.min(100, Math.round((c / total) * 100));
+  return { current: c, total, percent };
+}
 import { isAnswerCorrectForScenario } from "./scenarios/registry";
 
 export async function createParticipant(consented: boolean): Promise<{ id: string }> {
@@ -27,6 +46,7 @@ export async function updateParticipantBackground(input: {
   webAppFamiliarity: number;
   aiToolFamiliarity: number;
 }): Promise<void> {
+  const now = new Date();
   await db
     .update(participants)
     .set({
@@ -34,6 +54,7 @@ export async function updateParticipantBackground(input: {
       occupation: input.occupation,
       webAppFamiliarity: input.webAppFamiliarity,
       aiToolFamiliarity: input.aiToolFamiliarity,
+      instructionAcknowledgedAt: now,
     })
     .where(eq(participants.id, input.participantId));
 }
@@ -47,7 +68,7 @@ export async function acknowledgeInstruction(participantId: string): Promise<voi
 }
 
 /**
- * Ensures trial rows match the participant schedule: first row after instruction; each next row
+ * Ensures trial rows match the participant schedule: first row after onboarding; each next row
  * after the previous trial is completed and post-trial questionnaire is saved.
  */
 export async function ensureTrialsUpToDate(
@@ -240,7 +261,12 @@ const INTERACTION_EVENT_TYPES = new Set([
   "support_triggered",
   "support_shown",
   "support_dismissed",
+  "support_inspect_expanded",
   "support_used",
+  "support_ignored",
+  "slide_reordered",
+  "ticket_moved",
+  "workflow_step_completed",
 ]);
 
 export function shouldIncrementInteraction(eventType: string): boolean {
@@ -264,6 +290,7 @@ export type StudyStateResponse = {
   /** Latest trial row (by index); useful for logging events after all trials complete. */
   lastTrialId: string | null;
   totalTrials: number;
+  progress: StudyProgress;
 };
 
 export async function resolveStudyState(participantId: string): Promise<StudyStateResponse> {
@@ -285,6 +312,7 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
       baselineIsVersionA: null,
       lastTrialId: null,
       totalTrials: total,
+      progress: packStudyProgress(1),
     };
   }
   if (!p.ageRange || !p.occupation || p.webAppFamiliarity == null || p.aiToolFamiliarity == null) {
@@ -296,22 +324,8 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
       baselineIsVersionA: p.baselineIsVersionA,
       lastTrialId: null,
       totalTrials: total,
+      progress: packStudyProgress(1),
     };
-  }
-
-  if (!p.instructionAcknowledgedAt) {
-    const existingTrials = await getTrialsForParticipant(participantId);
-    if (existingTrials.length === 0) {
-      return {
-        participantId,
-        step: "instruction",
-        trial: null,
-        postTrialTrialId: null,
-        baselineIsVersionA: p.baselineIsVersionA,
-        lastTrialId: null,
-        totalTrials: total,
-      };
-    }
   }
 
   await ensureTrialsUpToDate(participantId, true);
@@ -326,11 +340,14 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
       baselineIsVersionA: p.baselineIsVersionA,
       lastTrialId: lt,
       totalTrials: total,
+      progress: packStudyProgress(2 + 2 * open.trialIndex),
     };
   }
 
   const pendingPost = await findPendingPostTrial(participantId);
   if (pendingPost) {
+    const postTrialRow = await getTrialByIdForParticipant(participantId, pendingPost);
+    const idx = postTrialRow?.trialIndex ?? 0;
     return {
       participantId,
       step: "post_trial",
@@ -339,6 +356,7 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
       baselineIsVersionA: p.baselineIsVersionA,
       lastTrialId: lt,
       totalTrials: total,
+      progress: packStudyProgress(3 + 2 * idx),
     };
   }
 
@@ -351,6 +369,7 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
       baselineIsVersionA: p.baselineIsVersionA,
       lastTrialId: lt,
       totalTrials: total,
+      progress: packStudyProgress(1 + TRIAL_SCHEDULE_LENGTH * 2 + 1),
     };
   }
 
@@ -362,5 +381,6 @@ export async function resolveStudyState(participantId: string): Promise<StudySta
     baselineIsVersionA: p.baselineIsVersionA,
     lastTrialId: lt,
     totalTrials: total,
+    progress: packStudyProgress(STUDY_PROGRESS_TOTAL),
   };
 }

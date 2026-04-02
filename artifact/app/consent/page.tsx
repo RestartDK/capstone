@@ -39,8 +39,8 @@ export default function ConsentPage(): React.ReactElement {
       <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
         <p>
           In this study you will complete several short interface tasks across different scenarios.
-          Each task asks you to review an interface and make a decision. During some tasks the
-          interface may provide additional temporary assistance.
+          Each task asks you to use the interface to complete a goal. During some tasks, temporary
+          assistance may appear after a short pause or if you explicitly request it.
         </p>
         <p>
           After every task you will answer three brief rating questions. The whole session takes

@@ -4,6 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 
 import { FinalQuestions } from "@/components/study/FinalQuestions";
+import { StudyProgressBar } from "@/components/study/StudyProgressBar";
 import { pathForStudyStep } from "@/lib/study-routes";
 import type { StudyStateResponse } from "@/lib/study";
 import { trackEvent } from "@/lib/track";
@@ -92,6 +93,7 @@ export default function FinalPage(): React.ReactElement {
 
   return (
     <div>
+      <StudyProgressBar progress={state.progress} />
       {error ? (
         <p className="px-6 pt-6 text-sm text-destructive">{error}</p>
       ) : null}

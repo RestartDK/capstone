@@ -1,0 +1,96 @@
+/**
+ * Visual stress test for ephemeral UI (debug only).
+ * Driven by .ephemeral-layer-stress on the portal root and .ephemeral-target-skin on task container.
+ */
+
+.ephemeral-layer-stress {
+  --e-stress: 0;
+  --e-hue: 0deg;
+  --e-radius: calc(0.75rem * (1 - var(--e-stress)));
+  --e-border: calc(1px + 5px * var(--e-stress));
+}
+
+/* Hue-only overlay (chromatic shift without geometric stress) */
+.ephemeral-layer-hue-only {
+  --e-hue: 0deg;
+  filter: hue-rotate(var(--e-hue, 0deg));
+}
+
+.ephemeral-layer-stress[data-stress-band="1"] {
+  font-variant-ligatures: none;
+  filter: hue-rotate(var(--e-hue, 0deg));
+}
+
+.ephemeral-layer-stress[data-stress-band="2"] {
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  font-variant-ligatures: none;
+  filter: hue-rotate(var(--e-hue, 0deg)) contrast(1.05) saturate(1.08);
+}
+
+.ephemeral-layer-stress[data-stress-band="2"] [class*="rounded-lg"],
+.ephemeral-layer-stress[data-stress-band="2"] [class*="rounded-xl"],
+.ephemeral-layer-stress[data-stress-band="2"] [class*="rounded-md"] {
+  border-radius: var(--e-radius) !important;
+  border-width: var(--e-border) !important;
+}
+
+.ephemeral-layer-stress[data-stress-band="2"] .border {
+  border-color: rgba(180, 120, 40, 0.7) !important;
+}
+
+.ephemeral-layer-stress[data-stress-band="3"] {
+  filter: hue-rotate(var(--e-hue, 0deg));
+}
+
+/* High band: chunky / pixel-adjacent overlay chrome */
+.ephemeral-layer-stress[data-stress-band="3"] [class*="rounded-lg"],
+.ephemeral-layer-stress[data-stress-band="3"] [class*="rounded-xl"],
+.ephemeral-layer-stress[data-stress-band="3"] [class*="rounded-md"] {
+  border-radius: 0 !important;
+  border-width: 4px !important;
+  box-shadow:
+    4px 4px 0 rgba(0, 0, 0, 0.35),
+    inset -3px -3px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.ephemeral-layer-stress[data-stress-band="3"] button {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Optional: make allowlisted task regions look like voxel panels */
+.ephemeral-target-skin[data-target-stress="1"] [data-ephemeral-id] {
+  border-radius: 6px !important;
+  transition:
+    border-radius 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.ephemeral-target-skin[data-target-stress="2"] [data-ephemeral-id] {
+  border-radius: 2px !important;
+  border-width: 3px !important;
+  border-color: rgb(92, 64, 51) !important;
+  box-shadow:
+    3px 3px 0 rgba(0, 0, 0, 0.25),
+    inset -2px -2px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.ephemeral-target-skin[data-target-stress="3"] [data-ephemeral-id] {
+  border-radius: 0 !important;
+  border-width: 4px !important;
+  border-color: rgb(62, 39, 35) !important;
+  box-shadow:
+    5px 5px 0 rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(139, 195, 74, 0.35),
+    inset -4px -4px 0 rgba(0, 0, 0, 0.2) !important;
+  image-rendering: pixelated;
+}
+
+/* Optional second axis: same hue token as the overlay, for skinned allowlist nodes */
+.ephemeral-target-chromatic {
+  --e-hue: 0deg;
+}
+
+.ephemeral-target-chromatic [data-ephemeral-id] {
+  filter: hue-rotate(var(--e-hue, 0deg));
+}

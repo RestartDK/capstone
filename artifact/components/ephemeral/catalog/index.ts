@@ -1,6 +1,13 @@
 export { AnchoredTooltip } from "./AnchoredTooltip";
+export { CatalogAnchoredHtml } from "./CatalogAnchoredHtml";
 export { CatalogArrowCue } from "./CatalogArrowCue";
+export { CatalogComparisonStrip } from "./CatalogComparisonStrip";
+export { CatalogConsequenceNote } from "./CatalogConsequenceNote";
+export { CatalogFlowHtml } from "./CatalogFlowHtml";
 export { CatalogHighlightRing } from "./CatalogHighlightRing";
+export { CatalogInspectPanel } from "./CatalogInspectPanel";
+export { CatalogTargetOffsetPanel } from "./CatalogTargetOffsetPanel";
+export { CatalogViewportPanel } from "./CatalogViewportPanel";
 export { ConnectorLine } from "./ConnectorLine";
 export { FocusMask } from "./FocusMask";
 export { HintStack } from "./HintStack";

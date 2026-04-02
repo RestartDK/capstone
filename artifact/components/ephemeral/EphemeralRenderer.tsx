@@ -1,11 +1,18 @@
 "use client";
 
-import type { EphemeralNode } from "@/lib/ephemeral/spec";
+import type { EphemeralNode, EphemeralSupportInteraction } from "@/lib/ephemeral/spec";
 
 import {
   AnchoredTooltip,
+  CatalogAnchoredHtml,
   CatalogArrowCue,
+  CatalogComparisonStrip,
+  CatalogConsequenceNote,
+  CatalogFlowHtml,
   CatalogHighlightRing,
+  CatalogInspectPanel,
+  CatalogTargetOffsetPanel,
+  CatalogViewportPanel,
   ConnectorLine,
   FocusMask,
   HintStack,
@@ -17,8 +24,9 @@ function RenderNode(props: {
   node: EphemeralNode;
   dismissible: boolean;
   onDismiss: () => void;
+  onSupportInteraction?: (interaction: EphemeralSupportInteraction) => void;
 }) {
-  const { node, dismissible, onDismiss } = props;
+  const { node, dismissible, onDismiss, onSupportInteraction } = props;
   const p = node.props as Record<string, unknown>;
 
   switch (node.type) {
@@ -75,6 +83,104 @@ function RenderNode(props: {
         />
       );
 
+    case "ComparisonStrip":
+      return (
+        <CatalogComparisonStrip
+          leftTargetId={p.leftTargetId as string}
+          rightTargetId={p.rightTargetId as string}
+          headline={p.headline as string | undefined}
+          body={p.body as string}
+          dismissible={dismissible}
+          onDismiss={onDismiss}
+        />
+      );
+
+    case "InspectPanel":
+      return (
+        <CatalogInspectPanel
+          targetId={p.targetId as string}
+          title={p.title as string}
+          summary={p.summary as string}
+          details={p.details as string[] | undefined}
+          placement={p.placement as "top" | "bottom" | "left" | "right" | undefined}
+          dismissible={dismissible}
+          onDismiss={onDismiss}
+          onInspectExpanded={() => onSupportInteraction?.({ kind: "inspect_expanded" })}
+        />
+      );
+
+    case "ConsequenceNote":
+      return (
+        <CatalogConsequenceNote
+          targetId={p.targetId as string}
+          line={p.line as string}
+          placement={p.placement as "top" | "bottom" | "left" | "right" | undefined}
+        />
+      );
+
+    case "ViewportPanel": {
+      const c = node.children ?? [];
+      return (
+        <CatalogViewportPanel
+          topPct={p.topPct as number}
+          leftPct={p.leftPct as number}
+          widthPct={p.widthPct as number}
+          maxHeightVh={p.maxHeightVh as number | undefined}
+          zIndex={p.zIndex as number | undefined}
+          pointerEvents={p.pointerEvents as "auto" | "none" | undefined}
+        >
+          {c.map((child, i) => (
+            <RenderNode
+              key={i}
+              node={child}
+              dismissible={dismissible}
+              onDismiss={onDismiss}
+              onSupportInteraction={onSupportInteraction}
+            />
+          ))}
+        </CatalogViewportPanel>
+      );
+    }
+
+    case "TargetOffsetPanel": {
+      const c = node.children ?? [];
+      return (
+        <CatalogTargetOffsetPanel
+          targetId={p.targetId as string}
+          widthPx={p.widthPx as number}
+          shiftXPx={p.shiftXPx as number}
+          shiftYPx={p.shiftYPx as number}
+          edge={p.edge as "top" | "bottom" | "left" | "right" | "center"}
+        >
+          {c.length > 0
+            ? c.map((child, i) => (
+                <RenderNode
+                  key={i}
+                  node={child}
+                  dismissible={dismissible}
+                  onDismiss={onDismiss}
+                  onSupportInteraction={onSupportInteraction}
+                />
+              ))
+            : null}
+        </CatalogTargetOffsetPanel>
+      );
+    }
+
+    case "FlowHtml":
+      return <CatalogFlowHtml html={p.html as string} />;
+
+    case "AnchoredHtml":
+      return (
+        <CatalogAnchoredHtml
+          targetId={p.targetId as string}
+          html={p.html as string}
+          placement={p.placement as "top" | "bottom" | "left" | "right" | undefined}
+          dismissible={dismissible}
+          onDismiss={onDismiss}
+        />
+      );
+
     case "Stack": {
       const children = node.children ?? [];
       return (
@@ -85,6 +191,7 @@ function RenderNode(props: {
               node={child}
               dismissible={dismissible}
               onDismiss={onDismiss}
+              onSupportInteraction={onSupportInteraction}
             />
           ))}
         </>
@@ -100,12 +207,14 @@ export function EphemeralRenderer(props: {
   root: EphemeralNode;
   dismissible: boolean;
   onDismiss: () => void;
+  onSupportInteraction?: (interaction: EphemeralSupportInteraction) => void;
 }) {
   return (
     <RenderNode
       node={props.root}
       dismissible={props.dismissible}
       onDismiss={props.onDismiss}
+      onSupportInteraction={props.onSupportInteraction}
     />
   );
 }

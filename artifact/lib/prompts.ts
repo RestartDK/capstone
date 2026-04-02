@@ -3,10 +3,36 @@ import { getScenarioEntry } from "./scenarios/registry";
 
 import type { TaskState } from "./task-state";
 
-export function buildSupportSystemPrompt(scenarioId: string) {
+function taxonomyGuidanceLines(taxonomy: string): string[] {
+  switch (taxonomy) {
+    case "interpretive":
+      return [
+        "Scenario role: interpretive support.",
+        "Prioritise combining signals: relate the alert strip to backlog or SLA cards using ConnectorLine or ComparisonStrip, and use InspectPanel to explain why two clues should be read together.",
+        "Use ConsequenceNote sparingly for a one-line ‘if this is ignored…’ reading of a key signal.",
+      ];
+    case "refinement":
+      return [
+        "Scenario role: refinement support before commitment.",
+        "Use StepRail for a coherent deck order (title → problem → metrics → ask) when multiple slides are involved; use InspectPanel near deck-context-bar to clarify narrative intent.",
+        "ConnectorLine can pair slides when comparing flow, not only spotlight one card.",
+      ];
+    case "task_execution":
+      return [
+        "Scenario role: bounded task execution on the board.",
+        "Use StepRail to link sprint goal strip, the backlog ticket that fits the goal, and the In progress column when teaching sequence; ConsequenceNote works well on the focal ticket.",
+        "InspectPanel can gloss dependencies or why the goal narrows choice—avoid generic highlighting with no workflow meaning.",
+      ];
+    default:
+      return [];
+  }
+}
+
+export function buildSupportSystemPrompt(scenarioId: string): string {
   const entry = getScenarioEntry(scenarioId);
   const targets = entry?.ephemeralTargets.join(", ") ?? "";
   const componentTypes = EPHEMERAL_COMPONENT_TYPES.join(", ");
+  const roleLines = entry ? taxonomyGuidanceLines(entry.taxonomy) : [];
   return [
     "You generate bounded ephemeral interface support for a research prototype.",
     "Return a JSON object matching the EphemeralSpec schema described below.",
@@ -26,18 +52,30 @@ export function buildSupportSystemPrompt(scenarioId: string) {
     "- HintStack: { targetId: string, lines: string[] (1-4 items, each max 200 chars), placement?: 'top'|'bottom'|'left'|'right' }",
     "- StepRail: { targetIds: string[] (2-6 items) }  (numbered callouts in order)",
     "- ConnectorLine: { fromTargetId: string, toTargetId: string }  (dashed line between two targets)",
+    "- ComparisonStrip: { leftTargetId: string, rightTargetId: string, headline?: string (max 100 chars), body: string (max 400) }  (short contrast between two targets; place copy under both)",
+    "- InspectPanel: { targetId: string, title: string (max 120), summary: string (max 280), details?: string[] (0-4 items, each max 200), placement?: 'top'|'bottom'|'left'|'right' }  (expandable reasoning; participant may open details)",
+    "- ConsequenceNote: { targetId: string, line: string (max 220), placement?: 'top'|'bottom'|'left'|'right' }  (one italic consequence line anchored near a target)",
+    "- ViewportPanel: { topPct: 0-100, leftPct: 0-100, widthPct: 15-96, maxHeightVh?: 12-88, zIndex?: 1-100, pointerEvents?: 'auto'|'none' }  (absolute panel in % of overlay; children stack vertically)",
+    "- TargetOffsetPanel: { targetId, widthPx: 200-520, shiftXPx: -480..480, shiftYPx: -480..480, edge: 'top'|'bottom'|'left'|'right'|'center' }  (panel placed relative to target bbox + pixel shifts)",
+    "- FlowHtml: { html: string (max 3000) }  — MUST appear only inside a ViewportPanel subtree (e.g. ViewportPanel → Stack → FlowHtml). Sanitized tags only: p, br, strong, em, b, i, ul, ol, li, span, h3, h4, code, pre. No scripts, styles, or event handlers.",
+    "- AnchoredHtml: { targetId, html: string (max 1800), placement?: 'top'|'bottom'|'left'|'right' }  (like AnchoredTooltip but HTML; same tag whitelist after sanitization)",
     "",
     `Allowed target IDs: ${targets}.`,
-    "Every targetId / fromTargetId / toTargetId must be one of the allowed target IDs.",
+    "Every targetId, fromTargetId, toTargetId, leftTargetId, and rightTargetId must be one of the allowed target IDs.",
+    "",
+    ...roleLines,
     "",
     "Rules:",
     "- The root should be a Stack containing 2-4 children.",
-    "- Choose components that help the user notice what matters for the task.",
-    "- Max tree depth: 3. Max children per node: 6.",
-    "- Keep tooltip/hint text under 400 characters, plain language, no HTML or Markdown.",
+    "- Unless the task state clearly implies a single focal control only, include at least one relational component: ConnectorLine, ComparisonStrip, or StepRail spanning two or more distinct targets.",
+    "- Prefer relating targets when it helps interpretation; do not emit only HighlightRing+ArrowCue on one element unless justified by the task state.",
+    "- Choose components that help the user reason or act on the task, not only draw attention.",
+    "- Max tree depth: 4 (deepest nodes are leaves). Max children per node: 6.",
+    "- AnchoredTooltip/ComparisonStrip/Inspect text: plain language, no raw HTML in those props.",
+    "- FlowHtml/AnchoredHtml: small semantic HTML only; server strips disallowed tags.",
     "- Set meta.dismissible to true.",
     "- Set meta.autoHideMs to null unless you have a good reason for timed fade.",
-    "- Do not redesign the page, output HTML, code, or standalone Markdown.",
+    "- Do not output executable code, Markdown documents, or full page HTML—only the EphemeralSpec JSON; HTML is allowed only in FlowHtml/AnchoredHtml as described.",
     "- Return only the JSON object, nothing else.",
   ].join("\n");
 }

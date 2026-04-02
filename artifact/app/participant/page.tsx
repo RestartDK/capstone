@@ -4,9 +4,10 @@ import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { StudyProgressBar } from "@/components/study/StudyProgressBar";
 import { Button } from "@/components/ui/button";
 import { pathForStudyStep } from "@/lib/study-routes";
-import type { StudyStateResponse } from "@/lib/study";
+import type { StudyProgress, StudyStateResponse } from "@/lib/study";
 
 export default function ParticipantPage(): React.ReactElement {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function ParticipantPage(): React.ReactElement {
   const [aiFam, setAiFam] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [progress, setProgress] = React.useState<StudyProgress | null>(null);
 
   React.useEffect(() => {
     void (async () => {
@@ -25,6 +27,7 @@ export default function ParticipantPage(): React.ReactElement {
         return;
       }
       const data = (await res.json()) as StudyStateResponse;
+      setProgress(data.progress);
       if (data.step !== "background") {
         router.replace(pathForStudyStep(data));
       }
@@ -55,7 +58,7 @@ export default function ParticipantPage(): React.ReactElement {
       if (!res.ok) {
         throw new Error("Save failed");
       }
-      router.push("/instruction");
+      router.push("/study");
       router.refresh();
     } catch {
       setError("Could not save. Try again.");
@@ -65,7 +68,9 @@ export default function ParticipantPage(): React.ReactElement {
   }
 
   return (
-    <div className="mx-auto max-w-lg space-y-6 p-6">
+    <>
+      {progress ? <StudyProgressBar progress={progress} /> : null}
+      <div className="mx-auto max-w-lg space-y-6 p-6">
       <h1 className="text-lg font-medium">Background</h1>
       <p className="text-sm text-muted-foreground">
         A few quick questions. Familiarity questions use a scale of 1 (low) to 7 (high).
@@ -138,5 +143,6 @@ export default function ParticipantPage(): React.ReactElement {
         </div>
       </form>
     </div>
+    </>
   );
 }

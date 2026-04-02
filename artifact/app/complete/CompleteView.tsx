@@ -1,9 +1,9 @@
 "use client";
 
 import confetti from "canvas-confetti";
-import { useEffect } from "react";
+import { useEffect, type ReactElement } from "react";
 
-export function CompleteView(props: { completed: boolean }): React.ReactElement {
+export function CompleteView(props: { completed: boolean }): ReactElement {
   useEffect(() => {
     if (!props.completed || typeof window === "undefined") return;
 

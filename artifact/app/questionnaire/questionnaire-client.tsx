@@ -4,8 +4,9 @@ import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { PostTrialQuestions } from "@/components/study/PostTrialQuestions";
+import { StudyProgressBar } from "@/components/study/StudyProgressBar";
 import { pathForStudyStep } from "@/lib/study-routes";
-import type { StudyStateResponse } from "@/lib/study";
+import type { StudyProgress, StudyStateResponse } from "@/lib/study";
 import { trackEvent } from "@/lib/track";
 
 export function QuestionnaireClient(): React.ReactElement {
@@ -16,6 +17,7 @@ export function QuestionnaireClient(): React.ReactElement {
   const [trialId, setTrialId] = React.useState<string | null>(trialIdParam);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [progress, setProgress] = React.useState<StudyProgress | null>(null);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -28,6 +30,7 @@ export function QuestionnaireClient(): React.ReactElement {
       const s = (await res.json()) as StudyStateResponse;
       if (cancelled) return;
       setParticipantId(s.participantId);
+      setProgress(s.progress);
       const tid = trialIdParam ?? s.postTrialTrialId;
       if (tid) setTrialId(tid);
       if (s.step !== "post_trial") {
@@ -95,6 +98,7 @@ export function QuestionnaireClient(): React.ReactElement {
 
   return (
     <div>
+      {progress ? <StudyProgressBar progress={progress} /> : null}
       {error ? (
         <p className="px-6 pt-6 text-sm text-destructive">{error}</p>
       ) : null}
