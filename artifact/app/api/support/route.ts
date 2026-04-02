@@ -1,82 +1,117 @@
-import { NextResponse } from "next/server";
-import { z } from "zod";
+import { NextResponse } from "next/server"
+import { z } from "zod"
 
-import { supportOutputs } from "@/lib/db/schema";
-import { db } from "@/lib/db";
-import { CATALOG_VERSION } from "@/lib/ephemeral/catalog";
-import { generateValidatedSupport } from "@/lib/genai/run-support";
-import { isScenarioId } from "@/lib/scenarios/ids";
-import { getParticipantIdFromCookies } from "@/lib/session";
-import { buildFallbackSpec, type ValidatedSupport } from "@/lib/support-schema";
-import { getTaskStateForScenario } from "@/lib/task-state";
-import { getTrialByIdForParticipant } from "@/lib/study";
+import { supportOutputs } from "@/lib/db/schema"
+import { db } from "@/lib/db"
+import { CATALOG_VERSION } from "@/lib/ephemeral/catalog"
+import { generateValidatedSupport } from "@/lib/genai/run-support"
+import { isScenarioId } from "@/lib/scenarios/ids"
+import { getParticipantIdFromCookies } from "@/lib/session"
+import { parseParticipantTaskSnapshotForScenario } from "@/lib/participant-task-snapshot"
+import { buildFallbackSpec, type ValidatedSupport } from "@/lib/support-schema"
+import { getTaskStateForScenario } from "@/lib/task-state"
+import { getScenarioVariantForCondition } from "@/lib/scenarios/variant"
+import { getTrialByIdForParticipant } from "@/lib/study"
 
 const bodySchema = z.object({
   participantId: z.string().uuid(),
   trialId: z.string().uuid(),
   scenarioId: z.string().min(1),
   trigger: z.enum(["initial", "hesitation", "explicit_request"]).optional(),
+  /** Current selections / draft outline / board columns; validated server-side. */
+  participantSnapshot: z.unknown().optional(),
   /** Dev only: skip model and return `buildFallbackSpec`. Requires NEXT_PUBLIC_DEBUG_SUPPORT=1. */
   debugForceFallback: z.boolean().optional(),
-});
+})
 
-const supportDebugEnabled = process.env.NEXT_PUBLIC_DEBUG_SUPPORT === "1";
+const supportDebugEnabled = process.env.NEXT_PUBLIC_DEBUG_SUPPORT === "1"
 
 export async function POST(req: Request): Promise<Response> {
-  const participantIdCookie = await getParticipantIdFromCookies();
-  const json: unknown = await req.json().catch(() => null);
-  const parsed = bodySchema.safeParse(json);
+  const participantIdCookie = await getParticipantIdFromCookies()
+  const json: unknown = await req.json().catch(() => null)
+  const parsed = bodySchema.safeParse(json)
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid body" }, { status: 400 })
   }
-  const { participantId, trialId, scenarioId, trigger, debugForceFallback } = parsed.data;
+  const {
+    participantId,
+    trialId,
+    scenarioId,
+    trigger,
+    participantSnapshot: snapshotRaw,
+    debugForceFallback,
+  } = parsed.data
   if (!participantIdCookie || participantIdCookie !== participantId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   if (!isScenarioId(scenarioId)) {
-    return NextResponse.json({ error: "Unknown scenario" }, { status: 400 });
+    return NextResponse.json({ error: "Unknown scenario" }, { status: 400 })
   }
-  const trial = await getTrialByIdForParticipant(participantId, trialId);
+  const trial = await getTrialByIdForParticipant(participantId, trialId)
   if (!trial || trial.completed) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Not found" }, { status: 404 })
   }
   if (trial.scenarioId !== scenarioId) {
-    return NextResponse.json({ error: "Scenario mismatch" }, { status: 400 });
+    return NextResponse.json({ error: "Scenario mismatch" }, { status: 400 })
   }
   if (trial.condition !== "ephemeral") {
-    return NextResponse.json({ error: "Support not available for this trial" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Support not available for this trial" },
+      { status: 400 }
+    )
   }
 
-  const taskState = getTaskStateForScenario(scenarioId);
+  const variant = getScenarioVariantForCondition(
+    participantId,
+    scenarioId,
+    trial.condition
+  )
+  const taskState = getTaskStateForScenario(scenarioId, variant)
   if (!taskState) {
-    return NextResponse.json({ error: "Invalid scenario state" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Invalid scenario state" },
+      { status: 500 }
+    )
   }
+
+  const participantSnapshot = parseParticipantTaskSnapshotForScenario(
+    scenarioId,
+    snapshotRaw
+  )
 
   let gen: {
-    result: ValidatedSupport;
-    catalogVersion: string;
-    modelName: string;
-    rawOutput: unknown;
-    usedFallback: boolean;
-  };
+    result: ValidatedSupport
+    catalogVersion: string
+    modelName: string
+    rawOutput: unknown
+    usedFallback: boolean
+  }
 
   if (debugForceFallback && supportDebugEnabled) {
-    const result = buildFallbackSpec(scenarioId);
+    const result = buildFallbackSpec(scenarioId, taskState)
     gen = {
       result,
       catalogVersion: CATALOG_VERSION,
       modelName: "debug-fallback",
       rawOutput: result.spec,
       usedFallback: true,
-    };
+    }
   } else {
-    gen = await generateValidatedSupport(scenarioId, taskState);
+    gen = await generateValidatedSupport(
+      scenarioId,
+      taskState,
+      participantSnapshot
+    )
   }
 
   try {
     await db.insert(supportOutputs).values({
       trialId,
-      inputState: taskState as unknown as Record<string, unknown>,
+      inputState: {
+        baselineTaskState: taskState,
+        participantSnapshot,
+        trigger: trigger ?? "initial",
+      } as unknown as Record<string, unknown>,
       modelName: gen.modelName,
       output: {
         catalogVersion: gen.catalogVersion,
@@ -85,19 +120,18 @@ export async function POST(req: Request): Promise<Response> {
         trigger: trigger ?? "initial",
         usedFallback: gen.usedFallback,
       } as unknown as Record<string, unknown>,
-    });
+    })
   } catch (e) {
-    const detail = e instanceof Error ? e.message : String(e);
-    console.error("[api/support] support_outputs insert failed:", e);
+    const detail = e instanceof Error ? e.message : String(e)
+    console.error("[api/support] support_outputs insert failed:", e)
     return NextResponse.json(
       {
         error: "support_outputs_insert_failed",
         detail,
-        hint:
-          "If the detail mentions an old column (e.g. prompt_version), run `bun run db:migrate` against this DATABASE_URL.",
+        hint: "If the detail mentions an old column (e.g. prompt_version), run `bun run db:migrate` against this DATABASE_URL.",
       },
-      { status: 500 },
-    );
+      { status: 500 }
+    )
   }
 
   return NextResponse.json({
@@ -109,5 +143,5 @@ export async function POST(req: Request): Promise<Response> {
       componentTypes: gen.result.componentTypes,
       trigger: trigger ?? "initial",
     },
-  });
+  })
 }

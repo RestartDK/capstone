@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
+import { interfaceVersionLegend } from "@/lib/interface-version";
 
 function PreferenceRow(props: {
   name: string;
@@ -41,6 +42,8 @@ function PreferenceRow(props: {
 }
 
 export function FinalQuestions(props: {
+  /** When set, shows which interface modes A and B referred to for this participant. */
+  baselineIsVersionA: boolean | null;
   onSubmit: (r: {
     final_preference: string;
     final_helpfulness: string;
@@ -63,6 +66,9 @@ export function FinalQuestions(props: {
     final_real_life &&
     !props.disabled;
 
+  const legend =
+    props.baselineIsVersionA != null ? interfaceVersionLegend(props.baselineIsVersionA) : null;
+
   return (
     <div className="mx-auto max-w-lg space-y-6 p-6">
       <h1 className="text-lg font-medium">Final questions</h1>
@@ -70,6 +76,15 @@ export function FinalQuestions(props: {
         You completed tasks using two versions of the interface, labeled{" "}
         <strong>Version A</strong> and <strong>Version B</strong>. Please compare them overall.
       </p>
+      {legend ? (
+        <div className="rounded-md border border-border bg-muted/40 px-3 py-2.5 text-sm text-muted-foreground">
+          <p className="font-medium text-foreground">Reminder</p>
+          <ul className="mt-2 list-inside list-disc space-y-1">
+            <li>{legend.lineA}</li>
+            <li>{legend.lineB}</li>
+          </ul>
+        </div>
+      ) : null}
       <PreferenceRow
         name="final_preference"
         label="Overall, which version of the interface did you prefer?"

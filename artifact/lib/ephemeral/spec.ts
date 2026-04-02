@@ -143,7 +143,6 @@ export type EphemeralNode = {
 
 export type EphemeralSpecMeta = {
   dismissible: boolean;
-  autoHideMs?: number | null;
 };
 
 export type EphemeralSpec = {
@@ -187,7 +186,6 @@ function parseNodeTree(raw: unknown, depth: number): EphemeralNode | null {
 
 const specMetaSchema = z.object({
   dismissible: z.boolean(),
-  autoHideMs: z.number().int().positive().nullable().optional(),
 });
 
 const specEnvelopeSchema = z.object({
@@ -196,40 +194,144 @@ const specEnvelopeSchema = z.object({
   meta: specMetaSchema,
 });
 
+function validateStructuralContainers(root: EphemeralNode): boolean {
+  function walk(node: EphemeralNode): boolean {
+    if (
+      node.type === "Stack" ||
+      node.type === "ViewportPanel" ||
+      node.type === "TargetOffsetPanel"
+    ) {
+      if (!node.children || node.children.length === 0) {
+        return false;
+      }
+    }
+    if (node.children) {
+      return node.children.every(walk);
+    }
+    return true;
+  }
+  return walk(root);
+}
+
 /**
- * Non-recursive Zod schema for structured model output (generateText + Output.object).
- * Depth matches MAX_SPEC_DEPTH = 4 (deepest nodes are leaves with no children).
+ * Provider-friendly subset of the runtime schema for `Output.object`.
+ *
+ * Keep this much simpler than the full parser/validator tree:
+ * - root is always a Stack for model output
+ * - only one level of nested panel containers is allowed
+ * - props use a single typed bag instead of a deep discriminated union
+ *
+ * Runtime acceptance still goes through `parseEphemeralSpec` + `allowlistWalk`, which apply the
+ * strict per-component prop schemas and structural rules used by the app.
  */
+const MODEL_LEAF_TYPES = [
+  "FocusMask",
+  "HighlightRing",
+  "PulseRing",
+  "ArrowCue",
+  "AnchoredTooltip",
+  "HintStack",
+  "StepRail",
+  "ConnectorLine",
+  "ComparisonStrip",
+  "InspectPanel",
+  "ConsequenceNote",
+  "FlowHtml",
+  "AnchoredHtml",
+] as const;
+
+const modelPropsSchema = z
+  .object({
+    gap: z.enum(["none", "sm", "md"]).optional(),
+    targetId: z.string().min(1).max(120).optional(),
+    strength: z.number().min(0).max(1).optional(),
+    durationMs: z.number().int().min(500).max(5000).optional(),
+    body: z.string().min(1).max(MAX_MESSAGE_LENGTH).optional(),
+    placement: placementEnum.optional(),
+    lines: z.array(z.string().min(1).max(200)).min(1).max(MAX_HINT_LINES).optional(),
+    targetIds: z.array(z.string().min(1).max(120)).min(2).max(6).optional(),
+    fromTargetId: z.string().min(1).max(120).optional(),
+    toTargetId: z.string().min(1).max(120).optional(),
+    leftTargetId: z.string().min(1).max(120).optional(),
+    rightTargetId: z.string().min(1).max(120).optional(),
+    headline: z.string().min(1).max(MAX_COMPARISON_HEADLINE).optional(),
+    title: z.string().min(1).max(MAX_INSPECT_TITLE).optional(),
+    summary: z.string().min(1).max(MAX_INSPECT_SUMMARY).optional(),
+    details: z
+      .array(z.string().min(1).max(MAX_INSPECT_DETAIL_LENGTH))
+      .max(MAX_INSPECT_DETAIL_LINES)
+      .optional(),
+    line: z.string().min(1).max(MAX_CONSEQUENCE_LINE).optional(),
+    topPct: z.number().min(0).max(100).optional(),
+    leftPct: z.number().min(0).max(100).optional(),
+    widthPct: z.number().min(15).max(96).optional(),
+    maxHeightVh: z.number().min(12).max(88).optional(),
+    zIndex: z.number().int().min(1).max(100).optional(),
+    pointerEvents: z.enum(["auto", "none"]).optional(),
+    widthPx: z.number().int().min(200).max(520).optional(),
+    shiftXPx: z.number().int().min(-480).max(480).optional(),
+    shiftYPx: z.number().int().min(-480).max(480).optional(),
+    edge: edgeEnum.optional(),
+    html: z.string().min(1).max(MAX_FLOW_HTML_LENGTH).optional(),
+  })
+  .strict();
+
+const modelNonEmptyPropsSchema = modelPropsSchema.refine(
+  (props) => Object.keys(props).length > 0,
+  "props must include at least one field",
+);
+
+const modelLeafNode = z.object({
+  type: z.enum(MODEL_LEAF_TYPES),
+  props: modelNonEmptyPropsSchema,
+});
+
+const modelViewportPanelNode = z.object({
+  type: z.literal("ViewportPanel"),
+  props: modelNonEmptyPropsSchema,
+  children: z.array(modelLeafNode).min(1).max(MAX_CHILDREN),
+});
+
+const modelTargetOffsetPanelNode = z.object({
+  type: z.literal("TargetOffsetPanel"),
+  props: modelNonEmptyPropsSchema,
+  children: z.array(modelLeafNode).min(1).max(MAX_CHILDREN),
+});
+
+const modelRootChildNode = z.discriminatedUnion("type", [
+  modelLeafNode,
+  modelViewportPanelNode,
+  modelTargetOffsetPanelNode,
+]);
+
+const modelRootStack = z.object({
+  type: z.literal("Stack"),
+  props: stackProps,
+  children: z.array(modelRootChildNode).min(1).max(MAX_CHILDREN),
+});
+
 /**
- * AI structured output: max parse depth matches MAX_SPEC_DEPTH (4).
- * Root (1) → L1 (2) → L2 (3) → leaf (4); leaves have no children in JSON.
+ * Zod schema for `generateText(..., Output.object({ schema }))` with Gemini.
+ * Gemini's `response_schema` rejects integer `enum` values (e.g. `version: 1`);
+ * use string `"1"` here and coerce before `parseEphemeralSpec` (which expects `version: 1`).
  */
-const specModelLeaf = z.object({
-  type: z.enum(EPHEMERAL_COMPONENT_TYPES),
-  props: z.record(z.string(), z.unknown()),
-});
-
-const specModelL2 = z.object({
-  type: z.enum(EPHEMERAL_COMPONENT_TYPES),
-  props: z.record(z.string(), z.unknown()),
-  children: z.array(specModelLeaf).max(MAX_CHILDREN).optional(),
-});
-
-const specModelL1 = z.object({
-  type: z.enum(EPHEMERAL_COMPONENT_TYPES),
-  props: z.record(z.string(), z.unknown()),
-  children: z.array(specModelL2).max(MAX_CHILDREN).optional(),
-});
-
 export const ephemeralSpecSchemaForModel = z.object({
-  version: z.literal(1),
-  root: z.object({
-    type: z.enum(EPHEMERAL_COMPONENT_TYPES),
-    props: z.record(z.string(), z.unknown()),
-    children: z.array(specModelL1).max(MAX_CHILDREN).optional(),
-  }),
+  version: z.literal("1"),
+  root: modelRootStack,
   meta: specMetaSchema,
 });
+
+/** Normalizes model JSON (version `"1"`) to app `EphemeralSpec` envelope (`version: 1`). */
+export function coerceEphemeralSpecVersionFromModel(raw: unknown): unknown {
+  if (raw === null || raw === undefined || typeof raw !== "object" || Array.isArray(raw)) {
+    return raw;
+  }
+  const o = raw as Record<string, unknown>;
+  if (o.version === "1") {
+    return { ...o, version: 1 };
+  }
+  return raw;
+}
 
 function validateNodeProps(node: EphemeralNode): boolean {
   const schemaForType = COMPONENT_PROPS_MAP[node.type];
@@ -281,9 +383,54 @@ export function allowlistWalk(
   const componentTypes = [...new Set(collectComponentTypes(spec.root))];
   const valid =
     validateNodeProps(spec.root) &&
+    validateStructuralContainers(spec.root) &&
     targetIds.every((id) => allowedTargets.includes(id)) &&
     validateFlowHtmlAncestors(spec.root);
   return { valid, targetIds, componentTypes };
+}
+
+/**
+ * Human-oriented detail when `parseEphemeralSpec` returns null (envelope vs tree).
+ * For server logs only.
+ */
+export function describeEphemeralSpecParseFailure(raw: unknown): string {
+  const envelope = specEnvelopeSchema.safeParse(raw);
+  if (!envelope.success) {
+    return envelope.error.issues
+      .slice(0, 6)
+      .map((i) => `${i.path.join(".") || "root"}: ${i.message}`)
+      .join("; ");
+  }
+  const root = parseNodeTree(envelope.data.root, 1);
+  if (!root) {
+    return "root subtree invalid (node shape, child count, or depth > MAX_SPEC_DEPTH)";
+  }
+  return "";
+}
+
+/**
+ * Why `allowlistWalk` would be false for an already-parsed spec (props, targets, FlowHtml rule).
+ */
+export function getSpecRuleViolations(
+  spec: EphemeralSpec,
+  allowedTargets: readonly string[],
+): string[] {
+  const issues: string[] = [];
+  if (!validateNodeProps(spec.root)) {
+    issues.push("props_schema_mismatch_on_one_or_more_nodes");
+  }
+  const targetIds = collectTargetIds(spec.root);
+  const disallowed = [...new Set(targetIds.filter((id) => !allowedTargets.includes(id)))];
+  if (disallowed.length > 0) {
+    issues.push(`targets_not_allowlisted: ${disallowed.join(", ")}`);
+  }
+  if (!validateFlowHtmlAncestors(spec.root)) {
+    issues.push("flow_html_not_under_viewport_panel");
+  }
+  if (!validateStructuralContainers(spec.root)) {
+    issues.push("stack_viewport_or_target_offset_missing_children");
+  }
+  return issues;
 }
 
 /** FlowHtml may only appear under a ViewportPanel (any depth below it). */

@@ -97,7 +97,11 @@ export default function FinalPage(): React.ReactElement {
       {error ? (
         <p className="px-6 pt-6 text-sm text-destructive">{error}</p>
       ) : null}
-      <FinalQuestions onSubmit={(r) => void onSubmit(r)} disabled={loading} />
+      <FinalQuestions
+        baselineIsVersionA={state.baselineIsVersionA}
+        onSubmit={(r) => void onSubmit(r)}
+        disabled={loading}
+      />
     </div>
   );
 }

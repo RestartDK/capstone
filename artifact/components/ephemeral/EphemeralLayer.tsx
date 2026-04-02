@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactElement } from "react";
 import { createPortal } from "react-dom";
 
 import { normalizeHueDegrees } from "@/lib/ephemeral/debug-settings";
@@ -26,7 +26,7 @@ export function EphemeralLayer(props: {
   visualStress?: number;
   /** 0–360° CSS hue-rotate on overlay subtree; orthogonal to stress. */
   chromaticShiftDegrees?: number;
-}): React.ReactElement | null {
+}): ReactElement | null {
   if (typeof document === "undefined" || !props.spec) {
     return null;
   }

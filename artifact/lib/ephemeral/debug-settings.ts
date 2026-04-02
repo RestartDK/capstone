@@ -1,3 +1,5 @@
+import { DEFAULT_SUPPORT_HESITATION_MS } from "@/lib/support-timing";
+
 export type EphemeralDebugSettings = {
   /** Delay before auto support_triggered + fetch (0 = off). */
   hesitationMs: number;
@@ -21,7 +23,7 @@ export type EphemeralDebugSettings = {
 export const EPHEMERAL_DEBUG_STORAGE_KEY = "ephemeral-debug-settings-v1";
 
 export const DEFAULT_EPHEMERAL_DEBUG_SETTINGS: EphemeralDebugSettings = {
-  hesitationMs: 14_000,
+  hesitationMs: DEFAULT_SUPPORT_HESITATION_MS,
   supportOnTrialStart: false,
   visualStress: 0,
   skinAllowlistedTargets: false,

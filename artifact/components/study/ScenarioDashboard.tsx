@@ -1,79 +1,26 @@
-"use client";
+"use client"
 
-import * as React from "react";
+import * as React from "react"
 
-import { cn } from "@/lib/utils";
-
-export type DashboardOption = {
-  id: string;
-  title: string;
-  subtitle: string;
-  metric: string;
-  trend: string;
-  footnote?: string;
-  sparkline: number[];
-  updatedAt: string;
-};
-
-const OPTIONS: DashboardOption[] = [
-  {
-    id: "payments-backlog-card",
-    title: "Payments backlog",
-    subtitle: "Queued payouts, exceptions, wallet errors",
-    metric: "212 open",
-    trend: "+18% vs last week",
-    footnote: "Wallet ERR rate 3.4% (+0.9pp) · chargeback notices +22% WoW",
-    sparkline: [140, 155, 168, 175, 190, 198, 212],
-    updatedAt: "Updated 12 min ago",
-  },
-  {
-    id: "engineering-backlog-card",
-    title: "Engineering backlog",
-    subtitle: "Feature and bug queue",
-    metric: "94 open",
-    trend: "flat vs last week",
-    footnote: "No acute incident; platform stability nominal",
-    sparkline: [91, 96, 93, 95, 92, 94, 94],
-    updatedAt: "Updated 28 min ago",
-  },
-  {
-    id: "sla-breaches-card",
-    title: "SLA breaches",
-    subtitle: "Tickets past target response · class mix",
-    metric: "17 this week",
-    trend: "+4 vs prior week",
-    footnote: "Support notes: cluster aligns with payout-related ticket class",
-    sparkline: [8, 9, 11, 10, 13, 15, 17],
-    updatedAt: "Updated 6 min ago",
-  },
-  {
-    id: "customer-sentiment-card",
-    title: "Customer sentiment",
-    subtitle: "Rolling survey (lagging indicator)",
-    metric: "4.1 / 5",
-    trend: "slight dip",
-    footnote: "Qualitative: frustration themes mention payout delays",
-    sparkline: [44, 45, 44, 43, 42, 42, 41],
-    updatedAt: "Updated 1 hr ago",
-  },
-];
+import type { DashboardTaskState } from "@/lib/scenarios/task-state"
+import { cn } from "@/lib/utils"
 
 function MiniSparkline(props: { points: number[] }): React.ReactElement {
-  const { points } = props;
-  const min = Math.min(...points);
-  const max = Math.max(...points);
-  const range = max - min || 1;
-  const h = 24;
-  const w = 56;
-  const step = w / (points.length - 1);
+  const { points } = props
+  const min = Math.min(...points)
+  const max = Math.max(...points)
+  const range = max - min || 1
+  const h = 24
+  const w = 56
+  const step = w / (points.length - 1)
 
   const d = points
     .map((v, i) => {
-      const x = i * step;
-      const y = h - ((v - min) / range) * h;
-      return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
+      const x = i * step
+      const y = h - ((v - min) / range) * h
+      return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`
     })
-    .join(" ");
+    .join(" ")
 
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="h-6 w-14" aria-hidden>
@@ -86,7 +33,7 @@ function MiniSparkline(props: { points: number[] }): React.ReactElement {
         strokeLinejoin="round"
       />
     </svg>
-  );
+  )
 }
 
 const SIDEBAR_ICONS = [
@@ -115,15 +62,17 @@ const SIDEBAR_ICONS = [
     active: false,
     path: "M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4",
   },
-];
+]
 
-const NAV_TABS = ["Overview", "Incidents", "Metrics", "Settings"];
+const NAV_TABS = ["Overview", "Messages", "Tasks", "Notes"]
 
 export function ScenarioDashboard(props: {
-  selectedId: string | null;
-  onSelect: (id: string) => void;
-  disabled?: boolean;
+  taskState: DashboardTaskState
+  selectedId: string | null
+  onSelect: (id: string) => void
+  disabled?: boolean
 }): React.ReactElement {
+  const { taskState } = props
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-background shadow-lg">
       {/* Top navigation bar */}
@@ -131,8 +80,8 @@ export function ScenarioDashboard(props: {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="h-5 w-5 rounded-md bg-indigo-500" />
-            <span className="text-sm font-semibold text-foreground tracking-tight">
-              OpsView
+            <span className="text-sm font-semibold tracking-tight text-foreground">
+              {taskState.workspaceTitle}
             </span>
           </div>
           <nav className="hidden items-center gap-0.5 sm:flex">
@@ -143,7 +92,7 @@ export function ScenarioDashboard(props: {
                   "rounded-md px-2.5 py-1 text-xs font-medium",
                   tab === "Overview"
                     ? "bg-muted text-foreground"
-                    : "text-muted-foreground",
+                    : "text-muted-foreground"
                 )}
               >
                 {tab}
@@ -152,7 +101,7 @@ export function ScenarioDashboard(props: {
           </nav>
         </div>
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
-          <span className="hidden sm:inline">Last sync: 2 min ago</span>
+          <span className="hidden sm:inline">Updated 2 min ago</span>
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -181,7 +130,7 @@ export function ScenarioDashboard(props: {
                 "flex h-8 w-8 items-center justify-center rounded-lg",
                 icon.active
                   ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground/60",
+                  : "text-muted-foreground/60"
               )}
             >
               <svg
@@ -204,40 +153,43 @@ export function ScenarioDashboard(props: {
         <div className="min-w-0 flex-1 p-4">
           <div className="mb-4">
             <h1 className="text-sm font-semibold text-foreground">
-              Team Operations{" "}
-              <span className="font-normal text-muted-foreground">
-                · Morning Check-in
-              </span>
+              {taskState.title}
             </h1>
             <p className="mt-0.5 text-xs text-muted-foreground">
-              Wed 2 Apr 2025 · 09:15 UTC
+              {taskState.timestampLabel}
             </p>
           </div>
 
           <div className="space-y-4">
             <div
-              className="rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground leading-relaxed"
+              className="rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs leading-relaxed text-muted-foreground"
               data-ephemeral-id="alerts-strip"
             >
-              <span className="font-medium text-foreground">Alerts: </span>
-              <span className="mr-2 inline-flex items-center gap-1">
-                <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
-                Payments delivery risk increased week over week
-              </span>
-              <span className="mr-2 inline-flex items-center gap-1">
-                <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
-                SLA misses concentrated in payout-related ticket class
-              </span>
-              <span className="inline-flex items-center gap-1">
-                <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-green-500" />
-                Core platform stability returned to baseline
-              </span>
+              <span className="font-medium text-foreground">Updates: </span>
+              {taskState.alerts.map((alert, index) => (
+                <span
+                  key={alert.id}
+                  className="mr-2 inline-flex items-center gap-1"
+                >
+                  <span
+                    className={cn(
+                      "inline-block h-1.5 w-1.5 shrink-0 rounded-full",
+                      index === 0
+                        ? "bg-red-500"
+                        : index === 1
+                          ? "bg-amber-500"
+                          : "bg-green-500"
+                    )}
+                  />
+                  {alert.label}
+                </span>
+              ))}
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-              {OPTIONS.map((opt) => {
+              {taskState.cards.map((opt) => {
                 const trendNegative =
-                  opt.trend.startsWith("+") || opt.trend.includes("dip");
+                  opt.trend.startsWith("+") || opt.trend.includes("dip")
                 return (
                   <button
                     key={opt.id}
@@ -250,7 +202,7 @@ export function ScenarioDashboard(props: {
                       "hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
                       props.selectedId === opt.id &&
                         "border-primary ring-2 ring-primary/30",
-                      props.disabled && "pointer-events-none opacity-60",
+                      props.disabled && "pointer-events-none opacity-60"
                     )}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -267,7 +219,7 @@ export function ScenarioDashboard(props: {
                           "shrink-0",
                           trendNegative
                             ? "text-red-500/70"
-                            : "text-green-500/70",
+                            : "text-green-500/70"
                         )}
                       >
                         <MiniSparkline points={opt.sparkline} />
@@ -282,7 +234,7 @@ export function ScenarioDashboard(props: {
                           "rounded px-1 py-0.5 font-mono text-xs",
                           trendNegative
                             ? "bg-red-500/10 text-red-600 dark:text-red-400"
-                            : "bg-green-500/10 text-green-600 dark:text-green-400",
+                            : "bg-green-500/10 text-green-600 dark:text-green-400"
                         )}
                       >
                         {opt.trend}
@@ -297,14 +249,12 @@ export function ScenarioDashboard(props: {
                       {opt.updatedAt}
                     </div>
                   </button>
-                );
+                )
               })}
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
-
-export { OPTIONS as DASHBOARD_OPTIONS };

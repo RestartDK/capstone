@@ -1,26 +1,57 @@
-import type { ScenarioId } from "./ids";
+import type { ScenarioId } from "./ids"
+import type { ScenarioVariant } from "./variant"
+
+export type DashboardCardState = {
+  id: string
+  title: string
+  subtitle: string
+  metric: string
+  trend: string
+  footnote?: string
+  sparkline: number[]
+  updatedAt: string
+}
 
 export type DashboardTaskState = {
-  scenarioId: "dashboard-priority";
-  metrics: { id: string; label: string; value: string | number }[];
-  alerts: { id: string; label: string }[];
-};
+  scenarioId: "dashboard-priority"
+  variant: ScenarioVariant
+  workspaceTitle: string
+  title: string
+  timestampLabel: string
+  cards: DashboardCardState[]
+  alerts: { id: string; label: string }[]
+}
 
 export type SlidesTaskState = {
-  scenarioId: "slides-outline-refine";
-  reviewGoal: string;
-  slides: { id: string; title: string; summary: string }[];
-};
+  scenarioId: "slides-outline-refine"
+  variant: ScenarioVariant
+  reviewGoal: string
+  deckLabel: string
+  deckDeadlineLabel: string
+  slides: { id: string; title: string; summary: string; bullets: string[] }[]
+}
+
+export type PmTicketState = {
+  id: string
+  title: string
+  priority: string
+  detail: string
+  acceptanceCriteria: string
+  linkedIncident: string | null
+  estimate: string
+}
 
 export type PmSprintTaskState = {
-  scenarioId: "pm-sprint-handoff";
-  sprintGoal: string;
-  risks: { id: string; label: string }[];
-  backlog: { id: string; title: string; priority: string; detail: string }[];
-};
+  scenarioId: "pm-sprint-handoff"
+  variant: ScenarioVariant
+  boardLabel: string
+  sprintGoal: string
+  risks: { id: string; label: string }[]
+  backlog: PmTicketState[]
+}
 
-export type TaskState = DashboardTaskState | SlidesTaskState | PmSprintTaskState;
+export type TaskState = DashboardTaskState | SlidesTaskState | PmSprintTaskState
 
 export function taskStateScenarioId(state: TaskState): ScenarioId {
-  return state.scenarioId;
+  return state.scenarioId
 }

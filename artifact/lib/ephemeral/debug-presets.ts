@@ -35,7 +35,7 @@ export function buildEphemeralDebugPreset(
   const t1 = ids[1] ?? t0;
   const t2 = ids[2] ?? t0;
 
-  const baseMeta = { dismissible: true, autoHideMs: null };
+  const baseMeta = { dismissible: true };
 
   if (preset === "viewport_flow") {
     return {
