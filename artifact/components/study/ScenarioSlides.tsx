@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type SlideData = {
@@ -116,31 +117,36 @@ export function ScenarioSlides(props: {
                 props.disabled && "pointer-events-none opacity-60",
               )}
             >
-              <button
-                type="button"
-                className="flex w-full items-start justify-between p-4 text-left text-sm"
-                disabled={props.disabled}
-                onClick={() => handleCardClick(slide.id)}
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="font-medium text-foreground">{slide.title}</div>
-                  {!isExpanded && (
-                    <ul className="mt-2 list-inside list-disc text-xs text-muted-foreground">
-                      {slide.bullets.map((b, i) => (
-                        <li key={i}>{b || <span className="italic opacity-50">empty</span>}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <button
+              <div className="flex w-full items-start">
+                <Button
                   type="button"
-                  className="ml-2 shrink-0 rounded px-1.5 py-0.5 text-[10px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  variant="ghost"
+                  disabled={props.disabled}
+                  onClick={() => handleCardClick(slide.id)}
+                  className="h-auto min-w-0 flex-1 flex-col items-stretch justify-start gap-0 rounded-none p-4 text-left text-sm font-normal hover:bg-muted/50"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-foreground">{slide.title}</div>
+                    {!isExpanded && (
+                      <ul className="mt-2 list-inside list-disc text-xs text-muted-foreground">
+                        {slide.bullets.map((b, i) => (
+                          <li key={i}>{b || <span className="italic opacity-50">empty</span>}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="xs"
+                  disabled={props.disabled}
                   onClick={(e) => toggleExpand(e, slide.id)}
-                  tabIndex={-1}
+                  className="mt-4 mr-4 shrink-0 px-1.5 py-0.5 text-xs font-normal text-muted-foreground"
                 >
                   {isExpanded ? "collapse" : "edit"}
-                </button>
-              </button>
+                </Button>
+              </div>
 
               {isExpanded && (
                 <div
@@ -158,23 +164,27 @@ export function ScenarioSlides(props: {
                         placeholder="Bullet point…"
                       />
                       {slide.bullets.length > 1 && (
-                        <button
+                        <Button
                           type="button"
+                          variant="ghost"
+                          size="xs"
                           onClick={() => removeBullet(slide.id, bi)}
-                          className="shrink-0 rounded px-1 py-0.5 text-[10px] text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                          className="h-6 min-w-6 shrink-0 px-1 py-0 text-xs font-normal text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                         >
                           ×
-                        </button>
+                        </Button>
                       )}
                     </div>
                   ))}
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="xs"
                     onClick={() => addBullet(slide.id)}
-                    className="rounded px-2 py-0.5 text-[10px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                    className="h-6 px-2 text-xs font-normal text-muted-foreground"
                   >
                     + add bullet
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>

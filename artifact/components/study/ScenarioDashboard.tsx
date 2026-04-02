@@ -126,14 +126,14 @@ export function ScenarioDashboard(props: {
                 <span className="font-mono text-sm font-semibold text-foreground">{opt.metric}</span>
                 <span
                   className={cn(
-                    "rounded px-1 py-0.5 font-mono text-[10px]",
+                    "rounded px-1 py-0.5 font-mono text-xs",
                     trendNegative ? "bg-red-500/10 text-red-600 dark:text-red-400" : "bg-green-500/10 text-green-600 dark:text-green-400",
                   )}
                 >
                   {opt.trend}
                 </span>
               </div>
-              <div className="mt-2 text-[10px] text-muted-foreground/60">{opt.updatedAt}</div>
+              <div className="mt-2 text-xs text-muted-foreground/60">{opt.updatedAt}</div>
             </button>
           );
         })}

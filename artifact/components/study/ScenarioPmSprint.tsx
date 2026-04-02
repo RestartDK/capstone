@@ -98,7 +98,7 @@ export function ScenarioPmSprint(props: {
           >
             Backlog
           </div>
-          <div className="text-[10px] text-muted-foreground">
+          <div className="text-xs text-muted-foreground">
             {TICKETS.length} items · pick one to move to In&nbsp;progress
           </div>
         </div>
@@ -119,18 +119,18 @@ export function ScenarioPmSprint(props: {
             >
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-medium text-foreground">{t.title}</span>
-                <span className={cn("rounded px-1.5 py-0.5 font-mono text-[10px] font-semibold", BADGE_COLORS[t.badge] ?? BADGE_COLORS.P2)}>
+                <span className={cn("rounded px-1.5 py-0.5 font-mono text-xs font-semibold", BADGE_COLORS[t.badge] ?? BADGE_COLORS.P2)}>
                   {t.badge}
                 </span>
                 {t.linkedIncident && (
-                  <span className="rounded bg-red-500/10 px-1.5 py-0.5 font-mono text-[10px] text-red-600 dark:text-red-400">
+                  <span className="rounded bg-red-500/10 px-1.5 py-0.5 font-mono text-xs text-red-600 dark:text-red-400">
                     {t.linkedIncident}
                   </span>
                 )}
-                <span className="ml-auto font-mono text-[10px] text-muted-foreground">{t.estimate}</span>
+                <span className="ml-auto font-mono text-xs text-muted-foreground">{t.estimate}</span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">{t.detail}</p>
-              <p className="mt-1 text-[10px] text-muted-foreground/70">
+              <p className="mt-1 text-xs text-muted-foreground/70">
                 <span className="font-medium">AC:</span> {t.acceptanceCriteria}
               </p>
             </button>

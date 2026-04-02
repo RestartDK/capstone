@@ -31,7 +31,7 @@ function LikertRow(props: {
           </label>
         ))}
       </div>
-      <p className="text-[0.65rem] text-muted-foreground">1 = Not at all · 7 = Extremely</p>
+      <p className="text-xs text-muted-foreground">1 = Not at all · 7 = Extremely</p>
     </div>
   );
 }
@@ -71,7 +71,7 @@ export function PostTrialQuestions(props: {
         value={control}
         onChange={setControl}
       />
-      <p className="text-[0.65rem] text-muted-foreground">
+      <p className="text-xs text-muted-foreground">
         Control: 1 = No control at all · 7 = Complete control
       </p>
       <Button

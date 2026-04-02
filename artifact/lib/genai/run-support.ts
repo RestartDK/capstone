@@ -1,5 +1,5 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { generateObject } from "ai";
+import { generateText, Output } from "ai";
 
 import { buildSupportSystemPrompt, buildSupportUserPrompt } from "@/lib/prompts";
 import {
@@ -46,15 +46,28 @@ export async function generateValidatedSupport(
   const google = createGoogleGenerativeAI({ apiKey });
 
   try {
-    const { object } = await generateObject({
+    const { output: object } = await generateText({
       model: google(modelId),
-      schema: ephemeralSpecSchemaForModel,
-      schemaName: "EphemeralSpec",
-      schemaDescription:
-        "Tree-shaped ephemeral UI spec: a root node with typed children, each targeting allowed page elements.",
       system: buildSupportSystemPrompt(scenarioId),
       prompt: buildSupportUserPrompt(taskState),
+      output: Output.object({
+        schema: ephemeralSpecSchemaForModel,
+        name: "EphemeralSpec",
+        description:
+          "Tree-shaped ephemeral UI spec: a root node with typed children, each targeting allowed page elements.",
+      }),
     });
+
+    if (!object) {
+      const fallback = buildFallbackSpec(scenarioId);
+      return {
+        result: fallback,
+        catalogVersion: CATALOG_VERSION,
+        modelName: modelId,
+        rawOutput: null,
+        usedFallback: true,
+      };
+    }
 
     const validated = parseSpecForScenario(scenarioId, object);
     if (validated) {

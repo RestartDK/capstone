@@ -128,7 +128,7 @@ const specEnvelopeSchema = z.object({
 });
 
 /**
- * Non-recursive Zod schema for generateObject (model-facing).
+ * Non-recursive Zod schema for structured model output (generateText + Output.object).
  * Tree validation happens post-hoc in parseEphemeralSpec.
  */
 export const ephemeralSpecSchemaForModel = z.object({
