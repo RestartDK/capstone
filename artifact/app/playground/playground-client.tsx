@@ -25,13 +25,17 @@ import type {
 import { buildParticipantTaskSnapshotPayload } from "@/lib/participant-task-snapshot"
 import { getTaskStateForScenario } from "@/lib/task-state"
 import { SCENARIO_IDS, type ScenarioId } from "@/lib/scenarios/ids"
-import { getScenarioEntry, SLIDES_START_ORDER } from "@/lib/scenarios/registry"
+import {
+  getScenarioEntry,
+  SLIDES_START_ORDER,
+} from "@/lib/scenarios/registry"
+import type { ScenarioVariant } from "@/lib/scenarios/variant"
 import { cn } from "@/lib/utils"
 
 const PLAYGROUND_TRIAL_LOG_ID = "playground"
 const INITIAL_SLIDES_ATTEMPT: SlidesAttemptState = {
   hasReordered: false,
-  hasEditedProblem: false,
+  hasEditedRefinementSlide: false,
   readyToSubmit: false,
 }
 
@@ -56,6 +60,8 @@ export function PlaygroundClient(): React.ReactElement {
   const [scenarioId, setScenarioId] = React.useState<ScenarioId>(
     SCENARIO_IDS[0]
   )
+  const [playgroundVariant, setPlaygroundVariant] =
+    React.useState<ScenarioVariant>("a")
   const [selected, setSelected] = React.useState<string | null>(null)
   const [, setSlidesAttempt] = React.useState<SlidesAttemptState>(
     INITIAL_SLIDES_ATTEMPT
@@ -63,6 +69,7 @@ export function PlaygroundClient(): React.ReactElement {
   const [slidesLive, setSlidesLive] = React.useState<{
     order: string[]
     problemBullets: string[]
+    metricsBullets: string[]
   } | null>(null)
   const [pmBoard, setPmBoard] = React.useState<Record<
     string,
@@ -168,6 +175,7 @@ export function PlaygroundClient(): React.ReactElement {
   React.useEffect(() => {
     if (prevScenarioRef.current === scenarioId) return
     prevScenarioRef.current = scenarioId
+    setPlaygroundVariant("a")
     setSelected(null)
     setSlidesAttempt(INITIAL_SLIDES_ATTEMPT)
     setSlidesLive(null)
@@ -221,10 +229,13 @@ export function PlaygroundClient(): React.ReactElement {
     supportShownRef.current = true
   }
 
-  const entry = React.useMemo(() => getScenarioEntry(scenarioId), [scenarioId])
+  const entry = React.useMemo(
+    () => getScenarioEntry(scenarioId, playgroundVariant),
+    [scenarioId, playgroundVariant]
+  )
   const taskState = React.useMemo(
-    () => getTaskStateForScenario(scenarioId),
-    [scenarioId]
+    () => getTaskStateForScenario(scenarioId, playgroundVariant),
+    [scenarioId, playgroundVariant]
   )
   const taskHeading = entry?.taskHeading ?? scenarioId
   const preamble = entry?.scenarioPreamble ?? null
@@ -237,7 +248,11 @@ export function PlaygroundClient(): React.ReactElement {
   const onPmWorkflowAnswerChange = React.useCallback(() => {}, [])
 
   const onLiveOutlineChange = React.useCallback(
-    (live: { order: string[]; problemBullets: string[] }) => {
+    (live: {
+      order: string[]
+      problemBullets: string[]
+      metricsBullets: string[]
+    }) => {
       setSlidesLive(live)
     },
     []
@@ -276,9 +291,12 @@ export function PlaygroundClient(): React.ReactElement {
       />
     ) : scenarioId === "slides-outline-refine" ? (
       <ScenarioSlides
-        key={scenarioId}
+        key={`${scenarioId}-${playgroundVariant}`}
         taskState={taskState as never}
         initialOrder={SLIDES_START_ORDER}
+        refinementTargetSlideId={
+          playgroundVariant === "b" ? "slide-metrics-card" : "slide-problem-card"
+        }
         onAnswerPayloadChange={onRefinementAnswerChange}
         onLiveOutlineChange={onLiveOutlineChange}
         onAttemptStateChange={onSlidesAttemptChange}
@@ -343,6 +361,23 @@ export function PlaygroundClient(): React.ReactElement {
               })}
             </select>
           </label>
+          {scenarioId === "slides-outline-refine" ? (
+            <label className="flex min-w-[min(100%,200px)] flex-col gap-1">
+              <span className="text-xs text-muted-foreground">
+                Slides variant
+              </span>
+              <select
+                className="rounded-md border border-input bg-background px-2 py-2 text-sm"
+                value={playgroundVariant}
+                onChange={(e) =>
+                  setPlaygroundVariant(e.target.value as ScenarioVariant)
+                }
+              >
+                <option value="a">A — refine Problem slide</option>
+                <option value="b">B — refine Metrics slide</option>
+              </select>
+            </label>
+          ) : null}
         </div>
         <div className="mx-auto mt-3 w-full max-w-5xl rounded-md border border-border bg-muted/25 px-3 py-2.5">
           <p className="mb-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">

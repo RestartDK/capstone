@@ -53,6 +53,7 @@ const EPHEMERAL_TARGETS = {
     "slide-canvas-header",
     "slide-problem-hint",
     "slide-problem-bullets",
+    "slide-metrics-bullets",
   ] as const,
   pm: [
     "ticket-docs-lag",
@@ -499,15 +500,15 @@ export const SCENARIO_REGISTRY: Record<
       correctAnswerId: "slides-refinement-json",
       ephemeralTargets: EPHEMERAL_TARGETS.slides,
       scenarioPreamble:
-        "You are finishing a slide deck for a group presentation in one of your university classes the next day. The order of the slides is jumbled, and the slide about the problem still hints at trouble without saying clearly what might go wrong.",
+        "You are finishing a slide deck for a group presentation in one of your university classes the next day. The order of the slides is jumbled, and the evidence slide still reads like placeholder numbers instead of backing up the story.",
       taskHeading:
-        "Fix the deck before you submit it: put the small slides in a sensible order, then edit the Problem slide so it clearly states a real risk (for example the demo failing, running over time, or part of the group not being ready).",
+        "Fix the deck before you submit it: put the small slides in a sensible order, then edit the Metrics snapshot slide so the numbers clearly support the problem (for example rehearsal gaps, time risk, or demo reliability).",
       participantOutcome: [
         "Drag each small slide card (the whole card, not only the dots) left or right until the order is: title, then problem, then numbers, then what you are asking for.",
-        "Click the Problem slide in the row so it shows large above. Type in that large view to name the presentation or demo risk in plain language.",
+        "Click the Metrics snapshot slide in the row so it shows large above. Type in that large view to make the evidence concrete.",
       ],
       supportUserPromptPreamble:
-        "Scenario: refinement before a university group presentation in a lightweight deck editor. Task: help the user reorder the narrative and strengthen the Problem slide with an explicit risk line, not just point at a weak slide.",
+        "Scenario: refinement before a university group presentation in a lightweight deck editor. Task: help the user reorder the narrative and strengthen the Metrics slide with evidence that supports the problem, not just tidy the outline.",
       buildTaskState: buildSlidesVariantB,
     },
   },
@@ -545,7 +546,10 @@ export const SCENARIO_REGISTRY: Record<
   },
 }
 
-export function isSlidesRefinementPayloadCorrect(raw: string): boolean {
+export function isSlidesRefinementPayloadCorrect(
+  raw: string,
+  variant: ScenarioVariant = "a"
+): boolean {
   let parsed: unknown
   try {
     parsed = JSON.parse(raw) as unknown
@@ -553,12 +557,27 @@ export function isSlidesRefinementPayloadCorrect(raw: string): boolean {
     return false
   }
   if (typeof parsed !== "object" || parsed === null) return false
-  const o = parsed as { order?: unknown; problemBullets?: unknown }
+  const o = parsed as {
+    order?: unknown
+    problemBullets?: unknown
+    metricsBullets?: unknown
+  }
   if (!Array.isArray(o.order) || !o.order.every((x) => typeof x === "string"))
     return false
   if (o.order.length !== SLIDES_CANONICAL_ORDER.length) return false
   for (let i = 0; i < SLIDES_CANONICAL_ORDER.length; i++) {
     if (o.order[i] !== SLIDES_CANONICAL_ORDER[i]) return false
+  }
+  if (variant === "b") {
+    if (
+      !Array.isArray(o.metricsBullets) ||
+      !o.metricsBullets.every((x) => typeof x === "string")
+    ) {
+      return false
+    }
+    const metricsText = o.metricsBullets.join(" ").trim()
+    if (metricsText.length < 8) return false
+    return PROBLEM_RISK_PATTERN.test(metricsText)
   }
   if (
     !Array.isArray(o.problemBullets) ||
@@ -616,7 +635,7 @@ export function isAnswerCorrectForScenario(
     return false
   }
   if (scenarioId === "slides-outline-refine") {
-    return isSlidesRefinementPayloadCorrect(answerSubmitted)
+    return isSlidesRefinementPayloadCorrect(answerSubmitted, variant)
   }
   if (scenarioId === "pm-sprint-handoff") {
     return isPmWorkflowPayloadCorrect(scenarioId, answerSubmitted, variant)

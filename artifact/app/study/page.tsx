@@ -84,7 +84,7 @@ type SupportDebugInfo = {
 
 const INITIAL_SLIDES_ATTEMPT: SlidesAttemptState = {
   hasReordered: false,
-  hasEditedProblem: false,
+  hasEditedRefinementSlide: false,
   readyToSubmit: false,
 }
 
@@ -102,7 +102,7 @@ function participantChecklistCompletion(
   if (!isScenarioId(scenarioId)) {
     steps = []
   } else if (scenarioId === "slides-outline-refine") {
-    steps = [slidesAttempt.hasReordered, slidesAttempt.hasEditedProblem]
+    steps = [slidesAttempt.hasReordered, slidesAttempt.hasEditedRefinementSlide]
   } else if (scenarioId === "dashboard-priority") {
     steps = [selected != null]
   } else if (scenarioId === "pm-sprint-handoff") {
@@ -124,6 +124,7 @@ export default function StudyPage(): React.ReactElement {
   const [slidesLive, setSlidesLive] = React.useState<{
     order: string[]
     problemBullets: string[]
+    metricsBullets: string[]
   } | null>(null)
   const [slidesAttempt, setSlidesAttempt] = React.useState<SlidesAttemptState>(
     INITIAL_SLIDES_ATTEMPT
@@ -471,7 +472,11 @@ export default function StudyPage(): React.ReactElement {
   }, [])
 
   const onLiveOutlineChange = React.useCallback(
-    (live: { order: string[]; problemBullets: string[] }) => {
+    (live: {
+      order: string[]
+      problemBullets: string[]
+      metricsBullets: string[]
+    }) => {
       setSlidesLive(live)
     },
     []
@@ -482,7 +487,7 @@ export default function StudyPage(): React.ReactElement {
       dismissSupport("used", {
         scenarioAction: "slides_attempt_completed",
         hasReordered: attempt.hasReordered,
-        hasEditedProblem: attempt.hasEditedProblem,
+        hasEditedRefinementSlide: attempt.hasEditedRefinementSlide,
       })
     }
     prevSlidesReadyRef.current = attempt.readyToSubmit
@@ -696,6 +701,9 @@ export default function StudyPage(): React.ReactElement {
           getTaskStateForScenario(sid, fallbackVariant)) as SlidesTaskState
       }
       initialOrder={SLIDES_START_ORDER}
+      refinementTargetSlideId={
+        scenarioVariant === "b" ? "slide-metrics-card" : "slide-problem-card"
+      }
       onAnswerPayloadChange={onRefinementAnswerChange}
       onLiveOutlineChange={onLiveOutlineChange}
       onAttemptStateChange={onSlidesAttemptChange}

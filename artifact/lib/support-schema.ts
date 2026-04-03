@@ -90,6 +90,11 @@ export function buildFallbackSpec(
   }
 
   if (scenarioId === "slides-outline-refine") {
+    const variant =
+      taskState?.scenarioId === "slides-outline-refine"
+        ? taskState.variant
+        : "a"
+    const isMetricsRefinement = variant === "b"
     const spec: EphemeralSpec = {
       version: 1,
       root: {
@@ -102,30 +107,47 @@ export function buildFallbackSpec(
           },
           {
             type: "ConnectorLine",
-            props: {
-              fromTargetId: "slide-title-card",
-              toTargetId: "slide-problem-card",
-            },
+            props: isMetricsRefinement
+              ? {
+                  fromTargetId: "slide-problem-card",
+                  toTargetId: "slide-metrics-card",
+                }
+              : {
+                  fromTargetId: "slide-title-card",
+                  toTargetId: "slide-problem-card",
+                },
           },
           {
             type: "AnchoredHtml",
-            props: {
-              targetId: "slide-problem-bullets",
-              html: '<div style="display:flex;flex-direction:column;gap:8px"><h4 style="margin:0;font-weight:600">Strengthen this slide</h4><p style="margin:0">Replace vague language with a concrete risk — e.g. <strong>delays</strong>, <strong>complaint spike</strong>, or <strong>missed goals</strong>.</p><svg viewBox="0 0 200 32" width="200" height="32" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="8" width="80" height="16" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/><text x="40" y="20" text-anchor="middle" font-size="9" fill="#92400e">Vague pain</text><line x1="84" y1="16" x2="112" y2="16" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="112,12 120,16 112,20" fill="#f59e0b"/><rect x="120" y="8" width="80" height="16" rx="4" fill="#d1fae5" stroke="#10b981" stroke-width="1"/><text x="160" y="20" text-anchor="middle" font-size="9" fill="#065f46">Named risk</text></svg></div>',
-              placement: "top",
-            },
+            props: isMetricsRefinement
+              ? {
+                  targetId: "slide-metrics-bullets",
+                  html: '<div style="display:flex;flex-direction:column;gap:8px"><h4 style="margin:0;font-weight:600">Tighten the evidence</h4><p style="margin:0">Make each metric line tie to a real risk — e.g. <strong>zero rehearsals</strong>, <strong>demo failure</strong>, or <strong>time overrun</strong>.</p><svg viewBox="0 0 200 32" width="200" height="32" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="8" width="80" height="16" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="1"/><text x="40" y="20" text-anchor="middle" font-size="9" fill="#0c4a6e">Placeholder</text><line x1="84" y1="16" x2="112" y2="16" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="112,12 120,16 112,20" fill="#0284c7"/><rect x="120" y="8" width="80" height="16" rx="4" fill="#d1fae5" stroke="#10b981" stroke-width="1"/><text x="160" y="20" text-anchor="middle" font-size="9" fill="#065f46">Proof</text></svg></div>',
+                  placement: "top",
+                }
+              : {
+                  targetId: "slide-problem-bullets",
+                  html: '<div style="display:flex;flex-direction:column;gap:8px"><h4 style="margin:0;font-weight:600">Strengthen this slide</h4><p style="margin:0">Replace vague language with a concrete risk — e.g. <strong>delays</strong>, <strong>complaint spike</strong>, or <strong>missed goals</strong>.</p><svg viewBox="0 0 200 32" width="200" height="32" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="8" width="80" height="16" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/><text x="40" y="20" text-anchor="middle" font-size="9" fill="#92400e">Vague pain</text><line x1="84" y1="16" x2="112" y2="16" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="112,12 120,16 112,20" fill="#f59e0b"/><rect x="120" y="8" width="80" height="16" rx="4" fill="#d1fae5" stroke="#10b981" stroke-width="1"/><text x="160" y="20" text-anchor="middle" font-size="9" fill="#065f46">Named risk</text></svg></div>',
+                  placement: "top",
+                },
           },
           {
             type: "InspectPanel",
             props: {
               targetId: "deck-context-bar",
               title: "Refinement goal",
-              summary:
-                "Readers expect a clear story: context first, then a concrete problem, then evidence and the ask.",
-              details: [
-                "Weak starting order buries the problem before context.",
-                "The problem slide should name a concrete risk, not vague frustration.",
-              ],
+              summary: isMetricsRefinement
+                ? "After a sensible order, the metrics should prove the stakes — not just fill space."
+                : "Readers expect a clear story: context first, then a concrete problem, then evidence and the ask.",
+              details: isMetricsRefinement
+                ? [
+                    "Reorder first so problem leads naturally into evidence.",
+                    "Each metric line should point at a concrete risk the audience can act on.",
+                  ]
+                : [
+                    "Weak starting order buries the problem before context.",
+                    "The problem slide should name a concrete risk, not vague frustration.",
+                  ],
               placement: "bottom",
             },
           },
