@@ -42,7 +42,7 @@ export function CatalogComparisonStrip(props: {
       style={{ left: pos.left, top: pos.top }}
     >
       {props.headline ? (
-        <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">
+        <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-amber-700">
           {props.headline}
         </p>
       ) : null}
