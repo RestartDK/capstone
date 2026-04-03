@@ -8,6 +8,9 @@ participant_id,event_type,event_count
 22c50dcb-4e7b-43bc-98a3-ef541f3751c0,support_dismissed,2
 22c50dcb-4e7b-43bc-98a3-ef541f3751c0,support_shown,2
 22c50dcb-4e7b-43bc-98a3-ef541f3751c0,support_triggered,3
+2c6eb6a8-6252-4c5d-9373-958c35ce8eb3,support_dismissed,4
+2c6eb6a8-6252-4c5d-9373-958c35ce8eb3,support_shown,4
+2c6eb6a8-6252-4c5d-9373-958c35ce8eb3,support_triggered,4
 395dc208-4dfc-4d23-bbd1-032bb02d2b5f,support_dismissed,2
 395dc208-4dfc-4d23-bbd1-032bb02d2b5f,support_inspect_expanded,1
 395dc208-4dfc-4d23-bbd1-032bb02d2b5f,support_shown,2
