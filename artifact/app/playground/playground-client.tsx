@@ -63,8 +63,6 @@ export function PlaygroundClient(): React.ReactElement {
   const [slidesLive, setSlidesLive] = React.useState<{
     order: string[]
     problemBullets: string[]
-    metricsBullets: string[]
-    ctaBullets: string[]
   } | null>(null)
   const [pmBoard, setPmBoard] = React.useState<Record<
     string,
@@ -239,12 +237,7 @@ export function PlaygroundClient(): React.ReactElement {
   const onPmWorkflowAnswerChange = React.useCallback(() => {}, [])
 
   const onLiveOutlineChange = React.useCallback(
-    (live: {
-      order: string[]
-      problemBullets: string[]
-      metricsBullets: string[]
-      ctaBullets: string[]
-    }) => {
+    (live: { order: string[]; problemBullets: string[] }) => {
       setSlidesLive(live)
     },
     []
