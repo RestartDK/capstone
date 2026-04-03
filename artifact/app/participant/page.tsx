@@ -73,12 +73,12 @@ export default function ParticipantPage(): React.ReactElement {
       <div className="mx-auto max-w-lg space-y-6 p-6">
       <h1 className="text-lg font-medium">Background</h1>
       <p className="text-sm text-muted-foreground">
-        A few quick questions. Familiarity questions use a scale of 1 (low) to 7 (high).
+        A few quick questions. The last two use a scale from 1 (not at all) to 7 (very much).
       </p>
       <form className="space-y-4" onSubmit={(e) => void onSubmit(e)}>
         <div className="space-y-1">
           <label className="text-sm font-medium" htmlFor="age">
-            Age range
+            Your age
           </label>
           <input
             id="age"
@@ -86,7 +86,7 @@ export default function ParticipantPage(): React.ReactElement {
             className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
             value={ageRange}
             onChange={(e) => setAgeRange(e.target.value)}
-            placeholder="e.g. 25–34"
+            placeholder="e.g. 28"
           />
         </div>
         <div className="space-y-1">
@@ -104,8 +104,12 @@ export default function ParticipantPage(): React.ReactElement {
         </div>
         <div className="space-y-1">
           <label className="text-sm font-medium" htmlFor="web">
-            Familiarity with web apps (1–7)
+            How comfortable are you using websites and browser-based tools? (1–7)
           </label>
+          <p className="text-xs text-muted-foreground">
+            Examples: online banking, shopping sites, work tools in a web browser — not programming.
+            1 = rarely use them or find them difficult; 7 = use them often and with ease.
+          </p>
           <input
             id="web"
             required
@@ -119,7 +123,8 @@ export default function ParticipantPage(): React.ReactElement {
         </div>
         <div className="space-y-1">
           <label className="text-sm font-medium" htmlFor="ai">
-            Familiarity with AI-assisted tools (1–7)
+            How familiar are you with AI-assisted tools (for example chat assistants or writing
+            helpers)? (1–7)
           </label>
           <input
             id="ai"

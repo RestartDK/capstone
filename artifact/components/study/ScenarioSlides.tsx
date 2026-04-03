@@ -94,7 +94,7 @@ function SlideBulletInput({
       onChange={(e) => onChange(e.target.value)}
       disabled={disabled}
       className={cn(
-        "w-full rounded-md border border-transparent bg-transparent px-2 py-1.5 text-slate-900 transition-colors placeholder:text-slate-400 hover:border-slate-200 focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary/30 focus:outline-none disabled:cursor-not-allowed",
+        "w-full rounded-md border border-slate-200 bg-white px-2 py-1.5 text-slate-900 shadow-sm transition-colors placeholder:text-slate-400 hover:border-slate-300 focus:border-primary focus:ring-1 focus:ring-primary/30 focus:outline-none disabled:cursor-not-allowed",
         className
       )}
       placeholder={placeholder}
@@ -218,12 +218,26 @@ function SlideCanvas({
           </div>
         </div>
         <div
-          className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-amber-900"
+          className="flex items-start gap-3 rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-amber-900"
           data-ephemeral-id="slide-problem-hint"
         >
-          Weak phrasing is okay to keep until you improve it. The important part
-          is making the risk explicit, for example delays, confusion, missed
-          goals, or a complaint spike.
+          <svg
+            className="mt-0.5 size-4 shrink-0 text-amber-600"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+            <path d="m15 5 4 4" />
+          </svg>
+          <span>
+            Click the text fields below and type to rewrite them. Name a
+            concrete risk — for example delays, confusion, missed goals, or
+            a complaint spike.
+          </span>
         </div>
         <div className="grid gap-3" data-ephemeral-id="slide-problem-bullets">
           {slide.bullets.map((bullet, bulletIndex) => (
@@ -474,9 +488,11 @@ function SlideThumbnail({
       ref={setNodeRef}
       style={style}
       data-ephemeral-id={slide.id}
+      {...attributes}
+      {...listeners}
       onClick={onClick}
       className={cn(
-        "group/thumb w-[192px] shrink-0 cursor-pointer rounded-xl border p-2 transition-all",
+        "group/thumb w-[192px] shrink-0 cursor-grab rounded-xl border p-2 transition-all active:cursor-grabbing",
         isSelected
           ? "border-primary bg-primary/5 ring-1 ring-primary/25"
           : "border-border bg-card hover:border-primary/30 hover:bg-muted/30",
@@ -487,13 +503,7 @@ function SlideThumbnail({
     >
       <div className="mb-2 flex items-center justify-between px-1 text-[10px] font-medium text-muted-foreground">
         <span>Slide {index + 1}</span>
-        <div
-          {...attributes}
-          {...listeners}
-          className="flex cursor-grab items-center text-muted-foreground/50 transition-colors hover:text-muted-foreground active:cursor-grabbing"
-        >
-          <GripIcon className="size-3.5" />
-        </div>
+        <GripIcon className="size-3.5 text-muted-foreground/45" aria-hidden />
       </div>
       <MiniSlidePreview slide={slide} />
       <div className="mt-2 flex items-start justify-between gap-2 px-1">
@@ -575,7 +585,7 @@ export function ScenarioSlides({
   }, [initialOrder, initialSlides])
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
   )
 
   const orderedSlides = React.useMemo(
@@ -699,8 +709,8 @@ export function ScenarioSlides({
                   </div>
                   <p className="mt-1 text-sm text-foreground">
                     {readyToSubmit
-                      ? "Draft is ready to submit from the bar below."
-                      : "Edit the selected slide above, then reorder thumbnails underneath."}
+                      ? "Draft is ready — hit Submit in the bar below."
+                      : "Click a slide below to open it here, then click any text field to edit it directly."}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
@@ -727,8 +737,20 @@ export function ScenarioSlides({
                         {selectedSlide.title}
                       </span>
                     </div>
-                    <div className="rounded-full border border-slate-200 bg-white/80 px-3 py-1 text-[11px]">
-                      Slide view
+                    <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/80 px-3 py-1 text-[11px]">
+                      <svg
+                        className="size-3 text-slate-400"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+                        <path d="m15 5 4 4" />
+                      </svg>
+                      Editing
                     </div>
                   </div>
                   <div
@@ -771,8 +793,8 @@ export function ScenarioSlides({
                 Reorder slides
               </div>
               <p className="mt-1 max-w-3xl text-[11px] leading-relaxed text-muted-foreground">
-                Drag left or right to change the story order. Click a thumbnail
-                to select it for editing.
+                Drag anywhere on a small slide card to move it. Click a card to
+                open it in the large view and edit text there.
               </p>
             </div>
             <SortableContext

@@ -3,7 +3,12 @@ export {
   TRIAL_SCHEDULE_LENGTH,
   type TrialPlanSlot,
 } from "./schedule";
-export { SCENARIO_IDS, type ScenarioId, isScenarioId } from "./ids";
+export {
+  SCENARIO_IDS,
+  STUDY_SCENARIO_IDS,
+  type ScenarioId,
+  isScenarioId,
+} from "./ids";
 export {
   getScenarioEntry,
   getTaskStateForScenario,

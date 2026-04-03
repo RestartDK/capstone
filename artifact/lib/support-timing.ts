@@ -1,7 +1,7 @@
 const MAX_HESITATION_MS = 600_000;
 
 /** Default when `NEXT_PUBLIC_SUPPORT_HESITATION_MS` is unset (ms). */
-const HESITATION_FALLBACK_MS = 8_000;
+const HESITATION_FALLBACK_MS = 3_500;
 
 function clampHesitationMs(n: number): number {
   if (!Number.isFinite(n) || n < 0) return HESITATION_FALLBACK_MS;

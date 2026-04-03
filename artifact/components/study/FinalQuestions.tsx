@@ -73,12 +73,20 @@ export function FinalQuestions(props: {
     <div className="mx-auto max-w-lg space-y-6 p-6">
       <h1 className="text-lg font-medium">Final questions</h1>
       <p className="text-sm text-muted-foreground">
-        You completed tasks using two versions of the interface, labeled{" "}
-        <strong>Version A</strong> and <strong>Version B</strong>. Please compare them overall.
+        You used two versions of the same tool, called{" "}
+        <strong>Version A</strong> and <strong>Version B</strong>. Below is what
+        those labels meant for <strong>your</strong> session — use this when you
+        answer.
       </p>
       {legend ? (
         <div className="rounded-md border border-border bg-muted/40 px-3 py-2.5 text-sm text-muted-foreground">
-          <p className="font-medium text-foreground">Reminder</p>
+          <p className="font-medium text-foreground">
+            Which version had assistance?
+          </p>
+          <p className="mt-2">
+            One version was always the plain interface; the other could show
+            temporary on-screen help. For you specifically:
+          </p>
           <ul className="mt-2 list-inside list-disc space-y-1">
             <li>{legend.lineA}</li>
             <li>{legend.lineB}</li>

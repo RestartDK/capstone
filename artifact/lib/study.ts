@@ -8,10 +8,10 @@ import { isScenarioId } from "./scenarios/ids"
 import { getScenarioVariantForCondition } from "./scenarios/variant"
 
 /**
- * Progress segments from background form through thank-you: background (1) + each trial’s task &
- * post-trial questionnaire (2×trials) + final questionnaire (1) + thank-you (1).
+ * User-facing steps shown in the progress bar: background (1) + each trial round (task + post-trial
+ * as one step) + final questionnaire (1). Thank-you uses the same index as final for the bar.
  */
-export const STUDY_PROGRESS_TOTAL = 1 + TRIAL_SCHEDULE_LENGTH * 2 + 2
+export const STUDY_PROGRESS_TOTAL = 1 + TRIAL_SCHEDULE_LENGTH + 1
 
 export type StudyProgress = {
   current: number
@@ -22,7 +22,8 @@ export type StudyProgress = {
 export function packStudyProgress(current: number): StudyProgress {
   const total = STUDY_PROGRESS_TOTAL
   const c = Math.min(Math.max(0, current), total)
-  const percent = Math.min(100, Math.round((c / total) * 100))
+  const percent =
+    total <= 0 ? 0 : Math.min(100, Math.round((c / total) * 100))
   return { current: c, total, percent }
 }
 import { isAnswerCorrectForScenario } from "./scenarios/registry"
@@ -81,7 +82,13 @@ export async function ensureTrialsUpToDate(
   participantId: string,
   instructionAcknowledged: boolean
 ): Promise<void> {
-  const plan = buildTrialPlan(participantId)
+  const [participantRow] = await db
+    .select({ baselineIsVersionA: participants.baselineIsVersionA })
+    .from(participants)
+    .where(eq(participants.id, participantId))
+    .limit(1)
+  const baselineIsVersionA = participantRow?.baselineIsVersionA ?? true
+  const plan = buildTrialPlan(baselineIsVersionA)
   let all = await getTrialsForParticipant(participantId)
 
   if (all.length === 0) {
@@ -396,7 +403,7 @@ export async function resolveStudyState(
       baselineIsVersionA: p.baselineIsVersionA,
       lastTrialId: lt,
       totalTrials: total,
-      progress: packStudyProgress(2 + 2 * open.trialIndex),
+      progress: packStudyProgress(2 + open.trialIndex),
     }
   }
 
@@ -415,7 +422,7 @@ export async function resolveStudyState(
       baselineIsVersionA: p.baselineIsVersionA,
       lastTrialId: lt,
       totalTrials: total,
-      progress: packStudyProgress(3 + 2 * idx),
+      progress: packStudyProgress(2 + idx),
     }
   }
 
@@ -428,7 +435,7 @@ export async function resolveStudyState(
       baselineIsVersionA: p.baselineIsVersionA,
       lastTrialId: lt,
       totalTrials: total,
-      progress: packStudyProgress(1 + TRIAL_SCHEDULE_LENGTH * 2 + 1),
+      progress: packStudyProgress(STUDY_PROGRESS_TOTAL),
     }
   }
 
