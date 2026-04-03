@@ -124,8 +124,6 @@ export default function StudyPage(): React.ReactElement {
   const [slidesLive, setSlidesLive] = React.useState<{
     order: string[]
     problemBullets: string[]
-    metricsBullets: string[]
-    ctaBullets: string[]
   } | null>(null)
   const [slidesAttempt, setSlidesAttempt] = React.useState<SlidesAttemptState>(
     INITIAL_SLIDES_ATTEMPT
@@ -473,12 +471,7 @@ export default function StudyPage(): React.ReactElement {
   }, [])
 
   const onLiveOutlineChange = React.useCallback(
-    (live: {
-      order: string[]
-      problemBullets: string[]
-      metricsBullets: string[]
-      ctaBullets: string[]
-    }) => {
+    (live: { order: string[]; problemBullets: string[] }) => {
       setSlidesLive(live)
     },
     []
@@ -656,16 +649,11 @@ export default function StudyPage(): React.ReactElement {
   const sid = trial.scenarioId
   const { scenarioVariant, entry, taskState } = scenarioContext
   const taskHeading =
-    (trial.condition === "baseline" && entry?.baselineTaskHeading
-      ? entry.baselineTaskHeading
-      : entry?.taskHeading) ?? "Complete the task using the interface below."
+    entry?.taskHeading ?? "Complete the task using the interface below."
   const preamble = entry?.scenarioPreamble ?? null
-  const participantOutcome =
-    (trial.condition === "baseline" && entry?.baselineParticipantOutcome
-      ? entry.baselineParticipantOutcome
-      : entry?.participantOutcome) ?? [
-      "Complete the task in the workspace below.",
-    ]
+  const participantOutcome = entry?.participantOutcome ?? [
+    "Complete the task in the workspace below.",
+  ]
   const canSubmit =
     sid === "dashboard-priority"
       ? !!selected
@@ -708,7 +696,6 @@ export default function StudyPage(): React.ReactElement {
           getTaskStateForScenario(sid, fallbackVariant)) as SlidesTaskState
       }
       initialOrder={SLIDES_START_ORDER}
-      trialCondition={trial.condition}
       onAnswerPayloadChange={onRefinementAnswerChange}
       onLiveOutlineChange={onLiveOutlineChange}
       onAttemptStateChange={onSlidesAttemptChange}

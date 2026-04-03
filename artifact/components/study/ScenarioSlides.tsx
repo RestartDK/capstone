@@ -151,7 +151,6 @@ function SlideCanvas({
   orderIndex,
   totalSlides,
   disabled,
-  problemEditingDisabled,
   onUpdateBullet,
   onRemoveBullet,
   onAddBullet,
@@ -162,7 +161,6 @@ function SlideCanvas({
   orderIndex: number
   totalSlides: number
   disabled?: boolean
-  problemEditingDisabled?: boolean
   onUpdateBullet: (bulletIndex: number, value: string) => void
   onRemoveBullet: (bulletIndex: number) => void
   onAddBullet: () => void
@@ -204,7 +202,6 @@ function SlideCanvas({
   }
 
   if (kind === "problem") {
-    const problemLocked = disabled || problemEditingDisabled
     return (
       <div className="flex h-full flex-col gap-5 bg-white p-6 sm:p-8">
         <div className="flex items-center justify-between gap-3">
@@ -217,9 +214,7 @@ function SlideCanvas({
             </h3>
           </div>
           <div className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[11px] font-medium text-amber-800">
-            {problemEditingDisabled
-              ? "Read-only in this version"
-              : "Name the concrete risk clearly"}
+            Name the concrete risk clearly
           </div>
         </div>
         <div
@@ -239,9 +234,9 @@ function SlideCanvas({
             <path d="m15 5 4 4" />
           </svg>
           <span>
-            {problemEditingDisabled
-              ? "In this version, edit the Evidence or Ask slide instead — the Problem slide stays as given."
-              : "Click the text fields below and type to rewrite them. Name a concrete risk — for example delays, confusion, missed goals, or a complaint spike."}
+            Click the text fields below and type to rewrite them. Name a
+            concrete risk — for example delays, confusion, missed goals, or
+            a complaint spike.
           </span>
         </div>
         <div className="grid gap-3" data-ephemeral-id="slide-problem-bullets">
@@ -254,7 +249,7 @@ function SlideCanvas({
               <SlideBulletInput
                 value={bullet}
                 onChange={(value) => onUpdateBullet(bulletIndex, value)}
-                disabled={problemLocked}
+                disabled={disabled}
                 placeholder="State the real problem or risk"
                 className="min-h-[44px] px-0 text-base leading-7 hover:border-transparent focus:border-transparent focus:bg-transparent focus:ring-0"
               />
@@ -263,7 +258,7 @@ function SlideCanvas({
                   type="button"
                   variant="ghost"
                   size="icon-xs"
-                  disabled={problemLocked}
+                  disabled={disabled}
                   onClick={() => onRemoveBullet(bulletIndex)}
                   className="mt-1 shrink-0 opacity-0 transition-opacity group-hover/bullet:opacity-100 hover:bg-destructive/10 hover:text-destructive"
                 >
@@ -288,7 +283,7 @@ function SlideCanvas({
             type="button"
             variant="ghost"
             size="sm"
-            disabled={problemLocked}
+            disabled={disabled}
             onClick={onAddBullet}
             className="text-xs font-normal text-slate-600"
           >
@@ -531,7 +526,6 @@ function SlideThumbnail({
 export function ScenarioSlides({
   taskState,
   initialOrder,
-  trialCondition = "ephemeral",
   onAnswerPayloadChange,
   onLiveOutlineChange,
   onSlideEdited,
@@ -541,14 +535,10 @@ export function ScenarioSlides({
 }: {
   taskState: SlidesTaskState
   initialOrder: readonly string[]
-  /** Baseline: edit Evidence or Ask only; Problem slide text is read-only. */
-  trialCondition?: "baseline" | "ephemeral"
   onAnswerPayloadChange: (json: string | null) => void
   onLiveOutlineChange?: (state: {
     order: string[]
     problemBullets: string[]
-    metricsBullets: string[]
-    ctaBullets: string[]
   }) => void
   onSlideEdited?: (slideId: string) => void
   onSlideReordered?: (fromIndex: number, toIndex: number) => void
@@ -569,15 +559,9 @@ export function ScenarioSlides({
       return map
     }
   )
-  const [selectedId, setSelectedId] = React.useState<string | null>(() => {
-    if (trialCondition === "baseline") {
-      const prefer = initialOrder.find(
-        (id) => id === "slide-metrics-card" || id === "slide-cta-card"
-      )
-      return prefer ?? initialOrder[0] ?? null
-    }
-    return initialOrder[0] ?? null
-  })
+  const [selectedId, setSelectedId] = React.useState<string | null>(
+    () => initialOrder[0] ?? null
+  )
   const [activeDragId, setActiveDragId] = React.useState<string | null>(null)
   const [hasReordered, setHasReordered] = React.useState(false)
   const [hasEditedProblem, setHasEditedProblem] = React.useState(false)
@@ -594,19 +578,11 @@ export function ScenarioSlides({
     }
     setSlidesById(map)
     setOrder([...initialOrder])
-    setSelectedId(
-      trialCondition === "baseline"
-        ? (initialOrder.find(
-            (id) => id === "slide-metrics-card" || id === "slide-cta-card"
-          ) ??
-          initialOrder[0] ??
-          null)
-        : (initialOrder[0] ?? null)
-    )
+    setSelectedId(initialOrder[0] ?? null)
     setActiveDragId(null)
     setHasReordered(false)
     setHasEditedProblem(false)
-  }, [initialOrder, initialSlides, trialCondition])
+  }, [initialOrder, initialSlides])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
@@ -621,23 +597,12 @@ export function ScenarioSlides({
 
   React.useEffect(() => {
     const problem = slidesById["slide-problem-card"]
-    const metrics = slidesById["slide-metrics-card"]
-    const cta = slidesById["slide-cta-card"]
-    const problemBullets = problem ? problem.bullets : []
-    const metricsBullets = metrics ? metrics.bullets : []
-    const ctaBullets = cta ? cta.bullets : []
-    const payload = JSON.stringify({
-      order,
-      problemBullets,
-      metricsBullets,
-      ctaBullets,
-    })
+    const bullets = problem ? problem.bullets : []
+    const payload = JSON.stringify({ order, problemBullets: bullets })
     onAnswerPayloadChange(payload)
     onLiveOutlineChange?.({
       order: [...order],
-      problemBullets: [...problemBullets],
-      metricsBullets: [...metricsBullets],
-      ctaBullets: [...ctaBullets],
+      problemBullets: [...bullets],
     })
   }, [onAnswerPayloadChange, onLiveOutlineChange, order, slidesById])
 
@@ -651,14 +616,7 @@ export function ScenarioSlides({
 
   function fireEdit(slideId: string) {
     onSlideEdited?.(slideId)
-    if (trialCondition === "baseline") {
-      if (
-        slideId === "slide-metrics-card" ||
-        slideId === "slide-cta-card"
-      ) {
-        setHasEditedProblem(true)
-      }
-    } else if (slideId === "slide-problem-card") {
+    if (slideId === "slide-problem-card") {
       setHasEditedProblem(true)
     }
   }
@@ -807,7 +765,6 @@ export function ScenarioSlides({
                         orderIndex={selectedSlideIndex}
                         totalSlides={order.length}
                         disabled={disabled}
-                        problemEditingDisabled={trialCondition === "baseline"}
                         onUpdateBullet={(bulletIndex, value) =>
                           updateBullet(selectedSlide.id, bulletIndex, value)
                         }

@@ -18,8 +18,6 @@ export type SlidesParticipantSnapshot = {
   scenarioId: "slides-outline-refine";
   slideOrder: string[];
   problemBullets: string[];
-  metricsBullets?: string[];
-  ctaBullets?: string[];
 };
 
 export type PmSprintParticipantSnapshot = {
@@ -45,16 +43,13 @@ function dashboardSchema(allowedCards: readonly string[]) {
 
 function slidesSchema(allowedSlideIds: readonly string[]) {
   const allow = new Set(allowedSlideIds);
-  const bulletArray = z
-    .array(z.string().max(MAX_BULLET_CHARS))
-    .max(MAX_PROBLEM_BULLETS);
   return z
     .object({
       scenarioId: z.literal("slides-outline-refine"),
       slideOrder: z.array(z.string().max(MAX_ID_LEN)).min(1).max(MAX_SLIDE_ORDER_LEN),
-      problemBullets: bulletArray,
-      metricsBullets: bulletArray.optional(),
-      ctaBullets: bulletArray.optional(),
+      problemBullets: z
+        .array(z.string().max(MAX_BULLET_CHARS))
+        .max(MAX_PROBLEM_BULLETS),
     })
     .refine((v) => v.slideOrder.every((id) => allow.has(id)), "slideOrder ids must be allowed slides")
     .refine(
@@ -86,12 +81,7 @@ export function buildParticipantTaskSnapshotPayload(
   scenarioId: ScenarioId,
   progress: {
     selectedCardId: string | null;
-    slidesLive: {
-      order: string[];
-      problemBullets: string[];
-      metricsBullets: string[];
-      ctaBullets: string[];
-    } | null;
+    slidesLive: { order: string[]; problemBullets: string[] } | null;
     pmTicketColumns: Record<string, "backlog" | "in_progress"> | null;
   },
 ): ParticipantTaskSnapshot | undefined {
@@ -104,8 +94,6 @@ export function buildParticipantTaskSnapshotPayload(
       scenarioId,
       slideOrder: progress.slidesLive.order,
       problemBullets: progress.slidesLive.problemBullets,
-      metricsBullets: progress.slidesLive.metricsBullets,
-      ctaBullets: progress.slidesLive.ctaBullets,
     };
   }
   if (scenarioId === "pm-sprint-handoff") {
