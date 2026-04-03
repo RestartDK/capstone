@@ -191,7 +191,8 @@ export async function submitTrialAnswer(input: {
   const correct = isAnswerCorrectForScenario(
     trial.scenarioId,
     input.answerSubmitted,
-    variant
+    variant,
+    trial.condition
   )
   const endedAt = new Date()
   const durationMs =

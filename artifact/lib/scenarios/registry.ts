@@ -30,7 +30,11 @@ export type ScenarioRegistryEntry = {
   ephemeralTargets: readonly string[]
   scenarioPreamble: string
   taskHeading: string
+  /** When set, used instead of taskHeading for baseline (no assistance) trials. */
+  baselineTaskHeading?: string
   participantOutcome: readonly string[]
+  /** When set, used instead of participantOutcome for baseline (no assistance) trials. */
+  baselineParticipantOutcome?: readonly string[]
   supportUserPromptPreamble: string
   buildTaskState: () => TaskState
 }
@@ -486,9 +490,15 @@ export const SCENARIO_REGISTRY: Record<
         "You are finishing a short slide deck for a team update the night before a meeting. The order of the slides is jumbled, and the slide about the problem still sounds vague instead of spelling out what might go wrong.",
       taskHeading:
         "Fix the deck before you submit it: put the small slides in a sensible order, then edit the Problem slide so it clearly states a real risk (for example things running late, unhappy customers, or missing a target).",
+      baselineTaskHeading:
+        "Fix the deck before you submit it: put the small slides in a sensible order, then edit the Evidence slide or the Ask slide (not the Problem slide) so it clearly states a real risk (for example things running late, unhappy customers, or missing a target).",
       participantOutcome: [
         "Drag each small slide card (the whole card, not only the dots) left or right until the order is: title, then problem, then numbers, then what you are asking for.",
         "Click the Problem slide in the row so it shows large above. Type in that large view to say the risk in plain language.",
+      ],
+      baselineParticipantOutcome: [
+        "Drag each small slide card (the whole card, not only the dots) left or right until the order is: title, then problem, then numbers, then what you are asking for.",
+        "Do not edit the Problem slide. Open the Evidence slide or the Ask slide in the large view and edit its text so it clearly states a real risk (for example things running late, unhappy customers, or missing a target).",
       ],
       supportUserPromptPreamble:
         "Scenario: refinement before a team review in a lightweight deck editor. Task: help the user reorder the narrative and strengthen the Problem slide with an explicit risk line, not just pick a weak slide from a list.",
@@ -502,9 +512,15 @@ export const SCENARIO_REGISTRY: Record<
         "You are finishing a slide deck for a group presentation in one of your university classes the next day. The order of the slides is jumbled, and the slide about the problem still hints at trouble without saying clearly what might go wrong.",
       taskHeading:
         "Fix the deck before you submit it: put the small slides in a sensible order, then edit the Problem slide so it clearly states a real risk (for example the demo failing, running over time, or part of the group not being ready).",
+      baselineTaskHeading:
+        "Fix the deck before you submit it: put the small slides in a sensible order, then edit the Evidence slide or the Ask slide (not the Problem slide) so it clearly states a real risk (for example the demo failing, running over time, or part of the group not being ready).",
       participantOutcome: [
         "Drag each small slide card (the whole card, not only the dots) left or right until the order is: title, then problem, then numbers, then what you are asking for.",
         "Click the Problem slide in the row so it shows large above. Type in that large view to name the presentation or demo risk in plain language.",
+      ],
+      baselineParticipantOutcome: [
+        "Drag each small slide card (the whole card, not only the dots) left or right until the order is: title, then problem, then numbers, then what you are asking for.",
+        "Do not edit the Problem slide. Open the Evidence slide or the Ask slide in the large view and edit its text so it clearly states a real risk (for example the demo failing, running over time, or part of the group not being ready).",
       ],
       supportUserPromptPreamble:
         "Scenario: refinement before a university group presentation in a lightweight deck editor. Task: help the user reorder the narrative and strengthen the Problem slide with an explicit risk line, not just point at a weak slide.",
@@ -545,7 +561,26 @@ export const SCENARIO_REGISTRY: Record<
   },
 }
 
-export function isSlidesRefinementPayloadCorrect(raw: string): boolean {
+function bulletsUnchanged(a: readonly string[], b: readonly string[]): boolean {
+  if (a.length !== b.length) return false
+  return a.every((v, i) => v === b[i])
+}
+
+function initialSlideBulletsForSlidesVariant(
+  variant: ScenarioVariant,
+  slideId: string
+): string[] {
+  const state = getTaskStateForScenario("slides-outline-refine", variant)
+  if (!state || state.scenarioId !== "slides-outline-refine") return []
+  const slide = state.slides.find((s) => s.id === slideId)
+  return slide ? [...slide.bullets] : []
+}
+
+export function isSlidesRefinementPayloadCorrect(
+  raw: string,
+  variant: ScenarioVariant = "a",
+  condition: "baseline" | "ephemeral" = "ephemeral"
+): boolean {
   let parsed: unknown
   try {
     parsed = JSON.parse(raw) as unknown
@@ -553,7 +588,12 @@ export function isSlidesRefinementPayloadCorrect(raw: string): boolean {
     return false
   }
   if (typeof parsed !== "object" || parsed === null) return false
-  const o = parsed as { order?: unknown; problemBullets?: unknown }
+  const o = parsed as {
+    order?: unknown
+    problemBullets?: unknown
+    metricsBullets?: unknown
+    ctaBullets?: unknown
+  }
   if (!Array.isArray(o.order) || !o.order.every((x) => typeof x === "string"))
     return false
   if (o.order.length !== SLIDES_CANONICAL_ORDER.length) return false
@@ -566,6 +606,41 @@ export function isSlidesRefinementPayloadCorrect(raw: string): boolean {
   ) {
     return false
   }
+
+  if (condition === "baseline") {
+    const initialProblem = initialSlideBulletsForSlidesVariant(
+      variant,
+      "slide-problem-card"
+    )
+    if (!bulletsUnchanged(o.problemBullets, initialProblem)) return false
+
+    if (
+      !Array.isArray(o.metricsBullets) ||
+      !o.metricsBullets.every((x) => typeof x === "string") ||
+      !Array.isArray(o.ctaBullets) ||
+      !o.ctaBullets.every((x) => typeof x === "string")
+    ) {
+      return false
+    }
+    const initialMetrics = initialSlideBulletsForSlidesVariant(
+      variant,
+      "slide-metrics-card"
+    )
+    const initialCta = initialSlideBulletsForSlidesVariant(
+      variant,
+      "slide-cta-card"
+    )
+    const metricsChanged = !bulletsUnchanged(o.metricsBullets, initialMetrics)
+    const ctaChanged = !bulletsUnchanged(o.ctaBullets, initialCta)
+    if (!metricsChanged && !ctaChanged) return false
+    const toCheck: string[] = []
+    if (metricsChanged) toCheck.push(o.metricsBullets.join(" ").trim())
+    if (ctaChanged) toCheck.push(o.ctaBullets.join(" ").trim())
+    return toCheck.every(
+      (t) => t.length >= 8 && PROBLEM_RISK_PATTERN.test(t)
+    )
+  }
+
   const problemText = o.problemBullets.join(" ").trim()
   if (problemText.length < 8) return false
   return PROBLEM_RISK_PATTERN.test(problemText)
@@ -610,13 +685,14 @@ export function getTaskStateForScenario(
 export function isAnswerCorrectForScenario(
   scenarioId: string,
   answerSubmitted: string,
-  variant: ScenarioVariant = "a"
+  variant: ScenarioVariant = "a",
+  condition: "baseline" | "ephemeral" = "ephemeral"
 ): boolean {
   if (!isScenarioId(scenarioId)) {
     return false
   }
   if (scenarioId === "slides-outline-refine") {
-    return isSlidesRefinementPayloadCorrect(answerSubmitted)
+    return isSlidesRefinementPayloadCorrect(answerSubmitted, variant, condition)
   }
   if (scenarioId === "pm-sprint-handoff") {
     return isPmWorkflowPayloadCorrect(scenarioId, answerSubmitted, variant)
