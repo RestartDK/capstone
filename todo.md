@@ -10,7 +10,7 @@
 - [x] Make the scaffold for the results, with the queries for the data ready
 - [ ] Go through implementation, fix formatting, and add any needed diagrams
 - [ ] Make an introduction
-- [ ] Add the problem and motiation section
+- [ ] Add the problem and motivation section
 - [ ] Make a draft for the conclusion
 - [ ] Improve the signposting, so there are better transitions and takeaway sentences for every section
 - [ ] Based on the results of the data, see if you need to tweak it using another method or not in every single one
