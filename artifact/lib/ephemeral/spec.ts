@@ -13,6 +13,8 @@ import {
   MAX_ANCHORED_HTML_LENGTH,
   MAX_FLOW_HTML_LENGTH,
   MAX_MESSAGE_LENGTH,
+  MAX_SIDENOTE_BODY_LENGTH,
+  MAX_SIDENOTE_HTML_LENGTH,
   MAX_SPEC_DEPTH,
   type EphemeralComponentType,
 } from "./catalog";
@@ -38,10 +40,13 @@ const arrowCueProps = z.object({
   targetId: z.string().min(1).max(120),
 });
 
+const variantEnum = z.enum(["popover", "inline"]);
+
 const anchoredTooltipProps = z.object({
   targetId: z.string().min(1).max(120),
   body: z.string().min(1).max(MAX_MESSAGE_LENGTH),
   placement: placementEnum.optional(),
+  variant: variantEnum.optional(),
 });
 
 const hintStackProps = z.object({
@@ -114,7 +119,19 @@ const anchoredHtmlProps = z.object({
   targetId: z.string().min(1).max(120),
   html: z.string().min(1).max(MAX_ANCHORED_HTML_LENGTH),
   placement: placementEnum.optional(),
+  variant: variantEnum.optional(),
 });
+
+const sideNoteProps = z.object({
+  targetId: z.string().min(1).max(120),
+  side: z.enum(["left", "right"]).optional(),
+  body: z.string().min(1).max(MAX_SIDENOTE_BODY_LENGTH).optional(),
+  html: z.string().min(1).max(MAX_SIDENOTE_HTML_LENGTH).optional(),
+  widthPx: z.number().int().min(140).max(400).optional(),
+}).refine(
+  (p) => Boolean(p.body) || Boolean(p.html),
+  "SideNote must have either body or html",
+);
 
 export const COMPONENT_PROPS_MAP: Record<EphemeralComponentType, z.ZodType> = {
   Stack: stackProps,
@@ -133,6 +150,7 @@ export const COMPONENT_PROPS_MAP: Record<EphemeralComponentType, z.ZodType> = {
   TargetOffsetPanel: targetOffsetPanelProps,
   FlowHtml: flowHtmlProps,
   AnchoredHtml: anchoredHtmlProps,
+  SideNote: sideNoteProps,
 };
 
 export type EphemeralNode = {
@@ -238,6 +256,7 @@ const MODEL_LEAF_TYPES = [
   "ConsequenceNote",
   "FlowHtml",
   "AnchoredHtml",
+  "SideNote",
 ] as const;
 
 const modelPropsSchema = z
@@ -248,6 +267,7 @@ const modelPropsSchema = z
     durationMs: z.number().int().min(500).max(5000).optional(),
     body: z.string().min(1).max(MAX_MESSAGE_LENGTH).optional(),
     placement: placementEnum.optional(),
+    variant: z.enum(["popover", "inline"]).optional(),
     lines: z.array(z.string().min(1).max(200)).min(1).max(MAX_HINT_LINES).optional(),
     targetIds: z.array(z.string().min(1).max(120)).min(2).max(6).optional(),
     fromTargetId: z.string().min(1).max(120).optional(),
@@ -268,7 +288,8 @@ const modelPropsSchema = z
     maxHeightVh: z.number().min(12).max(88).optional(),
     zIndex: z.number().int().min(1).max(100).optional(),
     pointerEvents: z.enum(["auto", "none"]).optional(),
-    widthPx: z.number().int().min(200).max(520).optional(),
+    side: z.enum(["left", "right"]).optional(),
+    widthPx: z.number().int().min(140).max(520).optional(),
     shiftXPx: z.number().int().min(-480).max(480).optional(),
     shiftYPx: z.number().int().min(-480).max(480).optional(),
     edge: edgeEnum.optional(),
@@ -452,7 +473,7 @@ export function validateFlowHtmlAncestors(root: EphemeralNode): boolean {
 
 export function sanitizeHtmlFieldsInTree(node: EphemeralNode): EphemeralNode {
   const props = { ...node.props };
-  if (node.type === "FlowHtml" || node.type === "AnchoredHtml") {
+  if (node.type === "FlowHtml" || node.type === "AnchoredHtml" || node.type === "SideNote") {
     const raw = props.html;
     if (typeof raw === "string") {
       props.html = sanitizeEphemeralHtml(raw);

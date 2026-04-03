@@ -17,6 +17,7 @@ export const EPHEMERAL_COMPONENT_TYPES = [
   "TargetOffsetPanel",
   "FlowHtml",
   "AnchoredHtml",
+  "SideNote",
 ] as const;
 
 export type EphemeralComponentType = (typeof EPHEMERAL_COMPONENT_TYPES)[number];
@@ -35,3 +36,7 @@ export const MAX_CONSEQUENCE_LINE = 220;
 export const MAX_FLOW_HTML_LENGTH = 8000;
 /** Rich HTML anchored near a target (sanitized). */
 export const MAX_ANCHORED_HTML_LENGTH = 5000;
+/** Max body length for SideNote plain text. */
+export const MAX_SIDENOTE_BODY_LENGTH = 600;
+/** Max HTML length for SideNote rich content. */
+export const MAX_SIDENOTE_HTML_LENGTH = 4000;

@@ -12,4 +12,5 @@ export { ConnectorLine } from "./ConnectorLine";
 export { FocusMask } from "./FocusMask";
 export { HintStack } from "./HintStack";
 export { PulseRing } from "./PulseRing";
+export { CatalogSideNote } from "./CatalogSideNote";
 export { StepRail } from "./StepRail";

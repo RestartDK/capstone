@@ -11,6 +11,7 @@ import {
   CatalogFlowHtml,
   CatalogHighlightRing,
   CatalogInspectPanel,
+  CatalogSideNote,
   CatalogTargetOffsetPanel,
   CatalogViewportPanel,
   ConnectorLine,
@@ -58,6 +59,7 @@ function RenderNode(props: {
           targetId={p.targetId as string}
           body={p.body as string}
           placement={p.placement as "top" | "bottom" | "left" | "right" | undefined}
+          variant={p.variant as "popover" | "inline" | undefined}
           dismissible={dismissible}
           onDismiss={onDismiss}
         />
@@ -176,8 +178,20 @@ function RenderNode(props: {
           targetId={p.targetId as string}
           html={p.html as string}
           placement={p.placement as "top" | "bottom" | "left" | "right" | undefined}
+          variant={p.variant as "popover" | "inline" | undefined}
           dismissible={dismissible}
           onDismiss={onDismiss}
+        />
+      );
+
+    case "SideNote":
+      return (
+        <CatalogSideNote
+          targetId={p.targetId as string}
+          side={p.side as "left" | "right" | undefined}
+          body={p.body as string | undefined}
+          html={p.html as string | undefined}
+          widthPx={p.widthPx as number | undefined}
         />
       );
 
