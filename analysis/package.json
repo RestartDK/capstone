@@ -1,0 +1,22 @@
+{
+  "name": "analysis",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "export": "bun run export-csv.ts",
+    "export:artifact-env": "bun --env-file=../artifact/.env run export-csv.ts",
+    "stats": "bun run run-tests.ts",
+    "figures": "bun run plot-figures.ts",
+    "gen-tex": "bun run generate-results-tex.ts",
+    "analyse": "bun run export-csv.ts && bun run run-tests.ts && bun run plot-figures.ts && bun run generate-results-tex.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^22.15.0",
+    "typescript": "^5.9.3"
+  }
+}

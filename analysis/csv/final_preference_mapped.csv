@@ -1,0 +1,13 @@
+question_key,actual_preference,n
+final_helpfulness,baseline,6
+final_helpfulness,ephemeral,10
+final_helpfulness,no_preference,3
+final_intrusiveness,baseline,1
+final_intrusiveness,ephemeral,15
+final_intrusiveness,no_preference,3
+final_preference,baseline,4
+final_preference,ephemeral,9
+final_preference,no_preference,6
+final_real_life,baseline,7
+final_real_life,ephemeral,8
+final_real_life,no_preference,4
