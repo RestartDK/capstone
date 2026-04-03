@@ -1,50 +1,9 @@
 "use client";
 
 import * as React from "react";
-import type { CSSProperties } from "react";
 
+import { anchorAndClamp, type Placement } from "../clampToViewport";
 import { useTargetRect } from "../useTargetRect";
-
-type Placement = "top" | "bottom" | "left" | "right";
-
-function computePosition(rect: DOMRect, placement: Placement) {
-  const width = 300;
-  const gap = 8;
-
-  switch (placement) {
-    case "top":
-      return {
-        left: Math.min(
-          window.innerWidth - width - 8,
-          Math.max(8, rect.left + rect.width / 2 - width / 2),
-        ),
-        top: rect.top - gap,
-        transform: "translateY(-100%)" as const,
-      };
-    case "left":
-      return {
-        left: rect.left - gap - width,
-        top: rect.top + rect.height / 2,
-        transform: "translateY(-50%)" as const,
-      };
-    case "right":
-      return {
-        left: rect.right + gap,
-        top: rect.top + rect.height / 2,
-        transform: "translateY(-50%)" as const,
-      };
-    case "bottom":
-    default:
-      return {
-        left: Math.min(
-          window.innerWidth - width - 8,
-          Math.max(8, rect.left + rect.width / 2 - width / 2),
-        ),
-        top: rect.bottom + gap,
-        transform: undefined as undefined,
-      };
-  }
-}
 
 export function CatalogInspectPanel(props: {
   targetId: string;
@@ -61,10 +20,17 @@ export function CatalogInspectPanel(props: {
   const [expanded, setExpanded] = React.useState(false);
   const expandedOnceRef = React.useRef(false);
   const details = props.details ?? [];
+  const width = 300;
+  const elRef = React.useRef<HTMLDivElement>(null);
+  const [height, setHeight] = React.useState(140);
+
+  React.useLayoutEffect(() => {
+    if (elRef.current) setHeight(elRef.current.offsetHeight);
+  });
 
   if (!rect) return null;
 
-  const pos = computePosition(rect, placement);
+  const pos = anchorAndClamp(rect, placement, width, height);
 
   function toggleExpanded(): void {
     const next = !expanded;
@@ -77,14 +43,9 @@ export function CatalogInspectPanel(props: {
 
   return (
     <div
+      ref={elRef}
       className="pointer-events-auto absolute w-[min(300px,calc(100vw-2rem))] rounded-lg border border-border bg-popover p-3 text-popover-foreground shadow-lg"
-      style={
-        {
-          left: pos.left,
-          top: pos.top,
-          transform: pos.transform,
-        } as CSSProperties
-      }
+      style={{ left: pos.left, top: pos.top }}
     >
       <p className="text-xs font-semibold leading-tight text-foreground">{props.title}</p>
       <p className="mt-1.5 text-sm leading-snug text-muted-foreground">{props.summary}</p>

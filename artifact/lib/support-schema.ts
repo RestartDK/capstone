@@ -108,6 +108,14 @@ export function buildFallbackSpec(
             },
           },
           {
+            type: "AnchoredHtml",
+            props: {
+              targetId: "slide-problem-bullets",
+              html: '<div style="display:flex;flex-direction:column;gap:8px"><h4 style="margin:0;font-weight:600">Strengthen this slide</h4><p style="margin:0">Replace vague language with a concrete risk — e.g. <strong>delays</strong>, <strong>complaint spike</strong>, or <strong>missed goals</strong>.</p><svg viewBox="0 0 200 32" width="200" height="32" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="8" width="80" height="16" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/><text x="40" y="20" text-anchor="middle" font-size="9" fill="#92400e">Vague pain</text><line x1="84" y1="16" x2="112" y2="16" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="112,12 120,16 112,20" fill="#f59e0b"/><rect x="120" y="8" width="80" height="16" rx="4" fill="#d1fae5" stroke="#10b981" stroke-width="1"/><text x="160" y="20" text-anchor="middle" font-size="9" fill="#065f46">Named risk</text></svg></div>',
+              placement: "top",
+            },
+          },
+          {
             type: "InspectPanel",
             props: {
               targetId: "deck-context-bar",
@@ -127,7 +135,13 @@ export function buildFallbackSpec(
     }
     return {
       spec,
-      componentTypes: ["Stack", "StepRail", "ConnectorLine", "InspectPanel"],
+      componentTypes: [
+        "Stack",
+        "StepRail",
+        "ConnectorLine",
+        "AnchoredHtml",
+        "InspectPanel",
+      ],
     }
   }
 

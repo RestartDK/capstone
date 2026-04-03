@@ -217,12 +217,15 @@ function SlideCanvas({
             Name the concrete risk clearly
           </div>
         </div>
-        <div className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-amber-900">
+        <div
+          className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-amber-900"
+          data-ephemeral-id="slide-problem-hint"
+        >
           Weak phrasing is okay to keep until you improve it. The important part
           is making the risk explicit, for example delays, confusion, missed
           goals, or a complaint spike.
         </div>
-        <div className="grid gap-3">
+        <div className="grid gap-3" data-ephemeral-id="slide-problem-bullets">
           {slide.bullets.map((bullet, bulletIndex) => (
             <div
               key={bulletIndex}
@@ -714,7 +717,10 @@ export function ScenarioSlides({
             <div className="flex min-h-[420px] flex-1 flex-col p-4 sm:p-6 lg:p-8">
               {selectedSlide ? (
                 <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col">
-                  <div className="mb-3 flex items-center justify-between gap-3 text-xs text-slate-600">
+                  <div
+                    className="mb-3 flex items-center justify-between gap-3 text-xs text-slate-600"
+                    data-ephemeral-id="slide-canvas-header"
+                  >
                     <div>
                       Slide {selectedSlideIndex + 1} of {order.length}
                       <span className="ml-2 text-slate-400">
@@ -725,7 +731,10 @@ export function ScenarioSlides({
                       Slide view
                     </div>
                   </div>
-                  <div className="relative min-h-0 flex-1 rounded-[28px] border border-slate-200/80 bg-white p-2 shadow-[0_24px_80px_-36px_rgba(15,23,42,0.55)] sm:p-3">
+                  <div
+                    className="relative min-h-0 flex-1 rounded-[28px] border border-slate-200/80 bg-white p-2 shadow-[0_24px_80px_-36px_rgba(15,23,42,0.55)] sm:p-3"
+                    data-ephemeral-id="slide-canvas-area"
+                  >
                     <div className="h-full min-h-[380px] rounded-[22px] border border-slate-100 bg-white shadow-inner">
                       <SlideCanvas
                         slide={selectedSlide}

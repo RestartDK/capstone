@@ -32,6 +32,6 @@ export const MAX_INSPECT_DETAIL_LINES = 4;
 export const MAX_INSPECT_DETAIL_LENGTH = 200;
 export const MAX_CONSEQUENCE_LINE = 220;
 /** Rich HTML inside ViewportPanel only (sanitized server + client). */
-export const MAX_FLOW_HTML_LENGTH = 3000;
+export const MAX_FLOW_HTML_LENGTH = 8000;
 /** Rich HTML anchored near a target (sanitized). */
-export const MAX_ANCHORED_HTML_LENGTH = 1800;
+export const MAX_ANCHORED_HTML_LENGTH = 5000;

@@ -49,6 +49,10 @@ const EPHEMERAL_TARGETS = {
     "slide-metrics-card",
     "slide-cta-card",
     "deck-context-bar",
+    "slide-canvas-area",
+    "slide-canvas-header",
+    "slide-problem-hint",
+    "slide-problem-bullets",
   ] as const,
   pm: [
     "ticket-docs-lag",

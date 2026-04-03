@@ -17,6 +17,9 @@ function taxonomyGuidanceLines(taxonomy: string): string[] {
         "Scenario role: refinement support before commitment.",
         "Use StepRail for a coherent deck order (title → problem → metrics → ask) when multiple slides are involved; use InspectPanel near deck-context-bar to clarify narrative intent.",
         "ConnectorLine can pair slides when comparing flow, not only spotlight one card.",
+        "The slide-canvas-area target covers the full editing canvas for the selected slide. Use it to anchor guidance about the content being edited (e.g. an AnchoredHtml with SVG arrows or a diagram illustrating good problem framing).",
+        "slide-problem-bullets targets the bullet editing zone of the Problem slide; slide-problem-hint targets the hint banner above it. Use these to provide specific inline guidance near where the participant is typing.",
+        "Prefer rich AnchoredHtml with SVG diagrams or FlowHtml inside ViewportPanel to illustrate concepts like narrative flow, risk framing, or before/after comparisons—not just plain text tooltips.",
       ]
     case "task_execution":
       return [
@@ -60,8 +63,11 @@ export function buildSupportSystemPrompt(scenarioId: string): string {
     "- ConsequenceNote: { targetId: string, line: string (max 220), placement?: 'top'|'bottom'|'left'|'right' }  (one italic consequence line anchored near a target)",
     "- ViewportPanel: { topPct: 0-100, leftPct: 0-100, widthPct: 15-96, maxHeightVh?: 12-88, zIndex?: 1-100, pointerEvents?: 'auto'|'none' }  (absolute panel in % of overlay; children stack vertically)",
     "- TargetOffsetPanel: { targetId, widthPx: 200-520, shiftXPx: -480..480, shiftYPx: -480..480, edge: 'top'|'bottom'|'left'|'right'|'center' }  (panel placed relative to target bbox + pixel shifts)",
-    "- FlowHtml: { html: string (max 3000) }  — MUST appear only inside a ViewportPanel subtree (prefer ViewportPanel -> FlowHtml directly). Sanitized tags only: p, br, strong, em, b, i, ul, ol, li, span, h3, h4, code, pre. No scripts, styles, or event handlers.",
-    "- AnchoredHtml: { targetId, html: string (max 1800), placement?: 'top'|'bottom'|'left'|'right' }  (like AnchoredTooltip but HTML; same tag whitelist after sanitization)",
+    "- FlowHtml: { html: string (max 8000) }  — MUST appear only inside a ViewportPanel subtree (prefer ViewportPanel -> FlowHtml directly).",
+    "  Allowed tags: p, br, strong, em, b, i, ul, ol, li, span, h3, h4, code, pre, div, figure, figcaption, blockquote, hr, table, thead, tbody, tr, th, td, svg, path, circle, ellipse, rect, line, polyline, polygon, g, text, tspan, defs, marker, use.",
+    "  Allowed attributes: style, viewBox, xmlns, fill, stroke, stroke-width, stroke-linecap, stroke-linejoin, stroke-dasharray, d, cx, cy, r, rx, ry, x, y, x1, y1, x2, y2, width, height, transform, text-anchor, dominant-baseline, font-size, font-weight, opacity, points, marker-end, marker-start, id, href, refX, refY, markerWidth, markerHeight, orient, markerUnits, colspan, rowspan.",
+    "  You can use inline SVG to draw arrows, flow diagrams, annotated illustrations, simple animal/object drawings, relationship graphs, or any visual aid. Use inline style for colours, spacing, and layout (e.g. flexbox via style=\"display:flex\"). No scripts or event handlers.",
+    "- AnchoredHtml: { targetId, html: string (max 5000), placement?: 'top'|'bottom'|'left'|'right' }  (like AnchoredTooltip but rich HTML+SVG; same tag/attribute whitelist after sanitization)",
     "",
     `Allowed target IDs: ${targets}.`,
     "Every targetId, fromTargetId, toTargetId, leftTargetId, and rightTargetId must be one of the allowed target IDs.",
@@ -77,7 +83,8 @@ export function buildSupportSystemPrompt(scenarioId: string): string {
     "- Do not include children on leaf components.",
     "- Max tree depth: 4 (deepest nodes are leaves). Max children per node: 6.",
     "- AnchoredTooltip/ComparisonStrip/Inspect text: plain language, no raw HTML in those props.",
-    "- FlowHtml/AnchoredHtml: small semantic HTML only; server strips disallowed tags.",
+    "- FlowHtml/AnchoredHtml: rich semantic HTML + inline SVG. Use SVG for arrows, flow diagrams, annotated illustrations, simple drawings (animals, objects, icons), relationship graphs, or any visual aid that helps comprehension. Use div with inline style for layout (flexbox, grid, spacing, colours). Server sanitizes disallowed tags.",
+    "- When the task benefits from visual explanation, prefer FlowHtml/AnchoredHtml with SVG diagrams over plain-text tooltips. For example: draw an arrow between concepts, illustrate a decision tree, show a before/after comparison with colour-coded boxes, or render a small annotated illustration.",
     "- Set meta.dismissible to true.",
     "- Do not output executable code, Markdown documents, or full page HTML—only the EphemeralSpec JSON; HTML is allowed only in FlowHtml/AnchoredHtml as described.",
     "- Return only the JSON object, nothing else.",

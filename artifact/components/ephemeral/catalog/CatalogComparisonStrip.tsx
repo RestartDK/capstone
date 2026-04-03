@@ -1,7 +1,8 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import * as React from "react";
 
+import { clampBox } from "../clampToViewport";
 import { useTargetRect } from "../useTargetRect";
 
 export function CatalogComparisonStrip(props: {
@@ -14,6 +15,13 @@ export function CatalogComparisonStrip(props: {
 }): React.JSX.Element | null {
   const left = useTargetRect(props.leftTargetId);
   const right = useTargetRect(props.rightTargetId);
+  const elRef = React.useRef<HTMLDivElement>(null);
+  const [height, setHeight] = React.useState(80);
+  const width = Math.min(320, window.innerWidth - 16);
+
+  React.useLayoutEffect(() => {
+    if (elRef.current) setHeight(elRef.current.offsetHeight);
+  });
 
   if (!left || !right) return null;
 
@@ -21,17 +29,17 @@ export function CatalogComparisonStrip(props: {
   const maxRight = Math.max(left.right, right.right);
   const unionBottom = Math.max(left.bottom, right.bottom);
   const centerX = (minLeft + maxRight) / 2;
-  const width = Math.min(320, window.innerWidth - 16);
 
-  const style: CSSProperties = {
-    left: Math.min(window.innerWidth - width - 8, Math.max(8, centerX - width / 2)),
-    top: unionBottom + 10,
-  };
+  const rawLeft = centerX - width / 2;
+  const rawTop = unionBottom + 10;
+
+  const pos = clampBox(rawLeft, rawTop, width, height);
 
   return (
     <div
+      ref={elRef}
       className="pointer-events-auto absolute w-[min(320px,calc(100vw-2rem))] rounded-lg border border-amber-500/40 bg-popover p-3 text-popover-foreground shadow-lg"
-      style={style}
+      style={{ left: pos.left, top: pos.top }}
     >
       {props.headline ? (
         <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">
