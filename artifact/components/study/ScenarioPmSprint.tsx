@@ -26,9 +26,9 @@ import type {
 import { cn } from "@/lib/utils"
 
 const BADGE_COLORS: Record<string, string> = {
-  P0: "bg-red-100 text-red-700 ring-red-600/20 dark:bg-red-500/20 dark:text-red-400 dark:ring-red-500/30",
-  P1: "bg-amber-100 text-amber-700 ring-amber-600/20 dark:bg-amber-500/20 dark:text-amber-400 dark:ring-amber-500/30",
-  P2: "bg-gray-100 text-gray-600 ring-gray-500/20 dark:bg-gray-500/20 dark:text-gray-400 dark:ring-gray-500/30",
+  P0: "bg-red-100 text-red-700 ring-red-600/20",
+  P1: "bg-amber-100 text-amber-700 ring-amber-600/20",
+  P2: "bg-gray-100 text-gray-600 ring-gray-500/20",
 }
 
 type Column = "backlog" | "in_progress"
@@ -73,20 +73,20 @@ function TicketCardContent({
   return (
     <div
       className={cn(
-        "group relative flex gap-3 rounded-lg border bg-white p-3 shadow-sm transition-shadow dark:bg-gray-900",
+        "group relative flex gap-3 rounded-lg border bg-white p-3 shadow-sm transition-shadow",
         columnId === "in_progress"
-          ? "border-l-[3px] border-blue-200 border-l-blue-500 dark:border-blue-800 dark:border-l-blue-500"
-          : "border-gray-200 dark:border-gray-700",
+          ? "border-l-[3px] border-blue-200 border-l-blue-500"
+          : "border-gray-200",
         isDragging && "rotate-[2deg] shadow-xl ring-2 ring-blue-400/40"
       )}
     >
-      <div className="flex shrink-0 items-center text-gray-300 dark:text-gray-600">
+      <div className="flex shrink-0 items-center text-gray-300">
         <GripDotsIcon className="h-4 w-4" />
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <div className="flex flex-wrap items-start gap-2">
-          <span className="text-sm leading-snug font-semibold text-gray-900 dark:text-gray-100">
+          <span className="text-sm leading-snug font-semibold text-gray-900">
             {t.title}
           </span>
         </div>
@@ -101,7 +101,7 @@ function TicketCardContent({
             {t.priority}
           </span>
           {t.linkedIncident && (
-            <span className="inline-flex items-center gap-1 rounded-md bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold text-red-700 ring-1 ring-red-600/20 ring-inset dark:bg-red-500/15 dark:text-red-400 dark:ring-red-500/30">
+            <span className="inline-flex items-center gap-1 rounded-md bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold text-red-700 ring-1 ring-red-600/20 ring-inset">
               <svg
                 className="h-2.5 w-2.5"
                 viewBox="0 0 8 8"
@@ -112,18 +112,18 @@ function TicketCardContent({
               {t.linkedIncident}
             </span>
           )}
-          <span className="ml-auto font-mono text-[11px] text-gray-400 dark:text-gray-500">
+          <span className="ml-auto font-mono text-[11px] text-gray-400">
             {t.estimate}
           </span>
         </div>
 
-        <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+        <p className="text-xs leading-relaxed text-gray-500">
           {t.detail}
         </p>
 
-        <div className="rounded-md bg-gray-50 px-2 py-1.5 dark:bg-gray-800/60">
-          <p className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400">
-            <span className="font-semibold text-gray-600 dark:text-gray-300">
+        <div className="rounded-md bg-gray-50 px-2 py-1.5">
+          <p className="text-[11px] leading-relaxed text-gray-500">
+            <span className="font-semibold text-gray-600">
               AC:
             </span>{" "}
             {t.acceptanceCriteria}
@@ -191,7 +191,7 @@ function DroppableColumn({
       ref={setNodeRef}
       className={cn(
         "min-h-[120px] rounded-b-xl p-2 transition-colors",
-        isOver && "bg-blue-50/60 dark:bg-blue-950/30"
+        isOver && "bg-blue-50/60"
       )}
     >
       <SortableContext items={ticketIds} strategy={verticalListSortingStrategy}>
@@ -305,7 +305,7 @@ export function ScenarioPmSprint(props: {
         <span>Move one task into the active column</span>
       </div>
       <div
-        className="rounded-lg border border-amber-300/50 bg-gradient-to-r from-amber-50 to-amber-50/30 px-4 py-2.5 dark:border-amber-500/30 dark:from-amber-950/30 dark:to-amber-950/10"
+        className="rounded-lg border border-amber-300/50 bg-gradient-to-r from-amber-50 to-amber-50/30 px-4 py-2.5"
         data-ephemeral-id="sprint-goal-strip"
       >
         <div className="flex items-center gap-2 text-sm">
@@ -321,24 +321,24 @@ export function ScenarioPmSprint(props: {
             />
           </svg>
           <span>
-            <span className="font-semibold text-amber-800 dark:text-amber-300">
+            <span className="font-semibold text-amber-800">
               Priority this week:{" "}
             </span>
-            <span className="text-amber-700 dark:text-amber-400/80">
+            <span className="text-amber-700">
               {taskState.sprintGoal}
             </span>
           </span>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 dark:border-gray-700 dark:bg-gray-800/50">
-        <span className="text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">
+      <div className="flex flex-wrap items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5">
+        <span className="text-xs font-semibold tracking-wider text-gray-500 uppercase">
           Watch-outs
         </span>
         {taskState.risks.map((r) => (
           <span
             key={r.id}
-            className="inline-flex items-center gap-1.5 rounded-full bg-amber-100/60 px-2.5 py-1 text-xs text-amber-800 dark:bg-amber-500/15 dark:text-amber-300"
+            className="inline-flex items-center gap-1.5 rounded-full bg-amber-100/60 px-2.5 py-1 text-xs text-amber-800"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
             {r.label}
@@ -354,21 +354,21 @@ export function ScenarioPmSprint(props: {
         onDragCancel={handleDragCancel}
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-gray-50/50 shadow-sm dark:border-gray-700 dark:bg-gray-900/50">
-            <div className="border-b-2 border-gray-300 bg-white px-4 py-3 dark:border-gray-600 dark:bg-gray-900">
+          <div className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-gray-50/50 shadow-sm">
+            <div className="border-b-2 border-gray-300 bg-white px-4 py-3">
               <div className="flex items-center justify-between">
                 <div
                   className="flex items-center gap-2"
                   data-ephemeral-id="backlog-column-header"
                 >
-                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                  <span className="text-sm font-semibold text-gray-700">
                     To prepare
                   </span>
-                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-gray-200 px-1.5 text-[11px] font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-gray-200 px-1.5 text-[11px] font-semibold text-gray-600">
                     {backlogTickets.length}
                   </span>
                 </div>
-                <span className="text-[11px] font-medium text-gray-400 dark:text-gray-500">
+                <span className="text-[11px] font-medium text-gray-400">
                   {backlogTickets.reduce((sum, t) => {
                     const n = parseInt(
                       backlog.find((x) => x.id === t.id)?.estimate ?? "0"
@@ -385,7 +385,7 @@ export function ScenarioPmSprint(props: {
               ticketIds={backlogTickets.map((t) => t.id)}
             >
               {backlogTickets.length === 0 ? (
-                <div className="flex items-center justify-center py-10 text-xs text-gray-400 dark:text-gray-500">
+                <div className="flex items-center justify-center py-10 text-xs text-gray-400">
                   Nothing waiting here
                 </div>
               ) : (
@@ -403,21 +403,21 @@ export function ScenarioPmSprint(props: {
             </DroppableColumn>
           </div>
 
-          <div className="flex flex-col overflow-hidden rounded-xl border border-blue-200 bg-blue-50/30 shadow-sm dark:border-blue-800/50 dark:bg-blue-950/20">
-            <div className="border-b-2 border-blue-400 bg-white px-4 py-3 dark:border-blue-600 dark:bg-gray-900">
+          <div className="flex flex-col overflow-hidden rounded-xl border border-blue-200 bg-blue-50/30 shadow-sm">
+            <div className="border-b-2 border-blue-400 bg-white px-4 py-3">
               <div className="flex items-center justify-between">
                 <div
                   className="flex items-center gap-2"
                   data-ephemeral-id="in-progress-column-header"
                 >
-                  <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">
+                  <span className="text-sm font-semibold text-blue-700">
                     Working on
                   </span>
-                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-100 px-1.5 text-[11px] font-semibold text-blue-700 dark:bg-blue-800 dark:text-blue-200">
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-100 px-1.5 text-[11px] font-semibold text-blue-700">
                     {inProgressTickets.length}
                   </span>
                 </div>
-                <span className="text-[11px] font-medium text-blue-400 dark:text-blue-500">
+                <span className="text-[11px] font-medium text-blue-400">
                   Limit: 1
                 </span>
               </div>
@@ -428,9 +428,9 @@ export function ScenarioPmSprint(props: {
               ticketIds={inProgressTickets.map((t) => t.id)}
             >
               {inProgressTickets.length === 0 ? (
-                <div className="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-blue-200 bg-blue-50/40 py-12 dark:border-blue-800/50 dark:bg-blue-950/10">
+                <div className="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-blue-200 bg-blue-50/40 py-12">
                   <svg
-                    className="h-8 w-8 text-blue-300 dark:text-blue-700"
+                    className="h-8 w-8 text-blue-300"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -442,7 +442,7 @@ export function ScenarioPmSprint(props: {
                       d="M12 4.5v15m7.5-7.5h-15"
                     />
                   </svg>
-                  <span className="text-xs font-medium text-blue-400 dark:text-blue-600">
+                  <span className="text-xs font-medium text-blue-400">
                     Move one task here
                   </span>
                 </div>

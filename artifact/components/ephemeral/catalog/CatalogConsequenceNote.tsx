@@ -27,7 +27,7 @@ export function CatalogConsequenceNote(props: {
   return (
     <div
       ref={elRef}
-      className="pointer-events-none absolute w-[min(280px,calc(100vw-2rem))] rounded-md border border-amber-500/30 bg-amber-500/5 px-2.5 py-1.5 text-xs italic leading-snug text-amber-950 dark:text-amber-100"
+      className="pointer-events-none absolute w-[min(280px,calc(100vw-2rem))] rounded-md border border-amber-500/30 bg-amber-500/5 px-2.5 py-1.5 text-xs italic leading-snug text-amber-950"
       style={{ left: pos.left, top: pos.top }}
     >
       {props.line}
