@@ -91,9 +91,7 @@ A total of \GenNTotal{} participants accessed the study website. Of these, \GenN
 
 Task completion was defined as submitting the slide deck in the correct canonical order. In the baseline condition, \GenCompNBaseline{} of \GenNValid{} participants (\GenCompPctBaseline{}\%) completed the task correctly. In the ephemeral condition, \GenCompNEphemeral{} of \GenNValid{} (\GenCompPctEphemeral{}\%) completed correctly. McNemar's exact test comparing discordant pairs yielded $p = \GenCompMcNemarP{}$.
 
-% TODO: If completion was near-universal in both conditions, note that the task
-% may have been straightforward enough that ceiling effects limit interpretation
-% of this measure.
+\thesistodo{If completion was near-universal in both conditions, note that the task may have been straightforward enough for ceiling effects to limit how informative this measure is.}
 
 \subsection{Task Completion Time}
 
@@ -158,10 +156,7 @@ Completion time was measured from the moment the participant started the trial t
 
 The total number of logged interactions per trial was used as a proxy for task effort. The median interaction count in the baseline condition was \GenIntBaselineMdn{} (IQR: \GenIntBaselineIqr{}), compared to \GenIntEphemeralMdn{} (IQR: \GenIntEphemeralIqr{}) in the ephemeral condition. A Wilcoxon signed-rank test \GenIntWilcoxonResult{} ($W = \GenIntW$, $p = \GenIntP$, $r = \GenIntR$).
 
-% TODO: Note that the ephemeral condition includes support-related interactions
-% (e.g. support_shown, support_dismissed) in the count. If ephemeral has a higher
-% count, discuss whether this reflects additional effort or simply the extra
-% interaction steps introduced by the support layer.
+\thesistodo{Clarify that the ephemeral condition includes support-related interactions such as support shown and support dismissed. If the interaction count is higher, explain whether this reflects greater task effort or simply the extra steps introduced by the support layer.}
 
 \begin{figure}[htbp]
     \centering
@@ -219,10 +214,7 @@ After each trial, participants rated the interface on three dimensions using a s
     \end{tabular}
 \end{table}
 
-% TODO: Write 1 paragraph per measure interpreting the direction and significance.
-% For helpfulness: did participants rate the ephemeral condition as more helpful?
-% For intrusiveness: did the ephemeral condition feel more intrusive?
-% For control: did perceived control remain stable or change?
+\thesistodo{Add one short paragraph per measure interpreting direction and significance. Cover whether the ephemeral condition was rated as more helpful, whether it felt more intrusive, and whether perceived control remained stable or changed.}
 
 \begin{figure}[htbp]
     \centering
@@ -281,9 +273,7 @@ After completing both trials, participants answered four forced-choice compariso
     \end{tabular}
 \end{table}
 
-% TODO: Run a binomial test for the overall preference question (excluding
-% "no preference" responses). Report the test result and interpret whether
-% participants meaningfully favoured one condition.
+\thesistodo{Run a binomial test for the overall preference question excluding no-preference responses, then report whether participants meaningfully favoured one condition.}
 
 \subsection{Ephemeral Support Engagement}
 
@@ -329,17 +319,11 @@ To interpret the behavioural and subjective results in context, this subsection 
 
 Of the \GenNValid{} participants who completed the ephemeral trial, support was triggered or explicitly requested in \GenEngNTriggered{} cases (\GenEngPctTriggered{}\%). Once shown, support was actively used (applied or confirmed) in \GenEngNUsed{} cases, dismissed without use in \GenEngNDismissed{} cases, and ignored entirely in \GenEngNIgnored{} cases. \GenEngNExpanded{} participants expanded the support for further detail. The support generation pipeline produced \GenEngTotalGen{} specifications in total, of which \GenEngFallbackCount{} (\GenEngFallbackPct{}\%) fell back to the deterministic fallback because the generated output failed validation.
 
-% TODO: Interpret the engagement pattern. If most participants used the support,
-% the main results are interpretable at face value. If many dismissed or ignored
-% the support, note that the measured effects may understate the potential of
-% ephemeral assistance (or may reflect that the support was not perceived as useful).
+\thesistodo{Interpret the engagement pattern. If most participants used the support, say the main results are directly interpretable. If many dismissed or ignored it, note that the measured effects may either understate the potential of ephemeral assistance or indicate that the support was not perceived as useful.}
 
 \subsection{Summary of Findings}
 
-% TODO: Write a short summary (4-6 sentences) that restates the key findings
-% without interpretation. Cover: completion rate, completion time, interaction
-% count, subjective ratings, preference, and engagement pattern. This summary
-% should be factual and serve as a bridge to the Discussion section.
+\thesistodo{Write a short factual summary of the findings in 4 to 6 sentences. Cover completion rate, completion time, interaction count, subjective ratings, preference, and engagement, and use it as a bridge into the discussion.}
 
 Table~\ref{tab:results-summary} provides an overview of all primary outcome measures.
 
