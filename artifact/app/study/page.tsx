@@ -42,7 +42,10 @@ import type {
 } from "@/lib/task-state"
 import { getTaskStateForScenario } from "@/lib/task-state"
 import { cn } from "@/lib/utils"
-import { SLIDES_START_ORDER, getScenarioEntry } from "@/lib/scenarios/registry"
+import {
+  getScenarioEntry,
+  slidesStartOrderForVariant,
+} from "@/lib/scenarios/registry"
 import { isScenarioId } from "@/lib/scenarios/ids"
 import { getScenarioVariantForCondition } from "@/lib/scenarios/variant"
 import { pathForStudyStep } from "@/lib/study-routes"
@@ -84,7 +87,6 @@ type SupportDebugInfo = {
 
 const INITIAL_SLIDES_ATTEMPT: SlidesAttemptState = {
   hasReordered: false,
-  hasEditedRefinementSlide: false,
   readyToSubmit: false,
 }
 
@@ -102,7 +104,7 @@ function participantChecklistCompletion(
   if (!isScenarioId(scenarioId)) {
     steps = []
   } else if (scenarioId === "slides-outline-refine") {
-    steps = [slidesAttempt.hasReordered, slidesAttempt.hasEditedRefinementSlide]
+    steps = [slidesAttempt.hasReordered]
   } else if (scenarioId === "dashboard-priority") {
     steps = [selected != null]
   } else if (scenarioId === "pm-sprint-handoff") {
@@ -487,7 +489,6 @@ export default function StudyPage(): React.ReactElement {
       dismissSupport("used", {
         scenarioAction: "slides_attempt_completed",
         hasReordered: attempt.hasReordered,
-        hasEditedRefinementSlide: attempt.hasEditedRefinementSlide,
       })
     }
     prevSlidesReadyRef.current = attempt.readyToSubmit
@@ -568,26 +569,6 @@ export default function StudyPage(): React.ReactElement {
     } finally {
       setSubmitting(false)
     }
-  }
-
-  const editTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
-  const lastEditSlideRef = React.useRef<string | null>(null)
-
-  function onSlideEdit(slideId: string): void {
-    if (!trial || state?.step !== "study") return
-    if (lastEditSlideRef.current === slideId && editTimerRef.current) return
-    lastEditSlideRef.current = slideId
-    if (editTimerRef.current) clearTimeout(editTimerRef.current)
-    editTimerRef.current = setTimeout(() => {
-      lastEditSlideRef.current = null
-      editTimerRef.current = null
-    }, 2000)
-    void trackEvent({
-      participantId: state.participantId,
-      trialId: trial.id,
-      eventType: "outline_edited",
-      payload: { slideId },
-    })
   }
 
   function onSlideReordered(fromIndex: number, toIndex: number): void {
@@ -700,14 +681,10 @@ export default function StudyPage(): React.ReactElement {
         (slidesTaskState ??
           getTaskStateForScenario(sid, fallbackVariant)) as SlidesTaskState
       }
-      initialOrder={SLIDES_START_ORDER}
-      refinementTargetSlideId={
-        scenarioVariant === "b" ? "slide-metrics-card" : "slide-problem-card"
-      }
+      initialOrder={slidesStartOrderForVariant(fallbackVariant)}
       onAnswerPayloadChange={onRefinementAnswerChange}
       onLiveOutlineChange={onLiveOutlineChange}
       onAttemptStateChange={onSlidesAttemptChange}
-      onSlideEdited={onSlideEdit}
       onSlideReordered={onSlideReordered}
     />
   ) : (

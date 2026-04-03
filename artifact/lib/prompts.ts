@@ -14,12 +14,11 @@ function taxonomyGuidanceLines(taxonomy: string): string[] {
       ]
     case "refinement":
       return [
-        "Scenario role: refinement support before commitment.",
-        "Use StepRail for a coherent deck order (title → problem → metrics → ask) when multiple slides are involved; use InspectPanel near deck-context-bar to clarify narrative intent.",
+        "Scenario role: reorder-only deck task before commitment.",
+        "Use StepRail for a coherent deck order (title → problem → metrics → ask); use InspectPanel near deck-context-bar or slide-canvas-area to clarify why order matters.",
         "ConnectorLine can pair slides when comparing flow, not only spotlight one card.",
-        "The slide-canvas-area target covers the full editing canvas for the selected slide. Use it to anchor guidance about the content being edited (e.g. an AnchoredHtml with SVG arrows or a diagram illustrating good problem framing).",
-        "slide-problem-bullets targets the bullet editing zone of the Problem slide; slide-problem-hint targets the hint banner above it. slide-metrics-bullets targets the metric text fields on the Metrics snapshot slide. Use these to provide specific inline guidance near where the participant is typing.",
-        "Prefer rich AnchoredHtml with SVG diagrams or FlowHtml inside ViewportPanel to illustrate concepts like narrative flow, risk framing, or before/after comparisons—not just plain text tooltips.",
+        "The slide-canvas-area target covers the large read-only preview; each slide uses id-bullets (and problem-style slides id-hint) for anchoring, not typing fields. Variant B uses slide-b-* ids and a committee story, not the CX slide ids.",
+        "Prefer rich AnchoredHtml with SVG diagrams or FlowHtml inside ViewportPanel to illustrate narrative flow or order—not editing copy.",
       ]
     case "task_execution":
       return [

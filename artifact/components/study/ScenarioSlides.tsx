@@ -19,41 +19,31 @@ import {
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 
-import { Button } from "@/components/ui/button"
-import type { SlidesTaskState } from "@/lib/scenarios/task-state"
+import type {
+  SlideCanvasTemplate,
+  SlidesTaskState,
+} from "@/lib/scenarios/task-state"
+import { outlineSnapshotBullets } from "@/lib/scenarios/registry"
 import { cn } from "@/lib/utils"
 
 type SlideData = {
   id: string
   title: string
   bullets: string[]
+  canvas: SlideCanvasTemplate
+  stripTag: string
 }
 
 export type SlidesAttemptState = {
   hasReordered: boolean
-  /** True once the participant has edited the slide required for this scenario variant. */
-  hasEditedRefinementSlide: boolean
   readyToSubmit: boolean
 }
 
-type SlideKind = "title" | "problem" | "metrics" | "ask"
-
-function kindForSlideId(slideId: string): SlideKind {
-  if (slideId === "slide-title-card") return "title"
-  if (slideId === "slide-problem-card") return "problem"
-  if (slideId === "slide-metrics-card") return "metrics"
-  return "ask"
-}
-
-function cloneSlidesState(
-  slides: SlidesTaskState["slides"],
-  order: readonly string[]
-): SlideData[] {
-  const defs = Object.fromEntries(slides.map((slide) => [slide.id, slide]))
-  return order.map((id) => {
-    const d = defs[id]
-    return { id, title: d.title, bullets: [...d.bullets] }
-  })
+function accentForCanvas(canvas: SlideCanvasTemplate): string {
+  if (canvas === "problem") return "bg-amber-100 text-amber-900"
+  if (canvas === "metrics") return "bg-sky-100 text-sky-900"
+  if (canvas === "ask") return "bg-violet-100 text-violet-900"
+  return "bg-slate-100 text-slate-900"
 }
 
 function GripIcon({ className }: { className?: string }) {
@@ -75,44 +65,8 @@ function GripIcon({ className }: { className?: string }) {
   )
 }
 
-function SlideBulletInput({
-  value,
-  onChange,
-  placeholder,
-  className,
-  disabled,
-}: {
-  value: string
-  onChange: (value: string) => void
-  placeholder: string
-  className?: string
-  disabled?: boolean
-}) {
-  return (
-    <input
-      type="text"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      disabled={disabled}
-      className={cn(
-        "w-full rounded-md border border-slate-200 bg-white px-2 py-1.5 text-slate-900 shadow-sm transition-colors placeholder:text-slate-400 hover:border-slate-300 focus:border-primary focus:ring-1 focus:ring-primary/30 focus:outline-none disabled:cursor-not-allowed",
-        className
-      )}
-      placeholder={placeholder}
-    />
-  )
-}
-
 function MiniSlidePreview({ slide }: { slide: SlideData }) {
-  const kind = kindForSlideId(slide.id)
-  const accent =
-    kind === "problem"
-      ? "bg-amber-100 text-amber-900"
-      : kind === "metrics"
-        ? "bg-sky-100 text-sky-900"
-        : kind === "ask"
-          ? "bg-violet-100 text-violet-900"
-          : "bg-slate-100 text-slate-900"
+  const accent = accentForCanvas(slide.canvas)
 
   return (
     <div className="aspect-[16/9] w-full rounded-[10px] border border-slate-200 bg-white p-2 shadow-sm">
@@ -123,7 +77,7 @@ function MiniSlidePreview({ slide }: { slide: SlideData }) {
             accent
           )}
         >
-          {kind}
+          {slide.stripTag}
         </span>
         <div className="h-1 w-6 rounded-full bg-slate-100" />
       </div>
@@ -151,24 +105,14 @@ function SlideCanvas({
   deckDeadlineLabel,
   orderIndex,
   totalSlides,
-  disabled,
-  onUpdateBullet,
-  onRemoveBullet,
-  onAddBullet,
 }: {
   slide: SlideData
   deckLabel: string
   deckDeadlineLabel: string
   orderIndex: number
   totalSlides: number
-  disabled?: boolean
-  onUpdateBullet: (bulletIndex: number, value: string) => void
-  onRemoveBullet: (bulletIndex: number) => void
-  onAddBullet: () => void
 }) {
-  const kind = kindForSlideId(slide.id)
-
-  if (kind === "title") {
+  if (slide.canvas === "title") {
     return (
       <div className="flex h-full flex-col justify-between gap-6 bg-[linear-gradient(180deg,#f8fafc_0%,#eef2ff_100%)] p-6 sm:p-8">
         <div className="flex items-center justify-between text-[11px] font-medium tracking-[0.18em] text-slate-500 uppercase">
@@ -183,14 +127,12 @@ function SlideCanvas({
           </div>
           <div className="grid gap-2 sm:max-w-2xl">
             {slide.bullets.map((bullet, bulletIndex) => (
-              <SlideBulletInput
+              <p
                 key={bulletIndex}
-                value={bullet}
-                onChange={(value) => onUpdateBullet(bulletIndex, value)}
-                disabled={disabled}
-                placeholder="Subtitle or context"
-                className="px-0 text-base text-slate-600 hover:border-transparent focus:border-transparent focus:bg-transparent focus:ring-0 sm:text-lg"
-              />
+                className="text-base leading-relaxed text-slate-600 sm:text-lg"
+              >
+                {bullet}
+              </p>
             ))}
           </div>
         </div>
@@ -202,13 +144,13 @@ function SlideCanvas({
     )
   }
 
-  if (kind === "problem") {
+  if (slide.canvas === "problem") {
     return (
       <div className="flex h-full flex-col gap-5 bg-white p-6 sm:p-8">
         <div className="flex items-center justify-between gap-3">
           <div>
             <div className="text-[11px] font-medium tracking-[0.18em] text-amber-700 uppercase">
-              Problem framing
+              Context
             </div>
             <h3 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
               {slide.title}
@@ -220,7 +162,7 @@ function SlideCanvas({
         </div>
         <div
           className="flex items-start gap-3 rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-amber-900"
-          data-ephemeral-id="slide-problem-hint"
+          data-ephemeral-id={`${slide.id}-hint`}
         >
           <svg
             className="mt-0.5 size-4 shrink-0 text-amber-600"
@@ -235,73 +177,34 @@ function SlideCanvas({
             <path d="m15 5 4 4" />
           </svg>
           <span>
-            Click the text fields below and type to rewrite them. Name a
-            concrete risk — for example delays, confusion, missed goals, or
-            a complaint spike.
+            Preview only — use the strip below to put this slide in the right
+            place in the story.
           </span>
         </div>
-        <div className="grid gap-3" data-ephemeral-id="slide-problem-bullets">
+        <div className="grid gap-3" data-ephemeral-id={`${slide.id}-bullets`}>
           {slide.bullets.map((bullet, bulletIndex) => (
             <div
               key={bulletIndex}
-              className="group/bullet flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2"
+              className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2"
             >
-              <span className="mt-2 size-2 rounded-full bg-amber-500" />
-              <SlideBulletInput
-                value={bullet}
-                onChange={(value) => onUpdateBullet(bulletIndex, value)}
-                disabled={disabled}
-                placeholder="State the real problem or risk"
-                className="min-h-[44px] px-0 text-base leading-7 hover:border-transparent focus:border-transparent focus:bg-transparent focus:ring-0"
-              />
-              {slide.bullets.length > 1 ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-xs"
-                  disabled={disabled}
-                  onClick={() => onRemoveBullet(bulletIndex)}
-                  className="mt-1 shrink-0 opacity-0 transition-opacity group-hover/bullet:opacity-100 hover:bg-destructive/10 hover:text-destructive"
-                >
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  >
-                    <path d="M3 3l6 6M9 3l-6 6" />
-                  </svg>
-                </Button>
-              ) : null}
+              <span className="mt-2 size-2 shrink-0 rounded-full bg-amber-500" />
+              <p className="min-h-[44px] flex-1 text-base leading-7 text-slate-900">
+                {bullet}
+              </p>
             </div>
           ))}
-        </div>
-        <div className="mt-auto border-t border-slate-200 pt-4">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            disabled={disabled}
-            onClick={onAddBullet}
-            className="text-xs font-normal text-slate-600"
-          >
-            + Add bullet
-          </Button>
         </div>
       </div>
     )
   }
 
-  if (kind === "metrics") {
+  if (slide.canvas === "metrics") {
     return (
       <div className="flex h-full flex-col gap-6 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] p-6 sm:p-8">
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="text-[11px] font-medium tracking-[0.18em] text-sky-700 uppercase">
-              Evidence
+              Numbers
             </div>
             <h3 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
               {slide.title}
@@ -313,7 +216,7 @@ function SlideCanvas({
         </div>
         <div
           className="grid flex-1 gap-4 md:grid-cols-3"
-          data-ephemeral-id="slide-metrics-bullets"
+          data-ephemeral-id={`${slide.id}-bullets`}
         >
           {slide.bullets.map((bullet, bulletIndex) => (
             <div
@@ -323,13 +226,9 @@ function SlideCanvas({
               <div className="text-[11px] font-medium tracking-[0.18em] text-slate-400 uppercase">
                 Metric {bulletIndex + 1}
               </div>
-              <SlideBulletInput
-                value={bullet}
-                onChange={(value) => onUpdateBullet(bulletIndex, value)}
-                disabled={disabled}
-                placeholder="Metric line"
-                className="mt-3 px-0 text-lg font-semibold tracking-tight hover:border-transparent focus:border-transparent focus:bg-transparent focus:ring-0"
-              />
+              <p className="mt-3 text-lg font-semibold tracking-tight text-slate-950">
+                {bullet}
+              </p>
               <div className="mt-4 h-24 rounded-xl bg-slate-50 p-3">
                 <div className="flex h-full items-end gap-2">
                   <div className="h-[42%] flex-1 rounded-t bg-sky-200" />
@@ -368,52 +267,12 @@ function SlideCanvas({
             {slide.bullets.map((bullet, bulletIndex) => (
               <div
                 key={bulletIndex}
-                className="group/bullet flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2"
+                className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2"
               >
-                <span className="mt-1.5 text-violet-600">→</span>
-                <SlideBulletInput
-                  value={bullet}
-                  onChange={(value) => onUpdateBullet(bulletIndex, value)}
-                  disabled={disabled}
-                  placeholder="Ask or owner line"
-                  className="px-0 text-base hover:border-transparent focus:border-transparent focus:bg-transparent focus:ring-0"
-                />
-                {slide.bullets.length > 1 ? (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon-xs"
-                    disabled={disabled}
-                    onClick={() => onRemoveBullet(bulletIndex)}
-                    className="mt-1 shrink-0 opacity-0 transition-opacity group-hover/bullet:opacity-100 hover:bg-destructive/10 hover:text-destructive"
-                  >
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 12 12"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    >
-                      <path d="M3 3l6 6M9 3l-6 6" />
-                    </svg>
-                  </Button>
-                ) : null}
+                <span className="mt-1.5 shrink-0 text-violet-600">→</span>
+                <p className="flex-1 text-base text-slate-900">{bullet}</p>
               </div>
             ))}
-          </div>
-          <div className="mt-4 border-t border-slate-200 pt-4">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              disabled={disabled}
-              onClick={onAddBullet}
-              className="text-xs font-normal text-slate-600"
-            >
-              + Add bullet
-            </Button>
           </div>
         </div>
         <div className="rounded-2xl border border-violet-100 bg-violet-50/60 p-5 text-sm text-violet-950">
@@ -530,50 +389,44 @@ function SlideThumbnail({
 export function ScenarioSlides({
   taskState,
   initialOrder,
-  refinementTargetSlideId = "slide-problem-card",
   onAnswerPayloadChange,
   onLiveOutlineChange,
-  onSlideEdited,
   onSlideReordered,
   onAttemptStateChange,
   disabled,
 }: {
   taskState: SlidesTaskState
   initialOrder: readonly string[]
-  /** Which slide must be edited to satisfy the refinement task (variant A: problem; variant B: metrics). */
-  refinementTargetSlideId?: string
   onAnswerPayloadChange: (json: string | null) => void
   onLiveOutlineChange?: (state: {
     order: string[]
     problemBullets: string[]
     metricsBullets: string[]
   }) => void
-  onSlideEdited?: (slideId: string) => void
   onSlideReordered?: (fromIndex: number, toIndex: number) => void
   onAttemptStateChange?: (state: SlidesAttemptState) => void
   disabled?: boolean
 }): React.ReactElement {
-  const initialSlides = React.useMemo(
-    () => cloneSlidesState(taskState.slides, initialOrder),
-    [initialOrder, taskState.slides]
-  )
-  const [order, setOrder] = React.useState<string[]>(() => [...initialOrder])
-  const [slidesById, setSlidesById] = React.useState<Record<string, SlideData>>(
-    () => {
-      const map: Record<string, SlideData> = {}
-      for (const s of initialSlides) {
-        map[s.id] = s
+  const slidesById = React.useMemo(() => {
+    const map: Record<string, SlideData> = {}
+    for (const s of taskState.slides) {
+      map[s.id] = {
+        id: s.id,
+        title: s.title,
+        bullets: [...s.bullets],
+        canvas: s.canvas,
+        stripTag: s.stripTag,
       }
-      return map
     }
-  )
+    return map
+  }, [taskState.slides])
+
+  const [order, setOrder] = React.useState<string[]>(() => [...initialOrder])
   const [selectedId, setSelectedId] = React.useState<string | null>(
     () => initialOrder[0] ?? null
   )
   const [activeDragId, setActiveDragId] = React.useState<string | null>(null)
   const [hasReordered, setHasReordered] = React.useState(false)
-  const [hasEditedRefinementSlide, setHasEditedRefinementSlide] =
-    React.useState(false)
   const onAttemptStateChangeRef = React.useRef(onAttemptStateChange)
 
   React.useEffect(() => {
@@ -581,17 +434,11 @@ export function ScenarioSlides({
   }, [onAttemptStateChange])
 
   React.useEffect(() => {
-    const map: Record<string, SlideData> = {}
-    for (const slide of initialSlides) {
-      map[slide.id] = slide
-    }
-    setSlidesById(map)
     setOrder([...initialOrder])
     setSelectedId(initialOrder[0] ?? null)
     setActiveDragId(null)
     setHasReordered(false)
-    setHasEditedRefinementSlide(false)
-  }, [initialOrder, initialSlides])
+  }, [initialOrder])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
@@ -605,10 +452,7 @@ export function ScenarioSlides({
   const selectedSlide = selectedId ? slidesById[selectedId] : null
 
   React.useEffect(() => {
-    const problem = slidesById["slide-problem-card"]
-    const metrics = slidesById["slide-metrics-card"]
-    const problemBullets = problem ? problem.bullets : []
-    const metricsBullets = metrics ? metrics.bullets : []
+    const { problemBullets, metricsBullets } = outlineSnapshotBullets(taskState)
     const payload = JSON.stringify({
       order,
       problemBullets,
@@ -620,57 +464,14 @@ export function ScenarioSlides({
       problemBullets: [...problemBullets],
       metricsBullets: [...metricsBullets],
     })
-  }, [onAnswerPayloadChange, onLiveOutlineChange, order, slidesById])
+  }, [onAnswerPayloadChange, onLiveOutlineChange, order, taskState])
 
   React.useEffect(() => {
     onAttemptStateChangeRef.current?.({
       hasReordered,
-      hasEditedRefinementSlide,
-      readyToSubmit: hasReordered && hasEditedRefinementSlide,
+      readyToSubmit: hasReordered,
     })
-  }, [hasEditedRefinementSlide, hasReordered])
-
-  function fireEdit(slideId: string) {
-    onSlideEdited?.(slideId)
-    if (slideId === refinementTargetSlideId) {
-      setHasEditedRefinementSlide(true)
-    }
-  }
-
-  function updateBullet(slideId: string, bulletIndex: number, value: string) {
-    setSlidesById((prev) => {
-      const s = prev[slideId]
-      if (!s) return prev
-      const nextBullets = [...s.bullets]
-      nextBullets[bulletIndex] = value
-      return { ...prev, [slideId]: { ...s, bullets: nextBullets } }
-    })
-    fireEdit(slideId)
-  }
-
-  function addBullet(slideId: string) {
-    setSlidesById((prev) => {
-      const s = prev[slideId]
-      if (!s) return prev
-      return { ...prev, [slideId]: { ...s, bullets: [...s.bullets, ""] } }
-    })
-    fireEdit(slideId)
-  }
-
-  function removeBullet(slideId: string, bulletIndex: number) {
-    setSlidesById((prev) => {
-      const s = prev[slideId]
-      if (!s || s.bullets.length <= 1) return prev
-      return {
-        ...prev,
-        [slideId]: {
-          ...s,
-          bullets: s.bullets.filter((_, i) => i !== bulletIndex),
-        },
-      }
-    })
-    fireEdit(slideId)
-  }
+  }, [hasReordered])
 
   function handleDragStart(event: DragStartEvent) {
     setActiveDragId(event.active.id as string)
@@ -699,7 +500,7 @@ export function ScenarioSlides({
   const selectedSlideIndex = selectedSlide
     ? order.indexOf(selectedSlide.id)
     : -1
-  const readyToSubmit = hasReordered && hasEditedRefinementSlide
+  const readyToSubmit = hasReordered
 
   return (
     <div
@@ -725,8 +526,8 @@ export function ScenarioSlides({
                   </div>
                   <p className="mt-1 text-sm text-foreground">
                     {readyToSubmit
-                      ? "Draft is ready — hit Submit in the bar below."
-                      : "Click a slide below to open it here, then click any text field to edit it directly."}
+                      ? "Order looks good — hit Submit in the bar below."
+                      : "Drag the small slide cards below into a sensible order. Click a card to preview it here."}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
@@ -766,7 +567,7 @@ export function ScenarioSlides({
                         <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
                         <path d="m15 5 4 4" />
                       </svg>
-                      Editing
+                      Preview
                     </div>
                   </div>
                   <div
@@ -780,21 +581,13 @@ export function ScenarioSlides({
                         deckDeadlineLabel={taskState.deckDeadlineLabel}
                         orderIndex={selectedSlideIndex}
                         totalSlides={order.length}
-                        disabled={disabled}
-                        onUpdateBullet={(bulletIndex, value) =>
-                          updateBullet(selectedSlide.id, bulletIndex, value)
-                        }
-                        onRemoveBullet={(bulletIndex) =>
-                          removeBullet(selectedSlide.id, bulletIndex)
-                        }
-                        onAddBullet={() => addBullet(selectedSlide.id)}
                       />
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/70 text-sm text-muted-foreground">
-                  Select a slide to edit
+                  Select a slide to preview
                 </div>
               )}
             </div>
@@ -810,7 +603,7 @@ export function ScenarioSlides({
               </div>
               <p className="mt-1 max-w-3xl text-[11px] leading-relaxed text-muted-foreground">
                 Drag anywhere on a small slide card to move it. Click a card to
-                open it in the large view and edit text there.
+                see a large read-only preview above.
               </p>
             </div>
             <SortableContext

@@ -27,7 +27,7 @@ import { getTaskStateForScenario } from "@/lib/task-state"
 import { SCENARIO_IDS, type ScenarioId } from "@/lib/scenarios/ids"
 import {
   getScenarioEntry,
-  SLIDES_START_ORDER,
+  slidesStartOrderForVariant,
 } from "@/lib/scenarios/registry"
 import type { ScenarioVariant } from "@/lib/scenarios/variant"
 import { cn } from "@/lib/utils"
@@ -35,7 +35,6 @@ import { cn } from "@/lib/utils"
 const PLAYGROUND_TRIAL_LOG_ID = "playground"
 const INITIAL_SLIDES_ATTEMPT: SlidesAttemptState = {
   hasReordered: false,
-  hasEditedRefinementSlide: false,
   readyToSubmit: false,
 }
 
@@ -293,14 +292,10 @@ export function PlaygroundClient(): React.ReactElement {
       <ScenarioSlides
         key={`${scenarioId}-${playgroundVariant}`}
         taskState={taskState as never}
-        initialOrder={SLIDES_START_ORDER}
-        refinementTargetSlideId={
-          playgroundVariant === "b" ? "slide-metrics-card" : "slide-problem-card"
-        }
+        initialOrder={slidesStartOrderForVariant(playgroundVariant)}
         onAnswerPayloadChange={onRefinementAnswerChange}
         onLiveOutlineChange={onLiveOutlineChange}
         onAttemptStateChange={onSlidesAttemptChange}
-        onSlideEdited={() => void 0}
         onSlideReordered={() => void 0}
       />
     ) : (
@@ -373,8 +368,8 @@ export function PlaygroundClient(): React.ReactElement {
                   setPlaygroundVariant(e.target.value as ScenarioVariant)
                 }
               >
-                <option value="a">A — refine Problem slide</option>
-                <option value="b">B — refine Metrics slide</option>
+                <option value="a">A — CX team readout (slide-title-card…)</option>
+                <option value="b">B — Committee funding (slide-b-meeting…)</option>
               </select>
             </label>
           ) : null}

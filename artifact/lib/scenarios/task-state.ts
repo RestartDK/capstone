@@ -1,6 +1,9 @@
 import type { ScenarioId } from "./ids"
 import type { ScenarioVariant } from "./variant"
 
+/** Which read-only canvas template a slide uses (shared layouts). */
+export type SlideCanvasTemplate = "title" | "problem" | "metrics" | "ask"
+
 export type DashboardCardState = {
   id: string
   title: string
@@ -22,13 +25,23 @@ export type DashboardTaskState = {
   alerts: { id: string; label: string }[]
 }
 
+export type SlideDef = {
+  id: string
+  title: string
+  summary: string
+  bullets: string[]
+  canvas: SlideCanvasTemplate
+  /** Short chip on thumbnails (e.g. title, policy, vote). */
+  stripTag: string
+}
+
 export type SlidesTaskState = {
   scenarioId: "slides-outline-refine"
   variant: ScenarioVariant
   reviewGoal: string
   deckLabel: string
   deckDeadlineLabel: string
-  slides: { id: string; title: string; summary: string; bullets: string[] }[]
+  slides: SlideDef[]
 }
 
 export type PmTicketState = {

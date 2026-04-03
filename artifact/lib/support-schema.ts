@@ -4,7 +4,11 @@ import {
   type EphemeralSpec,
 } from "./ephemeral/spec"
 import type { TaskState } from "./task-state"
-import { getScenarioEntry, SLIDES_CANONICAL_ORDER } from "./scenarios/registry"
+import {
+  getScenarioEntry,
+  slidesCanonicalOrderForVariant,
+} from "./scenarios/registry"
+import type { ScenarioVariant } from "./scenarios/variant"
 
 export type Condition = "baseline" | "ephemeral"
 
@@ -90,11 +94,15 @@ export function buildFallbackSpec(
   }
 
   if (scenarioId === "slides-outline-refine") {
-    const variant =
+    const variant: ScenarioVariant =
       taskState?.scenarioId === "slides-outline-refine"
         ? taskState.variant
         : "a"
-    const isMetricsRefinement = variant === "b"
+    const canonical = slidesCanonicalOrderForVariant(variant)
+    const orderHint =
+      variant === "a"
+        ? "title → problem → metrics → ask"
+        : "meeting → policy → proof → vote"
     const spec: EphemeralSpec = {
       version: 1,
       root: {
@@ -103,51 +111,42 @@ export function buildFallbackSpec(
         children: [
           {
             type: "StepRail",
-            props: { targetIds: [...SLIDES_CANONICAL_ORDER] },
+            props: { targetIds: [...canonical] },
           },
           {
             type: "ConnectorLine",
-            props: isMetricsRefinement
-              ? {
-                  fromTargetId: "slide-problem-card",
-                  toTargetId: "slide-metrics-card",
-                }
-              : {
-                  fromTargetId: "slide-title-card",
-                  toTargetId: "slide-problem-card",
-                },
+            props: {
+              fromTargetId: canonical[0],
+              toTargetId: canonical[1],
+            },
           },
           {
             type: "AnchoredHtml",
-            props: isMetricsRefinement
-              ? {
-                  targetId: "slide-metrics-bullets",
-                  html: '<div style="display:flex;flex-direction:column;gap:8px"><h4 style="margin:0;font-weight:600">Tighten the evidence</h4><p style="margin:0">Make each metric line tie to a real risk — e.g. <strong>zero rehearsals</strong>, <strong>demo failure</strong>, or <strong>time overrun</strong>.</p><svg viewBox="0 0 200 32" width="200" height="32" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="8" width="80" height="16" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="1"/><text x="40" y="20" text-anchor="middle" font-size="9" fill="#0c4a6e">Placeholder</text><line x1="84" y1="16" x2="112" y2="16" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="112,12 120,16 112,20" fill="#0284c7"/><rect x="120" y="8" width="80" height="16" rx="4" fill="#d1fae5" stroke="#10b981" stroke-width="1"/><text x="160" y="20" text-anchor="middle" font-size="9" fill="#065f46">Proof</text></svg></div>',
-                  placement: "top",
-                }
-              : {
-                  targetId: "slide-problem-bullets",
-                  html: '<div style="display:flex;flex-direction:column;gap:8px"><h4 style="margin:0;font-weight:600">Strengthen this slide</h4><p style="margin:0">Replace vague language with a concrete risk — e.g. <strong>delays</strong>, <strong>complaint spike</strong>, or <strong>missed goals</strong>.</p><svg viewBox="0 0 200 32" width="200" height="32" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="8" width="80" height="16" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/><text x="40" y="20" text-anchor="middle" font-size="9" fill="#92400e">Vague pain</text><line x1="84" y1="16" x2="112" y2="16" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="112,12 120,16 112,20" fill="#f59e0b"/><rect x="120" y="8" width="80" height="16" rx="4" fill="#d1fae5" stroke="#10b981" stroke-width="1"/><text x="160" y="20" text-anchor="middle" font-size="9" fill="#065f46">Named risk</text></svg></div>',
-                  placement: "top",
-                },
+            props: {
+              targetId: "deck-context-bar",
+              html: `<div style="display:flex;flex-direction:column;gap:8px"><h4 style="margin:0;font-weight:600">Fix the order first</h4><p style="margin:0">Drag cards until the strip reads: <strong>${orderHint}</strong>. The large view is preview-only.</p></div>`,
+              placement: "top",
+            },
           },
           {
             type: "InspectPanel",
             props: {
-              targetId: "deck-context-bar",
-              title: "Refinement goal",
-              summary: isMetricsRefinement
-                ? "After a sensible order, the metrics should prove the stakes — not just fill space."
-                : "Readers expect a clear story: context first, then a concrete problem, then evidence and the ask.",
-              details: isMetricsRefinement
-                ? [
-                    "Reorder first so problem leads naturally into evidence.",
-                    "Each metric line should point at a concrete risk the audience can act on.",
-                  ]
-                : [
-                    "Weak starting order buries the problem before context.",
-                    "The problem slide should name a concrete risk, not vague frustration.",
-                  ],
+              targetId: "slide-canvas-area",
+              title: "Story order",
+              summary:
+                variant === "a"
+                  ? "Participants only rearrange the strip. Order should introduce the readout, then the problem, metrics, and ask."
+                  : "This deck uses different slide ids from the CX scenario. Order should frame the committee, then rules, proof, and ballot items.",
+              details:
+                variant === "a"
+                  ? [
+                      "Title before problem so metrics feel motivated.",
+                      "End with the ask after evidence.",
+                    ]
+                  : [
+                      "Meeting frame before policy so rules land in context.",
+                      "Proof before vote so asks feel grounded.",
+                    ],
               placement: "bottom",
             },
           },

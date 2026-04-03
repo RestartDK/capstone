@@ -38,7 +38,7 @@ export default function ConsentPage(): React.ReactElement {
       <h1 className="text-lg font-medium">Welcome</h1>
       <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
         <p>
-          In this study you will complete the same short slide-editing task twice, in a fixed order:
+          In this study you will complete the same short slide task twice, in a fixed order:
           first <strong>Version&nbsp;A</strong>, then <strong>Version&nbsp;B</strong>. For you, one
           of those is the normal screen without extra help; the other may show temporary on-screen
           help automatically after a brief pause.
