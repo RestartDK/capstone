@@ -31,7 +31,8 @@ type SlideData = {
 
 export type SlidesAttemptState = {
   hasReordered: boolean
-  hasEditedProblem: boolean
+  /** True once the participant has edited the slide required for this scenario variant. */
+  hasEditedRefinementSlide: boolean
   readyToSubmit: boolean
 }
 
@@ -310,7 +311,10 @@ function SlideCanvas({
             Support the story with data
           </div>
         </div>
-        <div className="grid flex-1 gap-4 md:grid-cols-3">
+        <div
+          className="grid flex-1 gap-4 md:grid-cols-3"
+          data-ephemeral-id="slide-metrics-bullets"
+        >
           {slide.bullets.map((bullet, bulletIndex) => (
             <div
               key={bulletIndex}
@@ -526,6 +530,7 @@ function SlideThumbnail({
 export function ScenarioSlides({
   taskState,
   initialOrder,
+  refinementTargetSlideId = "slide-problem-card",
   onAnswerPayloadChange,
   onLiveOutlineChange,
   onSlideEdited,
@@ -535,10 +540,13 @@ export function ScenarioSlides({
 }: {
   taskState: SlidesTaskState
   initialOrder: readonly string[]
+  /** Which slide must be edited to satisfy the refinement task (variant A: problem; variant B: metrics). */
+  refinementTargetSlideId?: string
   onAnswerPayloadChange: (json: string | null) => void
   onLiveOutlineChange?: (state: {
     order: string[]
     problemBullets: string[]
+    metricsBullets: string[]
   }) => void
   onSlideEdited?: (slideId: string) => void
   onSlideReordered?: (fromIndex: number, toIndex: number) => void
@@ -564,7 +572,8 @@ export function ScenarioSlides({
   )
   const [activeDragId, setActiveDragId] = React.useState<string | null>(null)
   const [hasReordered, setHasReordered] = React.useState(false)
-  const [hasEditedProblem, setHasEditedProblem] = React.useState(false)
+  const [hasEditedRefinementSlide, setHasEditedRefinementSlide] =
+    React.useState(false)
   const onAttemptStateChangeRef = React.useRef(onAttemptStateChange)
 
   React.useEffect(() => {
@@ -581,7 +590,7 @@ export function ScenarioSlides({
     setSelectedId(initialOrder[0] ?? null)
     setActiveDragId(null)
     setHasReordered(false)
-    setHasEditedProblem(false)
+    setHasEditedRefinementSlide(false)
   }, [initialOrder, initialSlides])
 
   const sensors = useSensors(
@@ -597,27 +606,34 @@ export function ScenarioSlides({
 
   React.useEffect(() => {
     const problem = slidesById["slide-problem-card"]
-    const bullets = problem ? problem.bullets : []
-    const payload = JSON.stringify({ order, problemBullets: bullets })
+    const metrics = slidesById["slide-metrics-card"]
+    const problemBullets = problem ? problem.bullets : []
+    const metricsBullets = metrics ? metrics.bullets : []
+    const payload = JSON.stringify({
+      order,
+      problemBullets,
+      metricsBullets,
+    })
     onAnswerPayloadChange(payload)
     onLiveOutlineChange?.({
       order: [...order],
-      problemBullets: [...bullets],
+      problemBullets: [...problemBullets],
+      metricsBullets: [...metricsBullets],
     })
   }, [onAnswerPayloadChange, onLiveOutlineChange, order, slidesById])
 
   React.useEffect(() => {
     onAttemptStateChangeRef.current?.({
       hasReordered,
-      hasEditedProblem,
-      readyToSubmit: hasReordered && hasEditedProblem,
+      hasEditedRefinementSlide,
+      readyToSubmit: hasReordered && hasEditedRefinementSlide,
     })
-  }, [hasEditedProblem, hasReordered])
+  }, [hasEditedRefinementSlide, hasReordered])
 
   function fireEdit(slideId: string) {
     onSlideEdited?.(slideId)
-    if (slideId === "slide-problem-card") {
-      setHasEditedProblem(true)
+    if (slideId === refinementTargetSlideId) {
+      setHasEditedRefinementSlide(true)
     }
   }
 
@@ -683,7 +699,7 @@ export function ScenarioSlides({
   const selectedSlideIndex = selectedSlide
     ? order.indexOf(selectedSlide.id)
     : -1
-  const readyToSubmit = hasReordered && hasEditedProblem
+  const readyToSubmit = hasReordered && hasEditedRefinementSlide
 
   return (
     <div
