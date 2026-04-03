@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import type { ScenarioId } from "@/lib/scenarios/ids";
 import { isScenarioId } from "@/lib/scenarios/ids";
-import { getScenarioEntry, SLIDES_CANONICAL_ORDER } from "@/lib/scenarios/registry";
+import {
+  getScenarioEntry,
+  SLIDES_ALLOWED_ORDER_IDS,
+} from "@/lib/scenarios/registry";
 
 const MAX_SLIDE_ORDER_LEN = 8;
 const MAX_PROBLEM_BULLETS = 16;
@@ -128,7 +131,7 @@ export function parseParticipantTaskSnapshotForScenario(
       return parsed.success ? parsed.data : null;
     }
     if (scenarioId === "slides-outline-refine") {
-      const parsed = slidesSchema(SLIDES_CANONICAL_ORDER).safeParse(raw);
+      const parsed = slidesSchema(SLIDES_ALLOWED_ORDER_IDS).safeParse(raw);
       return parsed.success ? parsed.data : null;
     }
     if (scenarioId === "pm-sprint-handoff") {

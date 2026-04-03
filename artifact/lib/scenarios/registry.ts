@@ -10,19 +10,82 @@ import type { ScenarioVariant } from "./variant"
 
 export type ScenarioTaxonomy = "interpretive" | "refinement" | "task_execution"
 
-export const SLIDES_CANONICAL_ORDER: readonly string[] = [
+/** Variant A: classic CX readout (title → problem → metrics → ask). */
+export const SLIDES_CANONICAL_ORDER_A: readonly string[] = [
   "slide-title-card",
   "slide-problem-card",
   "slide-metrics-card",
   "slide-cta-card",
 ]
 
-export const SLIDES_START_ORDER: readonly string[] = [
+/**
+ * Variant B: different deck — committee meeting → policy → proof → ballot items.
+ * Not the same slide IDs or story labels as variant A.
+ */
+export const SLIDES_CANONICAL_ORDER_B: readonly string[] = [
+  "slide-b-meeting",
+  "slide-b-policy",
+  "slide-b-proof",
+  "slide-b-vote",
+]
+
+export function slidesCanonicalOrderForVariant(
+  variant: ScenarioVariant
+): readonly string[] {
+  return variant === "a" ? SLIDES_CANONICAL_ORDER_A : SLIDES_CANONICAL_ORDER_B
+}
+
+/** @deprecated Use {@link slidesCanonicalOrderForVariant}. */
+export const SLIDES_CANONICAL_ORDER = SLIDES_CANONICAL_ORDER_A
+
+/** All slide ids that may appear in a submitted `order` (both variants). */
+export const SLIDES_ALLOWED_ORDER_IDS: readonly string[] = [
+  ...SLIDES_CANONICAL_ORDER_A,
+  ...SLIDES_CANONICAL_ORDER_B,
+]
+
+/** Jumbled strip for variant A (corporate team readout). */
+export const SLIDES_START_ORDER_A: readonly string[] = [
   "slide-metrics-card",
   "slide-cta-card",
   "slide-title-card",
   "slide-problem-card",
 ]
+
+/** Jumbled strip for variant B — different ids and pattern from variant A. */
+export const SLIDES_START_ORDER_B: readonly string[] = [
+  "slide-b-vote",
+  "slide-b-meeting",
+  "slide-b-proof",
+  "slide-b-policy",
+]
+
+export function slidesStartOrderForVariant(
+  variant: ScenarioVariant
+): readonly string[] {
+  return variant === "a" ? SLIDES_START_ORDER_A : SLIDES_START_ORDER_B
+}
+
+/** @deprecated Prefer {@link slidesStartOrderForVariant} — order differs by variant. */
+export const SLIDES_START_ORDER = SLIDES_START_ORDER_A
+
+/** Maps variant B slides into legacy snapshot keys for support APIs. */
+export function outlineSnapshotBullets(state: SlidesTaskState): {
+  problemBullets: string[]
+  metricsBullets: string[]
+} {
+  const byId = Object.fromEntries(state.slides.map((s) => [s.id, s]))
+  if (state.variant === "a") {
+    return {
+      problemBullets: [...(byId["slide-problem-card"]?.bullets ?? [])],
+      metricsBullets: [...(byId["slide-metrics-card"]?.bullets ?? [])],
+    }
+  }
+  return {
+    problemBullets: [...(byId["slide-b-policy"]?.bullets ?? [])],
+    metricsBullets: [...(byId["slide-b-proof"]?.bullets ?? [])],
+  }
+}
 
 export type ScenarioRegistryEntry = {
   taxonomy: ScenarioTaxonomy
@@ -44,16 +107,23 @@ const EPHEMERAL_TARGETS = {
     "alerts-strip",
   ] as const,
   slides: [
+    "deck-context-bar",
+    "slide-canvas-area",
+    "slide-canvas-header",
     "slide-title-card",
     "slide-problem-card",
     "slide-metrics-card",
     "slide-cta-card",
-    "deck-context-bar",
-    "slide-canvas-area",
-    "slide-canvas-header",
-    "slide-problem-hint",
-    "slide-problem-bullets",
-    "slide-metrics-bullets",
+    "slide-problem-card-hint",
+    "slide-problem-card-bullets",
+    "slide-metrics-card-bullets",
+    "slide-b-meeting",
+    "slide-b-policy",
+    "slide-b-proof",
+    "slide-b-vote",
+    "slide-b-policy-hint",
+    "slide-b-policy-bullets",
+    "slide-b-proof-bullets",
   ] as const,
   pm: [
     "ticket-docs-lag",
@@ -65,9 +135,6 @@ const EPHEMERAL_TARGETS = {
     "in-progress-column-header",
   ] as const,
 }
-
-const PROBLEM_RISK_PATTERN =
-  /\b(risk|delay|delayed|late|missed|complaint|complaints|shortage|backlog|bottleneck|confusion|overbooked|failure|issue|problem)\b/i
 
 function buildDashboardVariantA(): DashboardTaskState {
   return {
@@ -226,6 +293,8 @@ function buildSlidesVariantA(): SlidesTaskState {
           "Weekly team review",
           "Decision: focus on delivery delays first",
         ],
+        canvas: "title",
+        stripTag: "title",
       },
       {
         id: "slide-problem-card",
@@ -235,6 +304,8 @@ function buildSlidesVariantA(): SlidesTaskState {
           "Late deliveries are driving repeat customer complaints",
           "Current wording is still too vague",
         ],
+        canvas: "problem",
+        stripTag: "problem",
       },
       {
         id: "slide-metrics-card",
@@ -245,6 +316,8 @@ function buildSlidesVariantA(): SlidesTaskState {
           "On-time delivery rate 82%",
           "Refund requests +9% week over week",
         ],
+        canvas: "metrics",
+        stripTag: "metrics",
       },
       {
         id: "slide-cta-card",
@@ -255,6 +328,8 @@ function buildSlidesVariantA(): SlidesTaskState {
           "Assign one operations lead and one support lead",
           "Review impact in 30 days",
         ],
+        canvas: "ask",
+        stripTag: "ask",
       },
     ],
   }
@@ -265,47 +340,56 @@ function buildSlidesVariantB(): SlidesTaskState {
     scenarioId: "slides-outline-refine",
     variant: "b",
     reviewGoal:
-      "Prepare a class presentation that explains the problem clearly, shows supporting evidence, and names one concrete risk before the ask.",
-    deckLabel: "Group presentation draft",
-    deckDeadlineLabel: "Present in class tomorrow 09:00",
+      "Frame the committee vote, then explain the rules, show why this society qualifies, and end with ballot-ready asks.",
+    deckLabel: "Society funding pack",
+    deckDeadlineLabel: "Committee vote tomorrow 18:00",
     slides: [
       {
-        id: "slide-title-card",
-        title: "Our group presentation",
-        summary: "Frames the topic and what you need from the class.",
+        id: "slide-b-meeting",
+        title: "Funding committee — 5 min slot",
+        summary: "Who is in the room and what the vote covers.",
         bullets: [
-          "University course — group assessment",
-          "Decision: fix the weakest part before the live demo",
+          "Student union finance sub-committee",
+          "Tonight: approve one-off allocations for spring events",
         ],
+        canvas: "title",
+        stripTag: "meeting",
       },
       {
-        id: "slide-problem-card",
-        title: "Problem",
-        summary: "Must name a concrete risk; vague pains are insufficient.",
+        id: "slide-b-policy",
+        title: "What the union funds this week",
+        summary: "Eligibility and caps so the story is grounded in policy.",
         bullets: [
-          "The live demo might fail if the dataset still will not load",
-          "The slide still avoids saying what could go wrong on the day",
+          "Societies may request one coordinator shift if volunteer hours fall short",
+          "No duplicate requests for the same room booking deposit",
+          "One-off caps: £400 for equipment, £250 for printed materials",
         ],
+        canvas: "problem",
+        stripTag: "policy",
       },
       {
-        id: "slide-metrics-card",
-        title: "Metrics snapshot",
-        summary: "Evidence and deltas with footnotes.",
+        id: "slide-b-proof",
+        title: "Film & photo society — track record",
+        summary: "Numbers that show membership and past use of funds.",
         bullets: [
-          "Slides: 14 of 18 ready",
-          "Full rehearsal: 0 runs",
-          "Last practice: demo crashed twice",
+          "Active members this term: 87",
+          "Average turnout last three screenings: 41",
+          "Last year’s allocation: 96% spent on approved line items",
         ],
+        canvas: "metrics",
+        stripTag: "proof",
       },
       {
-        id: "slide-cta-card",
-        title: "Ask",
-        summary: "Decision request with owners.",
+        id: "slide-b-vote",
+        title: "Ballot items we need",
+        summary: "Committee-ready asks with clear owners.",
         bullets: [
-          "Book a room for a full dry run tonight",
-          "Cut one backup slide if the demo runs long",
-          "Split who answers questions after the talk",
+          "Approve two paid setup shifts for the welcome desk",
+          "Confirm the room deposit for the spring screening",
+          "Release poster printing from the shared societies print budget",
         ],
+        canvas: "ask",
+        stripTag: "vote",
       },
     ],
   }
@@ -484,15 +568,14 @@ export const SCENARIO_REGISTRY: Record<
       correctAnswerId: "slides-refinement-json",
       ephemeralTargets: EPHEMERAL_TARGETS.slides,
       scenarioPreamble:
-        "You are finishing a short slide deck for a team update the night before a meeting. The order of the slides is jumbled, and the slide about the problem still sounds vague instead of spelling out what might go wrong.",
+        "You are finishing a short customer-operations readout for a team meeting tomorrow morning. The order of the slides is jumbled.",
       taskHeading:
-        "Fix the deck before you submit it: put the small slides in a sensible order, then edit the Problem slide so it clearly states a real risk (for example things running late, unhappy customers, or missing a target).",
+        "Before you submit: put the small slides in this order: opening title, then the problem, then the metrics, then the ask.",
       participantOutcome: [
-        "Drag each small slide card (the whole card, not only the dots) left or right until the order is: title, then problem, then numbers, then what you are asking for.",
-        "Click the Problem slide in the row so it shows large above. Type in that large view to say the risk in plain language.",
+        "Drag each small slide card (the whole card, not only the dots) left or right until the order is: title, then problem, then metrics, then ask.",
       ],
       supportUserPromptPreamble:
-        "Scenario: refinement before a team review in a lightweight deck editor. Task: help the user reorder the narrative and strengthen the Problem slide with an explicit risk line, not just pick a weak slide from a list.",
+        "Scenario: retail / CX team readout in a lightweight deck editor. Task: help the user reorder the slide strip into a clear story order; this deck is unrelated to the campus funding scenario.",
       buildTaskState: buildSlidesVariantA,
     },
     b: {
@@ -500,15 +583,14 @@ export const SCENARIO_REGISTRY: Record<
       correctAnswerId: "slides-refinement-json",
       ephemeralTargets: EPHEMERAL_TARGETS.slides,
       scenarioPreamble:
-        "You are finishing a slide deck for a group presentation in one of your university classes the next day. The order of the slides is jumbled, and the evidence slide still reads like placeholder numbers instead of backing up the story.",
+        "You are finishing a short slide pack for a student society funding vote. The committee meets tomorrow, and the order of the slides is jumbled after exporting from the shared doc.",
       taskHeading:
-        "Fix the deck before you submit it: put the small slides in a sensible order, then edit the Metrics snapshot slide so the numbers clearly support the problem (for example rehearsal gaps, time risk, or demo reliability).",
+        "Before you submit: put the small slides in this order: committee meeting frame, then union funding rules, then proof the society qualifies, then the ballot items you want approved.",
       participantOutcome: [
-        "Drag each small slide card (the whole card, not only the dots) left or right until the order is: title, then problem, then numbers, then what you are asking for.",
-        "Click the Metrics snapshot slide in the row so it shows large above. Type in that large view to make the evidence concrete.",
+        "Drag each small slide card (the whole card, not only the dots) left or right until the order is: meeting, then policy, then proof, then vote.",
       ],
       supportUserPromptPreamble:
-        "Scenario: refinement before a university group presentation in a lightweight deck editor. Task: help the user reorder the narrative and strengthen the Metrics slide with evidence that supports the problem, not just tidy the outline.",
+        "Scenario: campus committee funding deck (different slide ids and story from the CX readout). Task: help the user reorder into meeting → policy → proof → vote.",
       buildTaskState: buildSlidesVariantB,
     },
   },
@@ -550,6 +632,7 @@ export function isSlidesRefinementPayloadCorrect(
   raw: string,
   variant: ScenarioVariant = "a"
 ): boolean {
+  const canonical = slidesCanonicalOrderForVariant(variant)
   let parsed: unknown
   try {
     parsed = JSON.parse(raw) as unknown
@@ -559,35 +642,14 @@ export function isSlidesRefinementPayloadCorrect(
   if (typeof parsed !== "object" || parsed === null) return false
   const o = parsed as {
     order?: unknown
-    problemBullets?: unknown
-    metricsBullets?: unknown
   }
   if (!Array.isArray(o.order) || !o.order.every((x) => typeof x === "string"))
     return false
-  if (o.order.length !== SLIDES_CANONICAL_ORDER.length) return false
-  for (let i = 0; i < SLIDES_CANONICAL_ORDER.length; i++) {
-    if (o.order[i] !== SLIDES_CANONICAL_ORDER[i]) return false
+  if (o.order.length !== canonical.length) return false
+  for (let i = 0; i < canonical.length; i++) {
+    if (o.order[i] !== canonical[i]) return false
   }
-  if (variant === "b") {
-    if (
-      !Array.isArray(o.metricsBullets) ||
-      !o.metricsBullets.every((x) => typeof x === "string")
-    ) {
-      return false
-    }
-    const metricsText = o.metricsBullets.join(" ").trim()
-    if (metricsText.length < 8) return false
-    return PROBLEM_RISK_PATTERN.test(metricsText)
-  }
-  if (
-    !Array.isArray(o.problemBullets) ||
-    !o.problemBullets.every((x) => typeof x === "string")
-  ) {
-    return false
-  }
-  const problemText = o.problemBullets.join(" ").trim()
-  if (problemText.length < 8) return false
-  return PROBLEM_RISK_PATTERN.test(problemText)
+  return true
 }
 
 export function isPmWorkflowPayloadCorrect(

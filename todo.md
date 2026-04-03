@@ -1,7 +1,14 @@
 
 # TODO
 
-- [] Add this to the thesis:
+- [] Update my thesis to reflect 
+- [] One limitation I could put is the diversity of my examples
+  - Had to remove more advanced interactions from the user like helping them write text better
+  - I played around with this idea but with the writing
+  - Future research would include writing in option
+  - Another future research would be to have a more crazy ui like subway surfers
+  - Another format that I could do is a focus group research and spend more time with my testees instead of like this
+- Update my thesis methodology that I only included one scenario otherwise people would not want to complete it, the scenario was with slides
 
 > The thesis text should be revised so the final written method matches the implemented artifact.
 >

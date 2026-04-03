@@ -3,6 +3,8 @@ export type {
   DashboardTaskState,
   DashboardCardState,
   SlidesTaskState,
+  SlideDef,
+  SlideCanvasTemplate,
   PmSprintTaskState,
   PmTicketState,
 } from "./scenarios/task-state";
