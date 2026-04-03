@@ -11,7 +11,16 @@ import { ScenarioPmSprint } from "@/components/study/ScenarioPmSprint"
 import { ScenarioSlides } from "@/components/study/ScenarioSlides"
 import type { SlidesAttemptState } from "@/components/study/ScenarioSlides"
 import { StudyProgressBar } from "@/components/study/StudyProgressBar"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import {
   DEFAULT_EPHEMERAL_DEBUG_SETTINGS,
   ephemeralStressBand,
@@ -78,6 +87,9 @@ const INITIAL_SLIDES_ATTEMPT: SlidesAttemptState = {
   hasEditedProblem: false,
   readyToSubmit: false,
 }
+
+/** Stored when the participant submits without a generated refinement payload. */
+const SLIDES_INCOMPLETE_SUBMIT_FALLBACK = "{}"
 
 function participantChecklistCompletion(
   scenarioId: string,
@@ -515,11 +527,10 @@ export default function StudyPage(): React.ReactElement {
       sid === "dashboard-priority"
         ? selected
         : sid === "slides-outline-refine"
-          ? refinementAnswer
+          ? (refinementAnswer ?? SLIDES_INCOMPLETE_SUBMIT_FALLBACK)
           : sid === "pm-sprint-handoff"
             ? pmAnswer
             : null
-    if (sid === "slides-outline-refine" && !slidesAttempt.readyToSubmit) return
     if (!answer) return
 
     setSubmitting(true)
@@ -643,14 +654,11 @@ export default function StudyPage(): React.ReactElement {
   const participantOutcome = entry?.participantOutcome ?? [
     "Complete the task in the workspace below.",
   ]
-  const taskNumber = trial.trialIndex + 1
-  const totalTrials = state.totalTrials
-
   const canSubmit =
     sid === "dashboard-priority"
       ? !!selected
       : sid === "slides-outline-refine"
-        ? slidesAttempt.readyToSubmit && !!refinementAnswer
+        ? true
         : sid === "pm-sprint-handoff"
           ? !!pmAnswer
           : false
@@ -662,12 +670,6 @@ export default function StudyPage(): React.ReactElement {
     selected,
     pmAnswer
   )
-
-  const ephemeralIdle =
-    trial.condition === "ephemeral" &&
-    !spec &&
-    !loadingSupport &&
-    !supportLoadedRef.current
 
   const dashboardTaskState =
     taskState?.scenarioId === "dashboard-priority" ? taskState : null
@@ -755,80 +757,87 @@ export default function StudyPage(): React.ReactElement {
           }
         />
 
-        <div className="mb-6 flex items-baseline justify-between gap-4">
-          <div className="min-w-0 space-y-1">
-            <p className="text-xs text-muted-foreground tabular-nums">
-              Task {taskNumber} of {totalTrials}
-            </p>
-            {state.baselineIsVersionA != null ? (
-              <p className="text-xs text-muted-foreground">
-                This task uses{" "}
-                <span className="font-semibold text-foreground">
-                  Version{" "}
-                  {interfaceVersionLetter(
-                    state.baselineIsVersionA,
-                    trial.condition
-                  )}
-                </span>
-                <span className="text-muted-foreground">
-                  {" "}
-                  (
-                  {trial.condition === "ephemeral"
-                    ? "assistance may appear"
-                    : "no on-screen assistance"}
-                  ).
-                </span>
-              </p>
-            ) : null}
-          </div>
-          {trial.condition === "ephemeral" && ephemeralIdle ? (
-            <Button
-              type="button"
-              size="xs"
-              variant="outline"
-              onClick={() => void onExplicitSupportRequest()}
+        <div className="mb-8 space-y-4">
+          {state.baselineIsVersionA != null ? (
+            <Badge
+              variant={trial.condition === "ephemeral" ? "default" : "secondary"}
+              className="h-7 gap-1.5 px-3 text-sm"
             >
-              Request assistance
-            </Button>
-          ) : trial.condition === "ephemeral" && loadingSupport ? (
-            <p className="text-xs text-muted-foreground">Preparing…</p>
+              Version{" "}
+              {interfaceVersionLetter(
+                state.baselineIsVersionA,
+                trial.condition
+              )}
+              {" — "}
+              {trial.condition === "ephemeral"
+                ? "with assistance"
+                : "without assistance"}
+            </Badge>
           ) : null}
-        </div>
 
-        <div className="mb-6 max-w-prose space-y-6">
-          {preamble ? (
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {preamble}
-            </p>
-          ) : null}
-          <p className="text-base leading-snug font-semibold text-foreground">
-            {taskHeading}
-          </p>
-          <ul className="space-y-2 text-xs text-muted-foreground">
-            {participantOutcome.map((line, i) => (
-              <li key={`${line}-${i}`} className="flex items-start gap-2.5">
-                <span
-                  className={cn(
-                    "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border text-[10px] font-semibold",
-                    participantChecklistDone[i]
-                      ? "border-emerald-600 bg-emerald-600 text-white"
-                      : "border-muted-foreground/35 bg-background text-transparent"
-                  )}
-                  aria-hidden
-                >
-                  {participantChecklistDone[i] ? "✓" : ""}
-                </span>
-                <span
-                  className={cn(
-                    "pt-px leading-relaxed",
-                    participantChecklistDone[i] && "text-foreground"
-                  )}
-                >
-                  {line}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <Card>
+            <CardHeader>
+              <CardDescription>
+                {trial.condition === "ephemeral"
+                  ? "On-screen help may appear after a moment. You can close it any time."
+                  : "No extra on-screen help — just the normal interface."}
+              </CardDescription>
+            </CardHeader>
+
+            {preamble ? (
+              <CardContent>
+                <CardTitle className="mb-2">Situation</CardTitle>
+                <CardDescription className="leading-relaxed">
+                  {preamble}
+                </CardDescription>
+              </CardContent>
+            ) : null}
+
+            <CardContent>
+              <CardTitle className="mb-2">Your task</CardTitle>
+              <p className="text-sm font-semibold leading-relaxed text-foreground">
+                {taskHeading}
+              </p>
+            </CardContent>
+
+            <CardContent>
+              <CardTitle className="mb-3">Steps to complete</CardTitle>
+              <ul className="space-y-3">
+                {participantOutcome.map((line, i) => (
+                  <li key={`${line}-${i}`} className="flex gap-3">
+                    <span
+                      className={cn(
+                        "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md text-[11px] font-semibold transition-colors",
+                        participantChecklistDone[i]
+                          ? "bg-emerald-600 text-white"
+                          : "bg-muted text-muted-foreground/60 ring-1 ring-border"
+                      )}
+                      aria-hidden
+                    >
+                      {participantChecklistDone[i] ? "✓" : i + 1}
+                    </span>
+                    <span
+                      className={cn(
+                        "min-w-0 flex-1 pt-0.5 text-sm leading-relaxed text-muted-foreground",
+                        participantChecklistDone[i] &&
+                          "text-foreground line-through decoration-muted-foreground/30"
+                      )}
+                    >
+                      {line}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+
+            {trial.condition === "ephemeral" && loadingSupport ? (
+              <CardFooter>
+                <p className="text-xs text-muted-foreground">
+                  Preparing help…
+                </p>
+              </CardFooter>
+            ) : null}
+          </Card>
         </div>
 
         <div
@@ -853,12 +862,6 @@ export default function StudyPage(): React.ReactElement {
 
         <div className="fixed right-0 bottom-0 left-0 border-t border-border bg-background/95 p-4 backdrop-blur">
           <div className="mx-auto flex max-w-5xl justify-end gap-2 px-6">
-            {sid === "slides-outline-refine" && !slidesAttempt.readyToSubmit ? (
-              <p className="mr-auto self-center text-xs text-muted-foreground">
-                Reorder the slide thumbnails and update the Problem slide to
-                unlock submit.
-              </p>
-            ) : null}
             <Button
               disabled={!canSubmit || submitting}
               onClick={() => void onSubmit()}

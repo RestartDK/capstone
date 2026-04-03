@@ -264,17 +264,17 @@ function buildSlidesVariantB(): SlidesTaskState {
     scenarioId: "slides-outline-refine",
     variant: "b",
     reviewGoal:
-      "Prepare a readiness update that explains the current problem clearly, shows supporting evidence, and names one concrete risk before the ask.",
-    deckLabel: "Event readiness draft",
-    deckDeadlineLabel: "Due tomorrow 11:30",
+      "Prepare a class presentation that explains the problem clearly, shows supporting evidence, and names one concrete risk before the ask.",
+    deckLabel: "Group presentation draft",
+    deckDeadlineLabel: "Present in class tomorrow 09:00",
     slides: [
       {
         id: "slide-title-card",
-        title: "Open day readiness",
-        summary: "Frames the launch review and decision.",
+        title: "Our group presentation",
+        summary: "Frames the topic and what you need from the class.",
         bullets: [
-          "Planning review",
-          "Decision: protect check-in before event day",
+          "University course — group assessment",
+          "Decision: fix the weakest part before the live demo",
         ],
       },
       {
@@ -282,8 +282,8 @@ function buildSlidesVariantB(): SlidesTaskState {
         title: "Problem",
         summary: "Must name a concrete risk; vague pains are insufficient.",
         bullets: [
-          "Too few trained volunteers could cause long check-in delays",
-          "The draft still avoids naming the real risk clearly",
+          "The live demo might fail if the dataset still will not load",
+          "The slide still avoids saying what could go wrong on the day",
         ],
       },
       {
@@ -291,9 +291,9 @@ function buildSlidesVariantB(): SlidesTaskState {
         title: "Metrics snapshot",
         summary: "Evidence and deltas with footnotes.",
         bullets: [
-          "Volunteer coverage at 68% of target",
-          "Queue wait estimate up 12 minutes",
-          "Last event: 23 check-in complaints",
+          "Slides: 14 of 18 ready",
+          "Full rehearsal: 0 runs",
+          "Last practice: demo crashed twice",
         ],
       },
       {
@@ -301,9 +301,9 @@ function buildSlidesVariantB(): SlidesTaskState {
         title: "Ask",
         summary: "Decision request with owners.",
         bullets: [
-          "Approve an extra volunteer recruitment push",
-          "Assign one logistics lead and one check-in lead",
-          "Return with an updated staffing plan",
+          "Book a room for a full dry run tonight",
+          "Cut one backup slide if the demo runs long",
+          "Split who answers questions after the talk",
         ],
       },
     ],
@@ -483,12 +483,12 @@ export const SCENARIO_REGISTRY: Record<
       correctAnswerId: "slides-refinement-json",
       ephemeralTargets: EPHEMERAL_TARGETS.slides,
       scenarioPreamble:
-        "You are finalising a team update deck the night before a review. The slide story is in a weak order, and the Problem slide still reads like a vague draft instead of a clear problem statement.",
+        "You are finishing a short slide deck for a team update the night before a meeting. The order of the slides is jumbled, and the slide about the problem still sounds vague instead of spelling out what might go wrong.",
       taskHeading:
-        "Improve the deck before submission: reorder the slide thumbnails into a coherent story (title → problem → metrics → ask), then revise the Problem slide on the canvas so it explicitly states a concrete risk such as delays, complaints, or missed goals.",
+        "Fix the deck before you submit it: put the small slides in a sensible order, then edit the Problem slide so it clearly states a real risk (for example things running late, unhappy customers, or missing a target).",
       participantOutcome: [
-        "Reorder the slides into title → problem → metrics → ask.",
-        "Revise the Problem slide so it names a concrete risk.",
+        "Drag each small slide card (the whole card, not only the dots) left or right until the order is: title, then problem, then numbers, then what you are asking for.",
+        "Click the Problem slide in the row so it shows large above. Type in that large view to say the risk in plain language.",
       ],
       supportUserPromptPreamble:
         "Scenario: refinement before a team review in a lightweight deck editor. Task: help the user reorder the narrative and strengthen the Problem slide with an explicit risk line, not just pick a weak slide from a list.",
@@ -499,15 +499,15 @@ export const SCENARIO_REGISTRY: Record<
       correctAnswerId: "slides-refinement-json",
       ephemeralTargets: EPHEMERAL_TARGETS.slides,
       scenarioPreamble:
-        "You are finalising an event-readiness deck the night before a decision review. The story order is weak, and the Problem slide still hints at trouble without naming the risk clearly.",
+        "You are finishing a slide deck for a group presentation in one of your university classes the next day. The order of the slides is jumbled, and the slide about the problem still hints at trouble without saying clearly what might go wrong.",
       taskHeading:
-        "Improve the deck before submission: reorder the slide thumbnails into a coherent story (title → problem → metrics → ask), then revise the Problem slide on the canvas so it explicitly states a concrete risk such as delays, complaints, or missed goals.",
+        "Fix the deck before you submit it: put the small slides in a sensible order, then edit the Problem slide so it clearly states a real risk (for example the demo failing, running over time, or part of the group not being ready).",
       participantOutcome: [
-        "Reorder the slides into title → problem → metrics → ask.",
-        "Revise the Problem slide so it names a concrete risk.",
+        "Drag each small slide card (the whole card, not only the dots) left or right until the order is: title, then problem, then numbers, then what you are asking for.",
+        "Click the Problem slide in the row so it shows large above. Type in that large view to name the presentation or demo risk in plain language.",
       ],
       supportUserPromptPreamble:
-        "Scenario: refinement before an event review in a lightweight deck editor. Task: help the user reorder the narrative and strengthen the Problem slide with an explicit risk line, not just point at a weak slide.",
+        "Scenario: refinement before a university group presentation in a lightweight deck editor. Task: help the user reorder the narrative and strengthen the Problem slide with an explicit risk line, not just point at a weak slide.",
       buildTaskState: buildSlidesVariantB,
     },
   },

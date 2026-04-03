@@ -12,6 +12,17 @@ export function interfaceVersionLetter(
   return baselineIsVersionA ? "B" : "A";
 }
 
+/** Trial order is always Version A first, then B; this maps the label to the underlying condition. */
+export function conditionForVersionLetter(
+  baselineIsVersionA: boolean,
+  letter: "A" | "B",
+): "baseline" | "ephemeral" {
+  if (letter === "A") {
+    return baselineIsVersionA ? "baseline" : "ephemeral";
+  }
+  return baselineIsVersionA ? "ephemeral" : "baseline";
+}
+
 /** Short copy for instruction / debrief: what A and B referred to for this participant. */
 export function interfaceVersionLegend(baselineIsVersionA: boolean): {
   lineA: string;
@@ -19,12 +30,16 @@ export function interfaceVersionLegend(baselineIsVersionA: boolean): {
 } {
   if (baselineIsVersionA) {
     return {
-      lineA: "Version A: interface without temporary on-screen assistance.",
-      lineB: "Version B: interface where temporary assistance could appear.",
+      lineA:
+        "Version A: no extra on-screen help — the interface on its own, without assistance.",
+      lineB:
+        "Version B: the same interface, but temporary on-screen assistance may appear (you can ignore or close it).",
     };
   }
   return {
-    lineA: "Version A: interface where temporary assistance could appear.",
-    lineB: "Version B: interface without temporary on-screen assistance.",
+    lineA:
+      "Version A: the same interface, but temporary on-screen assistance may appear (you can ignore or close it).",
+    lineB:
+      "Version B: no extra on-screen help — the interface on its own, without assistance.",
   };
 }

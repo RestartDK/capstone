@@ -38,14 +38,15 @@ export default function ConsentPage(): React.ReactElement {
       <h1 className="text-lg font-medium">Welcome</h1>
       <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
         <p>
-          In this study you will complete several short interface tasks across different scenarios.
-          Each task asks you to use the interface to complete a goal. During some tasks, temporary
-          assistance may appear after a short pause or if you explicitly request it.
+          In this study you will complete the same short slide-editing task twice, in a fixed order:
+          first <strong>Version&nbsp;A</strong>, then <strong>Version&nbsp;B</strong>. For you, one
+          of those is the normal screen without extra help; the other may show temporary on-screen
+          help automatically after a brief pause.
         </p>
         <p>
-          After every task you will answer three brief rating questions. The whole session takes
-          roughly 8&nbsp;minutes. Please complete each task as naturally as possible. You may ignore
-          or dismiss any assistance if you do not find it useful.
+          After each round you will answer three brief rating questions. The whole session takes
+          roughly a few minutes. Please work as you normally would. You may ignore or close any help
+          if you do not find it useful. At the end we will remind you which version was which.
         </p>
         <p>Your responses are used for research. Do not include personally identifying information.</p>
       </div>
