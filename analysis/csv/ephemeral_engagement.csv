@@ -33,6 +33,9 @@ participant_id,event_type,event_count
 88ec30ab-8850-4408-9c50-1fb4a5645f49,support_dismissed,1
 88ec30ab-8850-4408-9c50-1fb4a5645f49,support_shown,1
 88ec30ab-8850-4408-9c50-1fb4a5645f49,support_triggered,1
+8a7c44c4-b9e8-4c78-bef0-2074c8658bbd,support_dismissed,3
+8a7c44c4-b9e8-4c78-bef0-2074c8658bbd,support_shown,3
+8a7c44c4-b9e8-4c78-bef0-2074c8658bbd,support_triggered,5
 9e58c027-81d8-47e6-8c24-a06465d01306,support_dismissed,2
 9e58c027-81d8-47e6-8c24-a06465d01306,support_shown,2
 9e58c027-81d8-47e6-8c24-a06465d01306,support_triggered,2

@@ -11,12 +11,7 @@ These choices reflect the requirements of a research instrument rather than a pr
 
 \begin{figure}[htbp]
     \centering
-    \fbox{%
-        \begin{minipage}{0.94\textwidth}\footnotesize
-        \textit{[Diagram placeholder.]}\quad
-        Three-tier block diagram: browser client (React, Tailwind, \texttt{@dnd-kit}, ephemeral overlay) $\rightarrow$ Next.js API (participants, trials, events, support, questionnaires) $\rightarrow$ PostgreSQL and Google Gemini (structured output). Arrows indicate data flow.
-        \end{minipage}%
-    }
+    \includegraphics[width=0.95\textwidth]{graphics/architecture.png}
     \caption{High-level system architecture of the experimental artifact.}
     \label{fig:architecture}
 \end{figure}
@@ -30,18 +25,6 @@ After consenting, the participant completes a short background questionnaire cov
 Trial rows are created incrementally rather than all at once. The first trial is created when the participant acknowledges the instructions. Each subsequent trial is created only after the previous trial has been completed and its post-trial questionnaire has been submitted. This ensures that the participant cannot skip ahead or access later trials before finishing earlier ones.
 
 Counterbalancing is implemented at the participant level. When a participant record is created, a boolean flag is randomly set to determine whether the baseline condition corresponds to Version~A or Version~B. The trial plan then assigns conditions to version labels using this flag, so that one participant may encounter the baseline first while another encounters the ephemeral condition first, both under the neutral label ``Version~A.'' The content variant for each condition is further diversified by hashing the participant identifier together with the scenario identifier, ensuring that the specific slide deck a participant sees in the baseline condition differs from the one they see in the ephemeral condition.
-
-\begin{figure}[htbp]
-    \centering
-    \fbox{%
-        \begin{minipage}{0.94\textwidth}\footnotesize
-        \textit{[Diagram placeholder.]}\quad
-        Sequential flow: Landing $\rightarrow$ Consent $\rightarrow$ Background $\rightarrow$ Trial~1 $\rightarrow$ Post-trial~1 $\rightarrow$ Trial~2 $\rightarrow$ Post-trial~2 $\rightarrow$ Final questionnaire $\rightarrow$ Completion. Annotate \texttt{resolveStudyState} and incremental trial creation.
-        \end{minipage}%
-    }
-    \caption{Participant flow through the experimental website. Each step is enforced by a server-side state machine that prevents skipping or reordering.}
-    \label{fig:participant-flow}
-\end{figure}
 
 \subsection{Data Model}
 
@@ -183,11 +166,65 @@ Whether the specification was model-generated or a fallback, the full input stat
 
 \begin{figure}[htbp]
     \centering
-    \fbox{%
-        \begin{minipage}{0.94\textwidth}\footnotesize
-        \textit{[Diagram placeholder.]}\quad
-        Expanded pipeline: task state and snapshot $\rightarrow$ prompts $\rightarrow$ Gemini structured output $\rightarrow$ validation (envelope, node tree, props, target allowlist, structural rules, ancestry, HTML sanitisation) $\rightarrow$ accept or fallback $\rightarrow$ persist to \texttt{support\_outputs} $\rightarrow$ render overlay.
-        \end{minipage}%
+    \resizebox{0.98\textwidth}{!}{%
+    \begin{tikzpicture}[
+        font=\footnotesize,
+        node distance=7mm and 7mm,
+        box/.style={
+            draw,
+            rounded corners,
+            align=left,
+            inner sep=6pt,
+            text width=4.2cm
+        },
+        wide/.style={
+            draw,
+            rounded corners,
+            align=left,
+            inner sep=6pt,
+            text width=5.7cm
+        },
+        small/.style={
+            draw,
+            rounded corners,
+            align=left,
+            inner sep=6pt,
+            text width=3.9cm
+        }
+    ]
+    \node[box] (trigger) {\textbf{1. Client trigger}\\
+    In \texttt{app/study/page.tsx}, support is triggered after hesitation or by explicit request. The client sends \texttt{participantId}, \texttt{trialId}, \texttt{scenarioId}, trigger reason, and an optional participant snapshot to \texttt{POST /api/support}.};
+
+    \node[box, right=of trigger] (route) {\textbf{2. Route checks and state assembly}\\
+    \texttt{app/api/support/route.ts} verifies the session cookie, trial ownership, scenario match, and that the active condition is ephemeral. It reconstructs the baseline task state and validates the participant snapshot for the scenario.};
+
+    \node[box, right=of route] (prompt) {\textbf{3. Prompt construction and model call}\\
+    \texttt{generateValidatedSupport()} builds the system prompt from the component catalog, allowed target IDs, and taxonomy guidance, then combines it with task state and participant progress before calling Gemini through the Vercel AI SDK.};
+
+    \node[wide, below=of route] (validate) {\textbf{4. Spec parsing and validation}\\
+    Model output is coerced into the app envelope and checked in order for: (1) envelope parsing, (2) node-tree parsing, (3) per-component Zod prop validation, (4) target allowlisting, (5) structural container rules, (6) \texttt{FlowHtml} ancestry constraints, and (7) HTML sanitisation.};
+
+    \node[small, below left=of validate] (accept) {\textbf{5a. Accept model spec}\\
+    A valid \texttt{EphemeralSpec} becomes the support payload together with the discovered component types and catalog version.};
+
+    \node[small, below right=of validate] (fallback) {\textbf{5b. Deterministic fallback}\\
+    Missing API key, empty structured output, parse failure, rule violation, or SDK error causes \texttt{buildFallbackSpec()} to return a scenario-specific backup spec.};
+
+    \node[wide, below=11mm of validate] (persist) {\textbf{6. Persist generation record}\\
+    The route inserts a row into \texttt{support\_outputs} containing the input state (baseline task state, participant snapshot, trigger) and the output bundle (catalog version, final spec, component types, trigger, and whether fallback was used).};
+
+    \node[wide, below=of persist] (render) {\textbf{7. Return JSON and render overlay}\\
+    The API returns \texttt{spec} plus metadata to the study page. The client sets local state, \texttt{EphemeralLayer} renders the overlay above the existing interface, and later dismiss/use/inspect interactions are logged separately.};
+
+    \draw[->, semithick] (trigger) -- (route);
+    \draw[->, semithick] (route) -- (prompt);
+    \draw[->, semithick] (prompt) -- (validate);
+    \draw[->, semithick] (validate) -- (accept);
+    \draw[->, semithick] (validate) -- (fallback);
+    \draw[->, semithick] (accept) -- (persist);
+    \draw[->, semithick] (fallback) -- (persist);
+    \draw[->, semithick] (persist) -- (render);
+    \end{tikzpicture}%
     }
     \caption{Ephemeral support generation and validation pipeline. Model output passes through seven validation stages before rendering; invalid output triggers a deterministic fallback. Both paths are logged for later analysis.}
     \label{fig:ephemeral-pipeline-impl}
