@@ -55,9 +55,12 @@ import { trackEvent } from "@/lib/track"
 type SupportTrigger = "initial" | "hesitation" | "explicit_request"
 
 type SupportApiResponse = {
+  requestId: string
   spec: EphemeralSpec
   meta: {
     usedFallback: boolean
+    fallbackReason: string | null
+    providerAttempted: boolean
     modelName: string
     catalogVersion: string
     componentTypes: string[]
@@ -202,6 +205,11 @@ export default function StudyPage(): React.ReactElement {
       trigger: SupportTrigger
     ) => {
       if (supportLoadedRef.current && trigger !== "explicit_request") {
+        console.info("[support] fetch skipped: support already loaded", {
+          trialId,
+          scenarioId,
+          trigger,
+        })
         const skip: SupportDebugInfo = {
           at: new Date().toISOString(),
           trialId,
@@ -238,6 +246,11 @@ export default function StudyPage(): React.ReactElement {
           trigger,
         })
       }
+      console.info("[support] requesting /api/support", {
+        trialId,
+        scenarioId,
+        trigger,
+      })
       setLoadingSupport(true)
       try {
         const res = await fetch("/api/support", {
@@ -258,6 +271,15 @@ export default function StudyPage(): React.ReactElement {
           const data = (await res.json()) as SupportApiResponse
           setSpec(data.spec)
           supportShownRef.current = true
+          console.info("[support] /api/support success", {
+            requestId: data.requestId,
+            trialId,
+            trigger,
+            providerAttempted: data.meta.providerAttempted,
+            usedFallback: data.meta.usedFallback,
+            fallbackReason: data.meta.fallbackReason,
+            modelName: data.meta.modelName,
+          })
           if (supportDebugEnabled) {
             const okInfo: SupportDebugInfo = {
               at: new Date().toISOString(),
@@ -265,10 +287,10 @@ export default function StudyPage(): React.ReactElement {
               trigger,
               phase: "success",
               httpStatus: res.status,
-              detail: `usedFallback=${String(data.meta.usedFallback)} model=${data.meta.modelName} types=${data.meta.componentTypes.join(",")}`,
+              detail: `requestId=${data.requestId} attempted=${String(data.meta.providerAttempted)} usedFallback=${String(data.meta.usedFallback)} fallbackReason=${data.meta.fallbackReason ?? "none"} model=${data.meta.modelName} types=${data.meta.componentTypes.join(",")}`,
             }
             setSupportDebug(okInfo)
-            console.info("[support] spec applied", data.meta, data.spec)
+            console.info("[support] spec applied", data.requestId, data.meta, data.spec)
           }
           await trackEvent({
             participantId,
@@ -370,6 +392,14 @@ export default function StudyPage(): React.ReactElement {
         eventType: "trial_viewed",
       })
 
+      if (trialNow.condition === "ephemeral") {
+        console.info("[support] ephemeral trial started", {
+          trialId: tid,
+          scenarioId: trialNow.scenarioId,
+          supportOnTrialStart: debugSettings.supportOnTrialStart,
+        })
+      }
+
       if (
         trialNow.condition === "ephemeral" &&
         debugSettings.supportOnTrialStart
@@ -398,6 +428,11 @@ export default function StudyPage(): React.ReactElement {
     const pid = state.participantId
     const tid = trialNow.id
     const scenarioId = trialNow.scenarioId
+    console.info("[support] scheduling hesitation trigger", {
+      trialId: tid,
+      scenarioId,
+      hesitationMs: ms,
+    })
     const t = window.setTimeout(() => {
       void trackEvent({
         participantId: pid,
@@ -505,6 +540,10 @@ export default function StudyPage(): React.ReactElement {
   async function onExplicitSupportRequest(): Promise<void> {
     if (!trial || state?.step !== "study" || trial.condition !== "ephemeral")
       return
+    console.info("[support] explicit support request", {
+      trialId: trial.id,
+      scenarioId: trial.scenarioId,
+    })
     dismissSupport("superseded", { scenarioAction: "support_refreshed" })
     await trackEvent({
       participantId: state.participantId,

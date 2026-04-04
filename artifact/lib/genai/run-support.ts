@@ -27,6 +27,8 @@ export type SupportGenResult = {
   modelName: string
   rawOutput: unknown
   usedFallback: boolean
+  providerAttempted: boolean
+  fallbackReason: string | null
 }
 
 function getGoogleApiKey() {
@@ -147,6 +149,17 @@ export async function generateValidatedSupport(
   const apiKey = getGoogleApiKey()
   const modelId = process.env.GEMINI_MODEL ?? DEFAULT_MODEL
 
+  console.info("[support-gen] start", {
+    scenarioId,
+    modelId,
+    hasApiKey: Boolean(apiKey),
+    participantSnapshotPresent: participantSnapshot !== null,
+    participantSnapshotKeys:
+      participantSnapshot && typeof participantSnapshot === "object"
+        ? Object.keys(participantSnapshot).slice(0, 12)
+        : [],
+  })
+
   if (!apiKey) {
     console.warn(
       "[support-gen] fallback: missing GOOGLE_GENERATIVE_AI_API_KEY / GEMINI_API_KEY",
@@ -161,12 +174,18 @@ export async function generateValidatedSupport(
       modelName: "none",
       rawOutput: result.spec,
       usedFallback: true,
+      providerAttempted: false,
+      fallbackReason: "missing_api_key",
     }
   }
 
   const google = createGoogleGenerativeAI({ apiKey })
 
   try {
+    console.info("[support-gen] generateText:start", {
+      scenarioId,
+      modelId,
+    })
     const { output: object } = await generateText({
       model: google(modelId),
       system: buildSupportSystemPrompt(scenarioId),
@@ -199,18 +218,28 @@ export async function generateValidatedSupport(
         modelName: modelId,
         rawOutput: null,
         usedFallback: true,
+        providerAttempted: true,
+        fallbackReason: "empty_structured_output",
       }
     }
 
     const specPayload = coerceEphemeralSpecVersionFromModel(object)
     const validated = parseSpecForScenario(scenarioId, specPayload)
     if (validated) {
+      console.info("[support-gen] generateText:success", {
+        scenarioId,
+        modelId,
+        usedFallback: false,
+        componentTypes: validated.componentTypes,
+      })
       return {
         result: validated,
         catalogVersion: CATALOG_VERSION,
         modelName: modelId,
         rawOutput: object,
         usedFallback: false,
+        providerAttempted: true,
+        fallbackReason: null,
       }
     }
 
@@ -253,6 +282,8 @@ export async function generateValidatedSupport(
       modelName: modelId,
       rawOutput: object,
       usedFallback: true,
+      providerAttempted: true,
+      fallbackReason: "invalid_model_output",
     }
   } catch (e) {
     if (NoObjectGeneratedError.isInstance(e) && typeof e.text === "string") {
@@ -262,12 +293,19 @@ export async function generateValidatedSupport(
         e.text
       )
       if (recovered) {
+        console.info("[support-gen] generateText:recovered_from_text", {
+          scenarioId,
+          modelId,
+          componentTypes: recovered.result.componentTypes,
+        })
         return {
           result: recovered.result,
           catalogVersion: CATALOG_VERSION,
           modelName: modelId,
           rawOutput: recovered.rawOutput,
           usedFallback: false,
+          providerAttempted: true,
+          fallbackReason: null,
         }
       }
     }
@@ -285,6 +323,8 @@ export async function generateValidatedSupport(
       modelName: modelId,
       rawOutput: null,
       usedFallback: true,
+      providerAttempted: true,
+      fallbackReason: "generate_text_threw",
     }
   }
 }
