@@ -36,6 +36,10 @@ participant_id,event_type,event_count
 8a7c44c4-b9e8-4c78-bef0-2074c8658bbd,support_dismissed,3
 8a7c44c4-b9e8-4c78-bef0-2074c8658bbd,support_shown,3
 8a7c44c4-b9e8-4c78-bef0-2074c8658bbd,support_triggered,5
+99559b96-64b9-4033-9ab8-5fe366a08c72,support_dismissed,1
+99559b96-64b9-4033-9ab8-5fe366a08c72,support_shown,1
+99559b96-64b9-4033-9ab8-5fe366a08c72,support_triggered,1
+99559b96-64b9-4033-9ab8-5fe366a08c72,support_used,1
 9e58c027-81d8-47e6-8c24-a06465d01306,support_dismissed,2
 9e58c027-81d8-47e6-8c24-a06465d01306,support_shown,2
 9e58c027-81d8-47e6-8c24-a06465d01306,support_triggered,2
@@ -57,6 +61,10 @@ d4cc7231-ff1e-44de-8c77-252e1f700b97,support_triggered,1
 d6a3764a-3236-4fb4-a222-1bf5e8826bfd,support_dismissed,3
 d6a3764a-3236-4fb4-a222-1bf5e8826bfd,support_shown,3
 d6a3764a-3236-4fb4-a222-1bf5e8826bfd,support_triggered,3
+e2ac3c36-c745-468b-aac6-a2f3ad5aa72e,support_dismissed,2
+e2ac3c36-c745-468b-aac6-a2f3ad5aa72e,support_shown,2
+e2ac3c36-c745-468b-aac6-a2f3ad5aa72e,support_triggered,2
+e2ac3c36-c745-468b-aac6-a2f3ad5aa72e,support_used,1
 e6b298d6-eff1-49ff-83d6-0957bb6709a3,support_dismissed,3
 e6b298d6-eff1-49ff-83d6-0957bb6709a3,support_shown,3
 e6b298d6-eff1-49ff-83d6-0957bb6709a3,support_triggered,3

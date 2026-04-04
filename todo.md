@@ -10,18 +10,9 @@
 - [x] Make the scaffold for the results, with the queries for the data ready
 - [x] Make an introduction
 - [x] Add the problem and motivation section
-- [ ] Go through implementation, fix formatting, and add any needed diagrams
-- [ ] Fix production data so that it actually generates the ai that it should
-- [ ] Add shit to my appendix from the code I used for analysis the diaggrams, an example of a generated support output
-- [ ] Make a draft for the conclusion
-- [ ] Improve the signposting, so there are better transitions and takeaway sentences for every section
-- [ ] Based on the results of the data, see if you need to tweak it using another method or not in every single one
-- [ ] Add to the discussion the actual findings
-- [ ] Add the abstract
-- [ ] Once done with first draft, try to improve the result of your experiment so better to see visually
-
-
-
-
-
-Ok improve the generation and valiation pipeline in implmenentation section by just testing it locally and give my ai the result in pg db. so it should include the test and the actual picture output
+- [x] Go through implementation, fix formatting, and add any needed diagrams
+- [x] Fix production data so that it actually generates the ai that it should
+- [x] Add shit to my appendix from the code I used for analysis the diaggrams, an example of a generated support output
+- [x] Make a draft for the conclusion
+- [x] Improve my personal contribution by adding example of me using it with screenshots
+- [ ] Go through and make comments for every part of the thesis of what could be improved

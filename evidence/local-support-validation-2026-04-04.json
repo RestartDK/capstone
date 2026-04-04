@@ -1,0 +1,106 @@
+{
+  "date": "2026-04-04",
+  "route": "/api/support",
+  "scenarioId": "slides-outline-refine",
+  "participantId": "192571eb-71f5-4e69-9808-b1dedb71bdf6",
+  "trialId": "f8523735-82a2-4926-9e7a-26a78eb13a19",
+  "summary": {
+    "successfulRuns": 3,
+    "supportOutputIds": [101, 102, 103],
+    "modelName": "gemini-2.0-flash",
+    "allUsedFallback": false,
+    "allProviderAttempted": true,
+    "triggers": ["hesitation"],
+    "observedComponentTypeSets": [
+      ["Stack", "StepRail", "InspectPanel", "ConnectorLine"],
+      ["Stack", "StepRail", "InspectPanel"],
+      ["Stack", "StepRail", "InspectPanel", "ConnectorLine", "AnchoredTooltip"]
+    ]
+  },
+  "selectedExample": {
+    "requestId": "507d8f6e-525b-4478-8870-e9ac1be8e625",
+    "supportOutputId": 103,
+    "supportOutputCreatedAt": "2026-04-04T21:21:21.820Z",
+    "trigger": "hesitation",
+    "generation": {
+      "modelName": "gemini-2.0-flash",
+      "usedFallback": false,
+      "fallbackReason": null,
+      "providerAttempted": true,
+      "catalogVersion": "catalog-v3",
+      "componentTypes": [
+        "Stack",
+        "StepRail",
+        "InspectPanel",
+        "ConnectorLine",
+        "AnchoredTooltip"
+      ]
+    },
+    "inputExcerpt": {
+      "participantSnapshot": {
+        "scenarioId": "slides-outline-refine",
+        "slideOrder": [
+          "slide-b-meeting",
+          "slide-b-policy",
+          "slide-b-proof",
+          "slide-b-vote"
+        ]
+      }
+    },
+    "persistedOutput": {
+      "catalogVersion": "catalog-v3",
+      "spec": {
+        "version": 1,
+        "root": {
+          "type": "Stack",
+          "props": {},
+          "children": [
+            {
+              "type": "StepRail",
+              "props": {
+                "targetIds": [
+                  "slide-b-meeting",
+                  "slide-b-policy",
+                  "slide-b-proof",
+                  "slide-b-vote"
+                ]
+              }
+            },
+            {
+              "type": "InspectPanel",
+              "props": {
+                "targetId": "deck-context-bar",
+                "title": "Suggested Flow",
+                "summary": "Try this order: meeting context -> relevant policy -> proof the society qualifies -> ballot-ready asks. Frame the vote first, then explain the rules, show why this society qualifies, and end with clear requests.",
+                "details": [
+                  "Opening with context sets the stage.",
+                  "Highlighting policy grounds the story in the union's rules.",
+                  "Evidence builds confidence in the society's track record.",
+                  "Ending with concrete requests ensures a focused discussion."
+                ]
+              }
+            },
+            {
+              "type": "ConnectorLine",
+              "props": {
+                "fromTargetId": "slide-b-policy",
+                "toTargetId": "slide-b-proof"
+              }
+            },
+            {
+              "type": "AnchoredTooltip",
+              "props": {
+                "targetId": "slide-b-policy",
+                "body": "Policy before proof: explain the rules before showing how the society meets them.",
+                "placement": "top"
+              }
+            }
+          ]
+        },
+        "meta": {
+          "dismissible": true
+        }
+      }
+    }
+  }
+}
