@@ -172,6 +172,105 @@ writeFileSync(OUT_TEX, lines.join("\n") + "\n", "utf-8");
 \end{minted}
 \end{listing}
 
+\subsection{Local Generation Trace}\label{app:local-generation-trace}
+
+In addition to the aggregate study dataset analysed in Section~4, I captured a local end-to-end validation trace from the implemented support pipeline itself. This trace was taken from the real \texttt{/api/support} route rather than the development-only playground endpoint, so it exercised the same request handling, prompt construction, validation stages, PostgreSQL persistence, and client-facing response path used during the study. The selected example below is the locally persisted record with \texttt{support\_output\_id = 103}, captured on 2026-04-04 during a hesitation-triggered \texttt{slides-outline-refine} trial.
+
+\begin{listing}[htbp]
+\caption{Condensed excerpt of a locally captured support-generation record persisted to \texttt{support\_outputs}.}
+\label{lst:local-support-trace}
+\inputminted[fontsize=\scriptsize,breaklines]{json}{evidence/local-support-validation-2026-04-04.json}
+\end{listing}
+
+\subsection{Participant Flow Screenshots}
+
+Figures~\ref{fig:appendix-flow-1}--\ref{fig:appendix-flow-5} provide a chronological walkthrough of the participant-facing flow captured from the implemented artifact. These appendix figures complement the main-text interface screenshots by showing the sequence of states the participant moved through across the baseline trial, the ephemeral trial, and the final comparative questionnaire. One intervening transition capture that contained no visible interface content was omitted.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graphics/example-flow-1.png}
+        \caption{Baseline trial with the plain interface visible and no temporary support.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graphics/example-flow-2.png}
+        \caption{Baseline task interaction while the participant reorders the slide strip.}
+    \end{subfigure}
+    \caption{Participant-flow walkthrough, part~1: baseline-condition task screens.}
+    \label{fig:appendix-flow-1}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graphics/example-flow-3.png}
+        \caption{Baseline post-trial questionnaire immediately after task completion.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graphics/example-flow-4.png}
+        \caption{Start of the ephemeral-condition trial, which warns that temporary help may appear.}
+    \end{subfigure}
+    \caption{Participant-flow walkthrough, part~2: transition from the baseline trial to the ephemeral trial.}
+    \label{fig:appendix-flow-2}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graphics/example-flow-5.png}
+        \caption{Ephemeral-condition task before the support overlay expands.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graphics/example-flow-6.png}
+        \caption{Generated support visible as an anchored explanation and ordered markers over the slide strip.}
+    \end{subfigure}
+    \caption{Participant-flow walkthrough, part~3: ephemeral assistance becoming visible during the task.}
+    \label{fig:appendix-flow-3}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graphics/example-flow-7.png}
+        \caption{Ephemeral overlay aligned to the current slide and reorder strip.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graphics/example-flow-8.png}
+        \caption{Expanded support details combining an inspect panel, tooltip, and ordering cues.}
+    \end{subfigure}
+    \caption{Participant-flow walkthrough, part~4: richer support states within the ephemeral trial.}
+    \label{fig:appendix-flow-4}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graphics/example-flow-9.png}
+        \caption{Beginning of the final comparative questionnaire after both trials are complete.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graphics/example-flow-11.png}
+        \caption{Completed final questionnaire with comparative judgments recorded.}
+    \end{subfigure}
+    \caption{Participant-flow walkthrough, part~5: final comparison questions at the end of the session.}
+    \label{fig:appendix-flow-5}
+\end{figure}
+
 \subsection{Interpretive Note}
 
 These listings are sufficient to show the main route from raw study records to reported results: first the valid sample was defined consistently, then paired statistical tests were run, then publication-quality figures were generated, and finally the resulting numerical outputs were written into LaTeX commands consumed by the manuscript itself. This is the core evidence needed to demonstrate that the quantitative results chapter was generated through a reproducible analysis workflow rather than through manual transcription.

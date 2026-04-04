@@ -14,5 +14,5 @@
 - [x] Fix production data so that it actually generates the ai that it should
 - [x] Add shit to my appendix from the code I used for analysis the diaggrams, an example of a generated support output
 - [x] Make a draft for the conclusion
-- [ ] Improve my personal contribution by adding example of me using it with screenshots
+- [x] Improve my personal contribution by adding example of me using it with screenshots
 - [ ] Go through and make comments for every part of the thesis of what could be improved

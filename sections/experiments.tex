@@ -164,6 +164,8 @@ If any stage rejects the output, the system falls back to a deterministic, hardc
 
 Whether the specification was model-generated or a fallback, the full input state, model name, and output are persisted to the \texttt{support\_outputs} table. This logging enables post-study analysis of generation quality, fallback frequency, and the relationship between input context and output content.
 
+To verify this implementation end-to-end outside the aggregate study analysis, the pipeline was also tested locally against the real \texttt{/api/support} route on 2026-04-04. Three consecutive hesitation-triggered requests for the \texttt{slides-outline-refine} scenario completed successfully and were persisted as \texttt{support\_outputs} rows 101--103, all with \texttt{usedFallback = false} and \texttt{modelName = gemini-2.0-flash}. The richest of these records (row 103) produced a \texttt{Stack}-rooted specification containing \texttt{StepRail}, \texttt{InspectPanel}, \texttt{ConnectorLine}, and \texttt{AnchoredTooltip} nodes, demonstrating that a non-trivial multi-component overlay could be generated, validated, saved to PostgreSQL, and rendered without falling back. A condensed excerpt of this local trace is included in Appendix~\ref{app:local-generation-trace}.
+
 \begin{figure}[htbp]
     \centering
     \resizebox{0.98\textwidth}{!}{%
