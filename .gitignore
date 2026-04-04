@@ -46,4 +46,5 @@
 ## Pythontex:
 *.pytxcode
 pythontex-files-*/
+_minted/
 examples/

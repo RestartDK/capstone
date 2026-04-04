@@ -1,13 +1,22 @@
 \begin{titlepage}
-    \centering
-    \Large\textbf{IE University}\\[0.5cm]
-    \large\textit{School of Science \& Technology}\\[1.5cm] 
-    \includegraphics[width=0.4\textwidth]{graphics/SST.png}\\ 
-    \Huge\textbf{Ephemeral Interfaces: Design Patterns for Task-Scoped Generative UI Components}\\[0.5cm] 
-    \Large\textbf{Daniel Kumlin}\\ 
-    \large\textit{Bachelor of Computer Science \& Artificial Intelligence}\\[0.5cm] 
-    \Large\textit{Supervised by:}\\
-    \Large\textbf{Prof. Jose Antonio Garcia Escandón }\\ 
-%     \large\textit{Connection Science, MIT, Cambridge, USA \\
-% Robotics \& AI Lab, School of Science \& Technology, IE University, Spain}\\[1cm] 
+    \newgeometry{margin=0.95in}
+    \definecolor{ieblue}{RGB}{42, 84, 143}
+    \thispagestyle{empty}
+
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=north] at ([yshift=-0.8in]current page.north) {%
+            \includegraphics[width=5.0cm]{graphics/ie-logo.png}%
+        };
+        \node[anchor=south east, text=black, font=\fontsize{16}{16}\selectfont] at ([xshift=-0.18in, yshift=0.18in]current page.south east) {1};
+        \node[anchor=center, align=center, text width=0.84\paperwidth] at ([yshift=-1.3cm]current page.center) {%
+            \color{ieblue}
+            {\bfseries\fontsize{22}{28}\selectfont Ephemeral Interfaces: Design Patterns for Task-Scoped Generative UI Components}\\[2.1cm]
+            {\fontsize{18}{24}\selectfont Daniel Kumlin}\\[0.7cm]
+            {\fontsize{18}{24}\selectfont IE University}\\[0.55cm]
+            {\fontsize{18}{24}\selectfont Capstone Project}\\[0.55cm]
+            {\fontsize{18}{24}\selectfont Supervisor: Prof. \textit{Jose Antonio Garcia Escand\'on}}\\[0.55cm]
+            {\fontsize{18}{24}\selectfont Date (\textit{April 2026})}%
+        };
+    \end{tikzpicture}
+    \restoregeometry
 \end{titlepage}

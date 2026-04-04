@@ -41,9 +41,12 @@ const INITIAL_SLIDES_ATTEMPT: SlidesAttemptState = {
 type SupportTrigger = "initial" | "hesitation" | "explicit_request"
 
 type SupportApiResponse = {
+  requestId: string
   spec: EphemeralSpec
   meta: {
     usedFallback: boolean
+    fallbackReason: string | null
+    providerAttempted: boolean
     modelName: string
     catalogVersion: string
     componentTypes: string[]
@@ -141,7 +144,7 @@ export function PlaygroundClient(): React.ReactElement {
             trigger,
             phase: "success",
             httpStatus: res.status,
-            detail: `usedFallback=${String(data.meta.usedFallback)} model=${data.meta.modelName} types=${data.meta.componentTypes.join(",")}`,
+            detail: `requestId=${data.requestId} attempted=${String(data.meta.providerAttempted)} usedFallback=${String(data.meta.usedFallback)} fallbackReason=${data.meta.fallbackReason ?? "none"} model=${data.meta.modelName} types=${data.meta.componentTypes.join(",")}`,
           })
         } else {
           supportLoadedRef.current = false

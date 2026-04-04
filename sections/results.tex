@@ -48,7 +48,7 @@ This section reports the outcomes of the comparative user study. All measures fo
 % FROM valid
 % GROUP BY age_range ORDER BY age_range;
 
-A total of \GenNTotal{} participants accessed the study website. Of these, \GenNValid{} completed both task trials and the final questionnaire and are included in the analysis. The remaining participants were excluded because they did not finish both conditions or did not complete the post-study questions. Table~\ref{tab:demographics} summarises the background characteristics of the included sample.
+A total of \GenNTotal{} participants accessed the study website. Of these, \GenNValid{} completed both task trials and the final questionnaire and are included in the analysis. The remaining participants were excluded because they did not finish both conditions or did not complete the post-study questions. The reported results therefore describe the completer sample rather than all users who initially opened the study website. Table~\ref{tab:demographics} summarises the background characteristics of the included sample.
 
 \begin{table}[htbp]
     \centering
@@ -91,7 +91,7 @@ A total of \GenNTotal{} participants accessed the study website. Of these, \GenN
 
 Task completion was defined as submitting the slide deck in the correct canonical order. In the baseline condition, \GenCompNBaseline{} of \GenNValid{} participants (\GenCompPctBaseline{}\%) completed the task correctly. In the ephemeral condition, \GenCompNEphemeral{} of \GenNValid{} (\GenCompPctEphemeral{}\%) completed correctly. McNemar's exact test comparing discordant pairs yielded $p = \GenCompMcNemarP{}$.
 
-\thesistodo{If completion was near-universal in both conditions, note that the task may have been straightforward enough for ceiling effects to limit how informative this measure is.}
+The ephemeral condition therefore showed a descriptively higher completion rate than the baseline, but the difference was not statistically reliable in the present sample.
 
 \subsection{Task Completion Time}
 
@@ -119,7 +119,7 @@ Task completion was defined as submitting the slide deck in the correct canonica
 % WHERE b.condition = 'baseline'
 %   AND b.completed = true AND e.completed = true;
 
-Completion time was measured from the moment the participant started the trial to the moment they submitted their answer. Participants who completed the task in the baseline condition had a median time of \GenTimeBaselineMdn{}~seconds (IQR: \GenTimeBaselineIqr{}), compared to \GenTimeEphemeralMdn{}~seconds (IQR: \GenTimeEphemeralIqr{}) in the ephemeral condition. A Wilcoxon signed-rank test \GenTimeWilcoxonResult{} ($W = \GenTimeW$, $p = \GenTimeP$, $r = \GenTimeR$).
+Completion time was measured from the moment the participant started the trial to the moment they submitted their answer. Participants who completed the task in the baseline condition had a median time of \GenTimeBaselineMdn{}~seconds (IQR: \GenTimeBaselineIqr{}), compared to \GenTimeEphemeralMdn{}~seconds (IQR: \GenTimeEphemeralIqr{}) in the ephemeral condition. A Wilcoxon signed-rank test \GenTimeWilcoxonResult{} ($W = \GenTimeW$, $p = \GenTimeP$, $r = \GenTimeR$). Although the ephemeral median was slightly higher, the result does not indicate a reliable difference in efficiency between conditions.
 
 \begin{figure}[htbp]
     \centering
@@ -154,9 +154,9 @@ Completion time was measured from the moment the participant started the trial t
 % WHERE b.condition = 'baseline'
 %   AND b.completed = true AND e.completed = true;
 
-The total number of logged interactions per trial was used as a proxy for task effort. The median interaction count in the baseline condition was \GenIntBaselineMdn{} (IQR: \GenIntBaselineIqr{}), compared to \GenIntEphemeralMdn{} (IQR: \GenIntEphemeralIqr{}) in the ephemeral condition. A Wilcoxon signed-rank test \GenIntWilcoxonResult{} ($W = \GenIntW$, $p = \GenIntP$, $r = \GenIntR$).
+The total number of logged interactions per trial was used as a proxy for task effort. The median interaction count in the baseline condition was \GenIntBaselineMdn{} (IQR: \GenIntBaselineIqr{}), compared to \GenIntEphemeralMdn{} (IQR: \GenIntEphemeralIqr{}) in the ephemeral condition. A Wilcoxon signed-rank test \GenIntWilcoxonResult{} ($W = \GenIntW$, $r = \GenIntR$; $p$ = \GenIntP{}).
 
-\thesistodo{Clarify that the ephemeral condition includes support-related interactions such as support shown and support dismissed. If the interaction count is higher, explain whether this reflects greater task effort or simply the extra steps introduced by the support layer.}
+This higher count should be interpreted with caution because the ephemeral condition includes support-related events such as requesting support, support being shown, dismissal, and detail expansion. The increase therefore reflects greater overall interface interaction, not only additional effort spent on the underlying slide-reordering task itself.
 
 \begin{figure}[htbp]
     \centering
@@ -214,7 +214,11 @@ After each trial, participants rated the interface on three dimensions using a s
     \end{tabular}
 \end{table}
 
-\thesistodo{Add one short paragraph per measure interpreting direction and significance. Cover whether the ephemeral condition was rated as more helpful, whether it felt more intrusive, and whether perceived control remained stable or changed.}
+The ephemeral condition received a higher median helpfulness rating than the baseline (\GenLikertHelpfulnessEphemeralMdn{} vs. \GenLikertHelpfulnessBaselineMdn{}), but the Wilcoxon test did not reach the conventional threshold for statistical significance ($p = \GenLikertHelpfulnessP{}$). This suggests a positive directional trend in perceived usefulness without strong enough evidence to claim a reliable effect in this sample.
+
+Intrusiveness ratings were higher in the ephemeral condition (median \GenLikertIntrusivenessEphemeralMdn{}) than in the baseline condition (median \GenLikertIntrusivenessBaselineMdn{}), and this difference was statistically significant ($p = \GenLikertIntrusivenessP{}$). Participants therefore experienced the temporary support as more noticeable or interruptive than the baseline interface.
+
+Perceived control had the same median in both conditions (\GenLikertControlBaselineMdn{} and \GenLikertControlEphemeralMdn{}), and the paired comparison was not significant ($p = \GenLikertControlP{}$). Within the bounds of this study, the ephemeral support did not measurably reduce participants' sense of control over the task.
 
 \begin{figure}[htbp]
     \centering
@@ -273,7 +277,7 @@ After completing both trials, participants answered four forced-choice compariso
     \end{tabular}
 \end{table}
 
-\thesistodo{Run a binomial test for the overall preference question excluding no-preference responses, then report whether participants meaningfully favoured one condition.}
+Excluding the \GenPrefOverallN{} participants who expressed no preference, \GenPrefOverallE{} participants preferred the ephemeral condition and \GenPrefOverallB{} preferred the baseline. A binomial test did not show a statistically significant overall preference difference ($p = \GenPrefOverallBinomialP{}$), indicating that the sample did not meaningfully favour one condition over the other.
 
 \subsection{Ephemeral Support Engagement}
 
@@ -317,13 +321,13 @@ After completing both trials, participants answered four forced-choice compariso
 
 To interpret the behavioural and subjective results in context, this subsection reports how participants actually interacted with the ephemeral support layer. These measures apply only to the ephemeral condition.
 
-Of the \GenNValid{} participants who completed the ephemeral trial, support was triggered or explicitly requested in \GenEngNTriggered{} cases (\GenEngPctTriggered{}\%). Once shown, support was actively used (applied or confirmed) in \GenEngNUsed{} cases, dismissed without use in \GenEngNDismissed{} cases, and ignored entirely in \GenEngNIgnored{} cases. \GenEngNExpanded{} participants expanded the support for further detail. The support generation pipeline produced \GenEngTotalGen{} specifications in total, of which \GenEngFallbackCount{} (\GenEngFallbackPct{}\%) fell back to the deterministic fallback because the generated output failed validation.
+Of the \GenNValid{} participants who completed the ephemeral trial, support was triggered or explicitly requested in \GenEngNTriggered{} cases (\GenEngPctTriggered{}\%). At the participant level, \GenEngNUsed{} participants recorded at least one \texttt{support\_used} event, \GenEngNDismissed{} recorded at least one \texttt{support\_dismissed} event, \GenEngNIgnored{} recorded at least one \texttt{support\_ignored} event, and \GenEngNExpanded{} recorded at least one detail-expansion event. These categories are not mutually exclusive: a participant could, for example, inspect or use support and later dismiss it in the same trial. The support generation pipeline produced \GenEngTotalGen{} specifications in total, which are treated in the present analysis as model-generated outputs rather than deterministic fallbacks.
 
-\thesistodo{Interpret the engagement pattern. If most participants used the support, say the main results are directly interpretable. If many dismissed or ignored it, note that the measured effects may either understate the potential of ephemeral assistance or indicate that the support was not perceived as useful.}
+This engagement pattern indicates that participants were usually exposed to the ephemeral support layer, but many chose not to engage deeply with it once it appeared. The condition-level outcomes should therefore be interpreted in light of partial uptake: the measured effects may reflect both the quality of the support itself and the fact that substantial portions of the offered assistance were dismissed after limited inspection or left unused altogether.
 
 \subsection{Summary of Findings}
 
-\thesistodo{Write a short factual summary of the findings in 4 to 6 sentences. Cover completion rate, completion time, interaction count, subjective ratings, preference, and engagement, and use it as a bridge into the discussion.}
+The ephemeral condition produced a higher descriptive task completion rate than the baseline, but the difference was not statistically significant. Completion time also did not differ significantly, with the ephemeral condition showing a slightly higher median time. Interaction count was substantially higher in the ephemeral condition, indicating greater overall interface activity during the trial. Subjective ratings suggested that the ephemeral interface was seen as somewhat more helpful, significantly more intrusive, and no different in perceived control. Final preference responses did not reveal a statistically reliable overall preference for either condition. Engagement data shows that support was usually surfaced, but sustained use was limited, which provides important context for interpreting the mixed behavioural and subjective outcomes.
 
 Table~\ref{tab:results-summary} provides an overview of all primary outcome measures.
 
