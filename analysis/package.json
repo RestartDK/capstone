@@ -3,6 +3,8 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "clean-pdf-text": "bun run scripts/clean-parsed-pdf.ts",
+    "pdf-comments": "bun run scripts/extract-pdf-comments.ts",
     "export": "bun run export-csv.ts",
     "export:artifact-env": "bun --env-file=../artifact/.env run export-csv.ts",
     "stats": "bun run run-tests.ts",
