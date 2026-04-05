@@ -1,0 +1,2609 @@
+{
+  "file": "/Users/danielkumlin/University/Capstone/submission/review/main-review-done.pdf",
+  "count": 137,
+  "annotations": [
+    {
+      "page": 2,
+      "ref": "764 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "Fix spelling mistake",
+      "modifiedAt": "D:20260404223926Z",
+      "createdAt": null,
+      "rect": [
+        306.51320319999996,
+        703.6786768000001,
+        327.76954879999994,
+        714.0438352000001
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 3,
+      "ref": "772 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "no it's not it's actually more general.\n\ncan just be that it is a big topic in software design.",
+      "modifiedAt": "D:20260405094635Z",
+      "createdAt": null,
+      "rect": [
+        101.26499999999999,
+        700.7426343999999,
+        494.0147682000003,
+        732.6248241
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 3,
+      "ref": "775 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "Could be phrase more that this collides with current day software that expects a static way of experiences to users.",
+      "modifiedAt": "D:20260405094751Z",
+      "createdAt": null,
+      "rect": [
+        101.26499999999999,
+        633.4716344,
+        494.01441820000053,
+        687.7768241
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 3,
+      "ref": "778 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove this ",
+      "modifiedAt": "D:20260405094918Z",
+      "createdAt": null,
+      "rect": [
+        240.96709700786187,
+        524.2518760051464,
+        298.21281509563374,
+        533.7188273721455
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 3,
+      "ref": "781 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "should it be specified here that we did it through this specific experiment design?",
+      "modifiedAt": "D:20260405094950Z",
+      "createdAt": null,
+      "rect": [
+        101.26499999999999,
+        543.7756344000001,
+        494.01476820000005,
+        575.6578241000001
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 3,
+      "ref": "784 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is this needed? could just remove...",
+      "modifiedAt": "D:20260405095024Z",
+      "createdAt": null,
+      "rect": [
+        101.26499999999999,
+        524.2518760051464,
+        494.0144182000004,
+        553.2338241000001
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 3,
+      "ref": "787 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "generativue ui not generative interface",
+      "modifiedAt": "D:20260405095435Z",
+      "createdAt": null,
+      "rect": [
+        157.1402733267891,
+        501.82787600514644,
+        235.80125327051718,
+        511.29482737214545
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 3,
+      "ref": "790 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "an interactive survey for empirical evaluation.",
+      "modifiedAt": "D:20260405095534Z",
+      "createdAt": null,
+      "rect": [
+        101.26499999999999,
+        454.07963440000015,
+        494.0144182000006,
+        485.9618241000001
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 3,
+      "ref": "793 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is this really true?",
+      "modifiedAt": "D:20260405095705Z",
+      "createdAt": null,
+      "rect": [
+        101.26499999999999,
+        344.86087600514657,
+        494.0144182000002,
+        376.7518273721456
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 3,
+      "ref": "796 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "double check this is the case I know this is what I determined in the end.\n\nbut in the abstract should the what ifs be mentioned? like that while this is true, different types of scenarios should be tested to draw conclusions to other use cases? or should that be kept for the discussion.",
+      "modifiedAt": "D:20260405095723Z",
+      "createdAt": null,
+      "rect": [
+        101.26499999999999,
+        274.6886344000003,
+        494.0144182000004,
+        306.57082410000027
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 3,
+      "ref": "799 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "framework, guidelines, and basis",
+      "modifiedAt": "D:20260405095906Z",
+      "createdAt": null,
+      "rect": [
+        101.26499999999999,
+        252.2656344000003,
+        494.01441820000025,
+        284.1468241000003
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 3,
+      "ref": "802 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "generative AI, design, UI / UX, webapps",
+      "modifiedAt": "D:20260405095955Z",
+      "createdAt": null,
+      "rect": [
+        89.55899999999998,
+        193.7526768000003,
+        141.42065759999997,
+        204.1178352000003
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 6,
+      "ref": "805 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "emphasise that it's complete fully immersive user interface, not just partial.",
+      "modifiedAt": "D:20260405100504Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        615.4876768,
+        523.2729344,
+        649.7608352000001
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 6,
+      "ref": "808 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "user journeys are more appropriate",
+      "modifiedAt": "D:20260405100554Z",
+      "createdAt": null,
+      "rect": [
+        290.122624,
+        543.7646768,
+        374.3230975999999,
+        554.1298352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 6,
+      "ref": "811 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "prevalent",
+      "modifiedAt": "D:20260405100624Z",
+      "createdAt": null,
+      "rect": [
+        214.08436319999993,
+        472.0406767999999,
+        239.30983519999995,
+        482.40583519999996
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 6,
+      "ref": "814 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "anew",
+      "modifiedAt": "D:20260405100650Z",
+      "createdAt": null,
+      "rect": [
+        415.52071680000006,
+        448.13367679999993,
+        463.3295616000001,
+        458.4988352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 6,
+      "ref": "817 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "users are required to relearn the interface and how they use it. A common pain point at the pace at which software is developing today.\n\ncould include a source here? or not needed in introduction...",
+      "modifiedAt": "D:20260405100705Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        400.3176767999999,
+        523.2729344000002,
+        434.59083519999996
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 6,
+      "ref": "820 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "where",
+      "modifiedAt": "D:20260405100936Z",
+      "createdAt": null,
+      "rect": [
+        318.16633439999987,
+        304.6866767999999,
+        321.48987999999986,
+        315.0518351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 6,
+      "ref": "828 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "an",
+      "modifiedAt": "D:20260405101010Z",
+      "createdAt": null,
+      "rect": [
+        116.97546239999998,
+        232.96267679999985,
+        151.99224319999996,
+        243.32783519999984
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 6,
+      "ref": "831 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "do we need to cite this? bear in mind this is the intro.\n\nit sounds very vague, like what research are we even talking about.",
+      "modifiedAt": "D:20260405101027Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        188.35029880760536,
+        523.2729343999998,
+        219.41983519999982
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 6,
+      "ref": "834 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "specifically in the context of software design. it has been explored in the natural world where ephemerality actually comes from in the first place.",
+      "modifiedAt": "D:20260405101111Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        140.53429880760535,
+        523.2729344000002,
+        198.69888636803074
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 7,
+      "ref": "852 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "Should this be in its own section completely? or constrained to the intro.\nin general the prior work section of my thesis is not too verbose.\n\nthis need to be investigated further if I need to improve this and how.",
+      "modifiedAt": "D:20260405102003Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        743.6256442,
+        215.74892400000004,
+        756.522878
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 9,
+      "ref": "837 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is this formatted well? double check with example papers if this is the best way to format this part.",
+      "modifiedAt": "D:20260405101202Z",
+      "createdAt": null,
+      "rect": [
+        101.265,
+        479.21264639999976,
+        494.00527519999986,
+        513.4140735999998
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 9,
+      "ref": "840 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "strictly conceptual?\n\nwouldn't this be an actual practical framework? what are the other ways to word this. I would say theroetical?",
+      "modifiedAt": "D:20260405101315Z",
+      "createdAt": null,
+      "rect": [
+        120.78917120000003,
+        425.62836319999974,
+        239.18151680000008,
+        436.3760879999997
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 9,
+      "ref": "843 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405101424Z",
+      "createdAt": null,
+      "rect": [
+        363.50364160000004,
+        258.18967679999963,
+        380.10941440000005,
+        268.5548351999997
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 9,
+      "ref": "846 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "change the instrumented comparative study thing. \n\nI would just say it's a interactive survey. make sure fully consistent what was said in abstract (should be the same) and the rest of the paper.",
+      "modifiedAt": "D:20260405101435Z",
+      "createdAt": null,
+      "rect": [
+        83.2857088,
+        234.28167679999964,
+        523.2729343999999,
+        245.11308799999964
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 9,
+      "ref": "855 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "do we really need \"and contribution\" here?\n\ncouldn't it just be research question?\n\nbased on the guidelines should the contribution be an actual section or only talked about in its related sections?",
+      "modifiedAt": "D:20260405102106Z",
+      "createdAt": null,
+      "rect": [
+        219.17766580000009,
+        563.5436441999998,
+        329.70079059999995,
+        576.4408779999998
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 10,
+      "ref": "849 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is this whole section even needed? I would assume not. see other examples and guildlines with what they did.",
+      "modifiedAt": "D:20260405101800Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        568.9656767999999,
+        523.2729343999999,
+        756.522878
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 11,
+      "ref": "858 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "shouldn't we have a citation to what this is? or not needed.",
+      "modifiedAt": "D:20260405102206Z",
+      "createdAt": null,
+      "rect": [
+        174.28869119999996,
+        663.3036768000001,
+        328.8455168,
+        673.6688352000001
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 11,
+      "ref": "861 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "we repeat this often. is that a good or bad thing? if bad, then find other words for this.",
+      "modifiedAt": "D:20260405105308Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        543.7646768,
+        211.9834367999999,
+        554.1298352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 11,
+      "ref": "864 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "a real world problem?\n\ndoes that change make sense. or should it focus not on problem but that it addresses a novel concept to work on.",
+      "modifiedAt": "D:20260405105423Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        618.8736585721731,
+        523.2729343999999,
+        649.7608352000001
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 11,
+      "ref": "867 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "Hence",
+      "modifiedAt": "D:20260405105542Z",
+      "createdAt": null,
+      "rect": [
+        223.1017727999999,
+        543.7646768,
+        275.0351615999999,
+        554.1298352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 11,
+      "ref": "870 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "We already mentioned this before. do we need to reference it again?",
+      "modifiedAt": "D:20260405105557Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        499.33465857217294,
+        523.2729344,
+        554.1298352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 11,
+      "ref": "873 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is constructed from existing literature",
+      "modifiedAt": "D:20260405105646Z",
+      "createdAt": null,
+      "rect": [
+        139.63313555912868,
+        403.7036585721729,
+        244.60296091601583,
+        413.65905700885867
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 11,
+      "ref": "876 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "the artifact",
+      "modifiedAt": "D:20260405105758Z",
+      "createdAt": null,
+      "rect": [
+        309.3346304,
+        256.87067679999984,
+        416.668416,
+        267.2358351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 11,
+      "ref": "884 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "theory. The framework",
+      "modifiedAt": "D:20260405105843Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        256.87067679999984,
+        523.2729343999999,
+        291.1438351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 12,
+      "ref": "887 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is this really needed? to justify the reason of why we just said that sentence from before.\n\nif not we should remove.",
+      "modifiedAt": "D:20260405110048Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        705.0456767999999,
+        523.2729343999999,
+        763.2268352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 12,
+      "ref": "890 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is this reflected with the artficat I made? make sure these are referenced later in the implmentation when I talk about the schemas.",
+      "modifiedAt": "D:20260405110139Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        517.1696585721728,
+        523.2729344000002,
+        619.9830735999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 12,
+      "ref": "893 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "for the diagram we could make the subtitles more concise.",
+      "modifiedAt": "D:20260405110238Z",
+      "createdAt": null,
+      "rect": [
+        124.34899999999999,
+        286.78167679999996,
+        164.5304272,
+        297.1468352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 12,
+      "ref": "896 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "use? just remove this.",
+      "modifiedAt": "D:20260405110316Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        223.27267679999997,
+        87.9362816,
+        233.63783519999996
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 12,
+      "ref": "904 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "which one? give an example and cite it.",
+      "modifiedAt": "D:20260405110343Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        175.45767679999997,
+        523.2729343999998,
+        233.63783519999996
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 13,
+      "ref": "907 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "make lifecycle bold as well.",
+      "modifiedAt": "D:20260405110626Z",
+      "createdAt": null,
+      "rect": [
+        234.41555537000002,
+        435.636825176664,
+        357.385986645274,
+        462.88453864398997
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 13,
+      "ref": "910 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "can remove subtext to be honest and only keep titles.",
+      "modifiedAt": "D:20260405110645Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        263.4076768,
+        115.7799424,
+        273.77283520000003
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 13,
+      "ref": "913 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "a",
+      "modifiedAt": "D:20260405110708Z",
+      "createdAt": null,
+      "rect": [
+        198.95226879999996,
+        186.4656768,
+        260.23462399999994,
+        196.8308352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 13,
+      "ref": "916 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "shouldn't we have a \":\" that lists them first and THEN talk about each one? what is best practice here.",
+      "modifiedAt": "D:20260405110743Z",
+      "createdAt": null,
+      "rect": [
+        345.10458879999993,
+        186.4656768,
+        523.2729343999998,
+        196.8308352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 14,
+      "ref": "919 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "safety constraint where inferred assistance",
+      "modifiedAt": "D:20260405110919Z",
+      "createdAt": null,
+      "rect": [
+        228.0631807999999,
+        681.1376767999999,
+        405.74136319999997,
+        691.5028351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 14,
+      "ref": "922 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "uses a well known common interface\n\n*side note should we mention the specific interface or not? like keep it general?",
+      "modifiedAt": "D:20260405111339Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        435.7466767999997,
+        523.2729344000003,
+        470.01983519999976
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 14,
+      "ref": "925 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "the user experience.\n\nOR\n\nthe user journey",
+      "modifiedAt": "D:20260405111433Z",
+      "createdAt": null,
+      "rect": [
+        275.9704858276732,
+        391.3176585721727,
+        431.38561347980453,
+        401.2730570088585
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 14,
+      "ref": "928 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "this should specify if the underlying interface was the same?\n\nremember that in the end I chose to have the exact same function of an interface but with different context for the ephemeral vs traditional.\n\nhighlight this here.",
+      "modifiedAt": "D:20260405111524Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        196.66867679999964,
+        523.2729344,
+        305.6410570088584
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 14,
+      "ref": "931 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "narrow where the",
+      "modifiedAt": "D:20260405111714Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        77.1296767999996,
+        523.2729343999998,
+        111.4028351999996
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 15,
+      "ref": "934 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "make this bold or italic",
+      "modifiedAt": "D:20260405111737Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        728.9536767999999,
+        523.2729344,
+        763.2268352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 15,
+      "ref": "937 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "does that weaken or strengthen my paper?\n\nlike does having a deterministic fallback actually provide value or discredit my work?",
+      "modifiedAt": "D:20260405111940Z",
+      "createdAt": null,
+      "rect": [
+        72.00000000000003,
+        261.57565857217287,
+        523.2729343999999,
+        292.4628351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 15,
+      "ref": "940 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is this needed to be explicitly stated? or can the paper just answer this normally. explain.",
+      "modifiedAt": "D:20260405112028Z",
+      "createdAt": null,
+      "rect": [
+        72.00000000000003,
+        234.28167679999987,
+        523.2729343999999,
+        271.5310570088586
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 15,
+      "ref": "943 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is this explained  why this choice was made?\n\nif not, the main reason is for safety of the end user like XSS can be made. also, the design system of the company would be at risk, so constraining it to an extent would make it more coherent for the company.",
+      "modifiedAt": "D:20260405112119Z",
+      "createdAt": null,
+      "rect": [
+        72.00000000000003,
+        186.46567679999984,
+        523.2817008000001,
+        220.73883519999984
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 15,
+      "ref": "946 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "what is meant by this?",
+      "modifiedAt": "D:20260405112232Z",
+      "createdAt": null,
+      "rect": [
+        75.08189505106454,
+        94.22065857217284,
+        520.1851488581341,
+        104.17605700885862
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 16,
+      "ref": "949 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "mutually exclusive.",
+      "modifiedAt": "D:20260405112309Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        728.9536767999999,
+        523.2729343999998,
+        763.2268352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 16,
+      "ref": "952 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "to",
+      "modifiedAt": "D:20260405112327Z",
+      "createdAt": null,
+      "rect": [
+        349.3725951999999,
+        728.9536767999999,
+        401.9037439999999,
+        739.3188352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 16,
+      "ref": "955 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "where they refine the given slides with different context",
+      "modifiedAt": "D:20260405112451Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        476.8936585721728,
+        523.2729343999999,
+        507.78083519999984
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 16,
+      "ref": "963 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "Having versions",
+      "modifiedAt": "D:20260405112633Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        309.53965857217275,
+        523.2729343999999,
+        340.42583519999977
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 16,
+      "ref": "966 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "acquired",
+      "modifiedAt": "D:20260405112653Z",
+      "createdAt": null,
+      "rect": [
+        171.80200959999996,
+        210.37367679999977,
+        214.29079039999993,
+        220.73883519999976
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 16,
+      "ref": "969 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "digitally literate",
+      "modifiedAt": "D:20260405112716Z",
+      "createdAt": null,
+      "rect": [
+        300.6790656,
+        210.37367679999977,
+        428.623616,
+        220.73883519999976
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 16,
+      "ref": "972 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "Acquirement",
+      "modifiedAt": "D:20260405112732Z",
+      "createdAt": null,
+      "rect": [
+        337.48912639999986,
+        186.46567679999978,
+        396.76300799999984,
+        196.83083519999977
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 17,
+      "ref": "975 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove please",
+      "modifiedAt": "D:20260405112807Z",
+      "createdAt": null,
+      "rect": [
+        239.65972479999988,
+        716.4526768,
+        301.89849599999985,
+        726.8178352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 17,
+      "ref": "978 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "We have repeated this quite alot? shouldn't we remove this?",
+      "modifiedAt": "D:20260405112832Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        644.7286767999999,
+        523.2729343999998,
+        702.9098352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 17,
+      "ref": "981 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "web-based",
+      "modifiedAt": "D:20260405112943Z",
+      "createdAt": null,
+      "rect": [
+        236.14170719999987,
+        477.3746767999998,
+        295.2362607999999,
+        487.73983519999985
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 17,
+      "ref": "984 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "sequence of scenario A then B",
+      "modifiedAt": "D:20260405113004Z",
+      "createdAt": null,
+      "rect": [
+        246.9914315822492,
+        409.03665857217277,
+        340.87190789214765,
+        418.9920570088585
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 17,
+      "ref": "987 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "make this more simple the wording and consistent. don't use \"-\"",
+      "modifiedAt": "D:20260405113026Z",
+      "createdAt": null,
+      "rect": [
+        235.03306239999998,
+        381.74267679999974,
+        425.53917439999987,
+        392.1078351999998
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 17,
+      "ref": "990 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "Is it mentioned that minimal data is provided like no name and email in order for it to be anonymous for the integrity of the people who are taking the survey? ",
+      "modifiedAt": "D:20260405113202Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        429.5586767999998,
+        523.2729344,
+        463.83183519999983
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 18,
+      "ref": "993 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "logs from ephemeral interactions",
+      "modifiedAt": "D:20260405113309Z",
+      "createdAt": null,
+      "rect": [
+        112.06187519999999,
+        633.3226767999998,
+        260.2107135999999,
+        643.6878351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 19,
+      "ref": "996 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "where ",
+      "modifiedAt": "D:20260405113411Z",
+      "createdAt": null,
+      "rect": [
+        318.9912431999999,
+        644.7286767999999,
+        325.99699039999985,
+        655.0938352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 19,
+      "ref": "999 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "for every scenario",
+      "modifiedAt": "D:20260405113430Z",
+      "createdAt": null,
+      "rect": [
+        170.34347519999992,
+        620.8216767999999,
+        276.33827839999987,
+        631.1868351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 19,
+      "ref": "1002 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "shouldn't we justify why this and not the other alternatives?",
+      "modifiedAt": "D:20260405113446Z",
+      "createdAt": null,
+      "rect": [
+        416.3934463999999,
+        620.8216767999999,
+        520.2841343999999,
+        631.1868351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 19,
+      "ref": "1005 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "Logs from ephemeral interactions",
+      "modifiedAt": "D:20260405113556Z",
+      "createdAt": null,
+      "rect": [
+        89.559,
+        214.3876767999997,
+        245.5265391999999,
+        224.75283519999968
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 21,
+      "ref": "1008 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is this needed or not?",
+      "modifiedAt": "D:20260405113651Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        587.525658572173,
+        523.2729344000002,
+        717.0200570088589
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 21,
+      "ref": "1011 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405113708Z",
+      "createdAt": null,
+      "rect": [
+        409.43551999999994,
+        506.1026767999999,
+        466.5215999999999,
+        516.4678352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 21,
+      "ref": "1014 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405113719Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        482.1946767999999,
+        523.2729344,
+        516.4678352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 21,
+      "ref": "1017 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405113742Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        413.8576585721729,
+        523.2729344000002,
+        444.74483519999995
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 21,
+      "ref": "1020 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405113803Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        314.83967679999984,
+        523.2729344000003,
+        375.99705700885863
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 21,
+      "ref": "1023 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405113836Z",
+      "createdAt": null,
+      "rect": [
+        245.52814371466178,
+        174.77865857217282,
+        326.4165446815965,
+        184.73405700885857
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 21,
+      "ref": "1026 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405113846Z",
+      "createdAt": null,
+      "rect": [
+        419.88067542964376,
+        174.77865857217282,
+        523.2729343999999,
+        184.73405700885857
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 22,
+      "ref": "1029 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is there a better way to say this? seems awfully verbose for just saying that our survey is a one way user flow.",
+      "modifiedAt": "D:20260405113932Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        362.83067679999994,
+        523.2729343999998,
+        397.1038352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 22,
+      "ref": "1032 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405114135Z",
+      "createdAt": null,
+      "rect": [
+        386.0272383999999,
+        75.93767679999988,
+        523.2729343999998,
+        86.30283519999988
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 23,
+      "ref": "1035 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405114144Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        728.9536767999999,
+        523.2729343999998,
+        763.2268352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 23,
+      "ref": "1038 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is this really needed? this is not core logic we care about in the thesis.",
+      "modifiedAt": "D:20260405114224Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        636.7086585721729,
+        523.2817008000002,
+        718.3870570088587
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 23,
+      "ref": "1041 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "do we really do this? check the artifact.",
+      "modifiedAt": "D:20260405114254Z",
+      "createdAt": null,
+      "rect": [
+        118.54026397238285,
+        493.26165857217273,
+        225.93685127162587,
+        503.2170570088585
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 23,
+      "ref": "1044 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "isn't this an ERD? if so say entity relationship diagram (ERD).",
+      "modifiedAt": "D:20260405114325Z",
+      "createdAt": null,
+      "rect": [
+        90.2795008,
+        316.20767679999966,
+        225.43303679999985,
+        326.5728351999997
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 23,
+      "ref": "1047 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405114358Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        196.59694559999997,
+        523.27554784,
+        230.94183519999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 23,
+      "ref": "1050 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405114406Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        101.0376768,
+        523.2817007999997,
+        183.1258352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 24,
+      "ref": "1053 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "should they really be one after the other here for figure 5 and table 2? not possible to split them up? also the spacing between this and figure 5 is off.",
+      "modifiedAt": "D:20260405114428Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        321.3886767999999,
+        523.2729343999999,
+        349.1750570088587
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 25,
+      "ref": "1066 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405114528Z",
+      "createdAt": null,
+      "rect": [
+        123.14207912257368,
+        596.259658572173,
+        203.17680147733316,
+        606.2150570088587
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 25,
+      "ref": "1069 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "I feel like this is repeated alot. is this intentional or is this a bad pattern? explain.",
+      "modifiedAt": "D:20260405114604Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        497.2426767999998,
+        523.2817008,
+        579.3308351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 25,
+      "ref": "1072 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "do we really need to mention dnd? it jsut helps to with dragging the cards for the experiment.\n\nexplain why or why not.",
+      "modifiedAt": "D:20260405114642Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        449.42667679999977,
+        523.2729343999998,
+        507.60783519999984
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 26,
+      "ref": "1075 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405114801Z",
+      "createdAt": null,
+      "rect": [
+        444.3566592000001,
+        664.5976767999999,
+        464.2859776000001,
+        674.9628352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 26,
+      "ref": "1081 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "I know I did this but in the end I just ended up using one version for testing that's it.\n\nso maybe we remove this? what other parts would have to be updated if so?",
+      "modifiedAt": "D:20260405114937Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        66.92667679999977,
+        523.2817008,
+        101.19983519999977
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 27,
+      "ref": "1078 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "fix the formatting here, it's in the middle of he page, the other text should be flowing on top of it and under it. not taking up a whole page.",
+      "modifiedAt": "D:20260405114851Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        588.5566585721731,
+        523.2729343999999,
+        609.9818352000001
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 29,
+      "ref": "1084 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "again doe this make my paper more valuable or not by having a fallback. explain.",
+      "modifiedAt": "D:20260405115138Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        377.7286767999999,
+        523.2817251408777,
+        510.6090570088587
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 29,
+      "ref": "1087 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "should not use exact inline code snippets, just describing what was done and referencing the appendix when needed for exact code snippets.",
+      "modifiedAt": "D:20260405115224Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        66.9266768,
+        523.2817008000001,
+        268.5548352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 30,
+      "ref": "1090 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "generateValidatedSupport() is overflowing the container",
+      "modifiedAt": "D:20260405115302Z",
+      "createdAt": null,
+      "rect": [
+        385.9364027499999,
+        567.3781798217598,
+        516.8466852985,
+        691.1529401541001
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 30,
+      "ref": "1093 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "for our diagram do we need to reference the routes, and requests? why expalin? \n\nshouldn't it just have the actual steps like client trigger, route checks and state assembly, so no subtitles?",
+      "modifiedAt": "D:20260405115327Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        141.5716768,
+        523.2729344000002,
+        180.8288352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 31,
+      "ref": "1096 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "should reference the docs here to react portal no?",
+      "modifiedAt": "D:20260405115422Z",
+      "createdAt": null,
+      "rect": [
+        158.99799039999994,
+        692.5446767999999,
+        218.80985599999997,
+        702.9098352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 31,
+      "ref": "1099 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "should reference to the appendix I think here, hard to know what these components are in the first place.",
+      "modifiedAt": "D:20260405115448Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        549.0259455999999,
+        523.27930976,
+        583.3708351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 32,
+      "ref": "1102 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "we have 2 table 4 titles, only keep one",
+      "modifiedAt": "D:20260405115537Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        714.6506767999999,
+        523.2729343999999,
+        763.2268352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 32,
+      "ref": "1105 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "because of table the measurement is being cut to mea- sure.\n\nfix this os they stay in the same line.",
+      "modifiedAt": "D:20260405115555Z",
+      "createdAt": null,
+      "rect": [
+        78.09599999999995,
+        417.3996344,
+        517.1821586,
+        696.2718241
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 32,
+      "ref": "1108 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove this",
+      "modifiedAt": "D:20260405115646Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        66.92667679999994,
+        523.2817007999998,
+        149.01583519999994
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 33,
+      "ref": "1111 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "I don't get the point of this? why should we state this. if not useful, remove.",
+      "modifiedAt": "D:20260405120018Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        583.8886176,
+        523.2729343999999,
+        642.3198352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 33,
+      "ref": "1114 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove",
+      "modifiedAt": "D:20260405120230Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        410.4716767999999,
+        523.2729344,
+        444.74483519999995
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 34,
+      "ref": "1117 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "make this graph bigger",
+      "modifiedAt": "D:20260405120305Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        290.52167679999997,
+        523.2729344000002,
+        315.33283520000003
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 35,
+      "ref": "1120 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "make graph bigger",
+      "modifiedAt": "D:20260405120525Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        489.8306768,
+        523.2729343999998,
+        514.6408352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 36,
+      "ref": "1123 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "make graph bigger",
+      "modifiedAt": "D:20260405120610Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        434.98667679999994,
+        523.2729343999999,
+        459.7978352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 37,
+      "ref": "1126 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is this needed or not? if not then remove.",
+      "modifiedAt": "D:20260405120741Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        603.1016767999998,
+        523.2729344,
+        661.2828351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 37,
+      "ref": "1129 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": ". Thus,",
+      "modifiedAt": "D:20260405120817Z",
+      "createdAt": null,
+      "rect": [
+        230.8726527999999,
+        483.56267679999996,
+        238.3087871999999,
+        493.9278352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 37,
+      "ref": "1132 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "These",
+      "modifiedAt": "D:20260405120838Z",
+      "createdAt": null,
+      "rect": [
+        71.99999999999999,
+        364.0236767999999,
+        523.2729344000002,
+        398.2968352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 37,
+      "ref": "1135 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "as",
+      "modifiedAt": "D:20260405120849Z",
+      "createdAt": null,
+      "rect": [
+        295.8611199999999,
+        364.0236767999999,
+        419.8365439999998,
+        374.38883519999996
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 37,
+      "ref": "1138 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "interactivity",
+      "modifiedAt": "D:20260405120918Z",
+      "createdAt": null,
+      "rect": [
+        71.99999999999999,
+        145.92565857217286,
+        523.2729343999998,
+        176.81283519999985
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 39,
+      "ref": "1141 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "capability",
+      "modifiedAt": "D:20260405121030Z",
+      "createdAt": null,
+      "rect": [
+        186.25584639999994,
+        386.5636767999999,
+        223.11372799999995,
+        396.9288351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 39,
+      "ref": "1144 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "that what makes",
+      "modifiedAt": "D:20260405121100Z",
+      "createdAt": null,
+      "rect": [
+        161.80746239999996,
+        314.83967679999984,
+        454.1718784,
+        325.2048351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 40,
+      "ref": "1147 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "manually editing several variables in a complex data analysis getting instant feedback.",
+      "modifiedAt": "D:20260405121146Z",
+      "createdAt": null,
+      "rect": [
+        386.0511487999999,
+        752.8616767999999,
+        490.99389439999976,
+        763.2268352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 40,
+      "ref": "1150 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "instead, it could mean that the application of ephemereal ui cn be more present in activities that require alot of tweaking of different variables and need instant feedback. Alot of these things like data science and design involve having to tweak several variables to see the outcome either mathmatically to udnerstand its impact or design to get its feel.\n\nI know an example from a paper that talks about breakable toys in design that shows it's relevant there.",
+      "modifiedAt": "D:20260405121238Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        561.5986767999998,
+        523.2729343999999,
+        619.7798351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 40,
+      "ref": "1153 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "where",
+      "modifiedAt": "D:20260405121834Z",
+      "createdAt": null,
+      "rect": [
+        431.0505215999999,
+        370.3366767999997,
+        434.3740671999999,
+        380.7018351999997
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 40,
+      "ref": "1156 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": ". However,",
+      "modifiedAt": "D:20260405121851Z",
+      "createdAt": null,
+      "rect": [
+        203.73195671457978,
+        325.90665857217266,
+        225.38659963153498,
+        335.8620570088584
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 40,
+      "ref": "1159 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "All in all\n\nor is there a better way to say this?",
+      "modifiedAt": "D:20260405121916Z",
+      "createdAt": null,
+      "rect": [
+        89.55900000000001,
+        226.88967679999965,
+        160.36964960000003,
+        237.25483519999963
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 41,
+      "ref": "1162 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "is this true? I would say the opposite or maybe both. explain. we need to reavaluate this.",
+      "modifiedAt": "D:20260405122029Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        469.3536585721727,
+        523.2817007999997,
+        670.5720570088587
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 41,
+      "ref": "1165 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "with",
+      "modifiedAt": "D:20260405122112Z",
+      "createdAt": null,
+      "rect": [
+        344.0832320029645,
+        367.4096585721727,
+        429.76835090726684,
+        377.36505700885846
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 41,
+      "ref": "1171 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "maybe we split this into 2 subsections, one limitations the other robustness?",
+      "modifiedAt": "D:20260405122346Z",
+      "createdAt": null,
+      "rect": [
+        104.27895000000001,
+        419.1436441999997,
+        274.58269020000006,
+        432.04087799999974
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 42,
+      "ref": "1168 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "mention how this is a reason why the X amount of people did not complete it.",
+      "modifiedAt": "D:20260405122211Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        513.7836767999997,
+        523.2729344000002,
+        571.9638351999998
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 43,
+      "ref": "1174 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "That contradiction",
+      "modifiedAt": "D:20260405122436Z",
+      "createdAt": null,
+      "rect": [
+        311.2713727999999,
+        179.07367679999962,
+        371.2864767999999,
+        189.4388351999996
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 44,
+      "ref": "1177 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "do i need to say this?",
+      "modifiedAt": "D:20260405122515Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        705.0456767999999,
+        523.2729343999999,
+        739.3188352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 45,
+      "ref": "1180 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove em dashses and simplify this point.",
+      "modifiedAt": "D:20260405122628Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        243.11667679999985,
+        523.2729343999999,
+        304.2740570088586
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 45,
+      "ref": "1183 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "shouldn't we mention that we should do it in separate workflows based on their significance? like actual design work is not as significant as providing epheemeral ui for someone ticking off stuff from their todo list.",
+      "modifiedAt": "D:20260405122658Z",
+      "createdAt": null,
+      "rect": [
+        238.06926355872025,
+        150.87165857217283,
+        319.8691979927497,
+        160.8270570088586
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 46,
+      "ref": "1186 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "this should be worded as actually using focus groups.",
+      "modifiedAt": "D:20260405122802Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        483.5626767999998,
+        523.2729343999999,
+        637.3748351999999
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 46,
+      "ref": "1189 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "remove em dash and simplify this.",
+      "modifiedAt": "D:20260405122834Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        118.63167679999967,
+        523.2794864,
+        200.7208351999997
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 46,
+      "ref": "1192 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "where we have",
+      "modifiedAt": "D:20260405122916Z",
+      "createdAt": null,
+      "rect": [
+        306.4591637628067,
+        98.11065857217268,
+        312.68319533707177,
+        108.06605700885846
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 46,
+      "ref": "1195 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "shouldn't we mention to also include the personalisation factor? so personalising the component based on the profile of the person? or is this a separate future work?",
+      "modifiedAt": "D:20260405122954Z",
+      "createdAt": null,
+      "rect": [
+        104.27895000000001,
+        436.7386441999998,
+        352.51124859999993,
+        449.6358779999998
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 48,
+      "ref": "1198 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "answers that",
+      "modifiedAt": "D:20260405123047Z",
+      "createdAt": null,
+      "rect": [
+        281.17180686000484,
+        611.4326585721731,
+        412.4598288939306,
+        621.3880570088588
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 48,
+      "ref": "1201 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "better way to say this?",
+      "modifiedAt": "D:20260405123132Z",
+      "createdAt": null,
+      "rect": [
+        265.75990745938316,
+        300.63165857217285,
+        475.90811085256087,
+        310.5870570088586
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 48,
+      "ref": "1204 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "this should be revised as I mentioend before. I personally think it could help in people who are doing complex tasks or things that require insttant feedback.",
+      "modifiedAt": "D:20260405123201Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        85.46065857217279,
+        523.2729343999998,
+        116.34783519999978
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    },
+    {
+      "page": 49,
+      "ref": "1207 0 R",
+      "subtype": "Highlight",
+      "author": "Daniel",
+      "subject": null,
+      "contents": "sensitive to interruptions in their worflows",
+      "modifiedAt": "D:20260405123243Z",
+      "createdAt": null,
+      "rect": [
+        72,
+        732.339658572173,
+        523.2729343999999,
+        763.2268352
+      ],
+      "parentRef": null,
+      "inReplyToRef": null,
+      "isOpen": null
+    }
+  ]
+}
