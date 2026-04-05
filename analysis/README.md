@@ -32,6 +32,7 @@ which uses `bun --env-file=../artifact/.env` (see [manual env files](https://bun
 | Command | What it does |
 |--------|----------------|
 | `bun run export` | Query Postgres and write CSVs under `analysis/csv/` |
+| `bun run pdf-comments -- <file.pdf>` | Extract embedded PDF annotations/comments |
 | `bun run stats` | Read those CSVs and print test statistics (console) |
 | `bun run figures` | Build vector PDF figures into `../graphics/` (needs CSVs from `export`) |
 | `bun run gen-tex` | Regenerate `../sections/generated-result-values.tex` from CSVs (needs `export` first) |
