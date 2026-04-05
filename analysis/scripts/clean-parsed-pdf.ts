@@ -1,12 +1,25 @@
 #!/usr/bin/env bun
 
+import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
+import path from "node:path";
+
+const defaultInput = path.resolve(import.meta.dir, "../../main.pdf");
+const defaultOutput = path.resolve(import.meta.dir, "../../main.parsed.txt");
+
 const usage = `Usage:
+  bun run clean-pdf-text
+  bun run clean-pdf-text -- <input.pdf> <output.txt>
   bun run clean-pdf-text -- <input.txt> <output.txt>
 
-Expected input:
-  Raw parser output containing markers like:
-  <PARSED TEXT FOR PAGE: 1 / 60>
-  <IMAGE FOR PAGE: 1 / 60>
+Default behavior with no arguments:
+  input:  ../main.pdf
+  output: ../main.parsed.txt
+
+Supported inputs:
+  1. A PDF file, which will be parsed page by page
+  2. Raw parser output containing markers like:
+     <PARSED TEXT FOR PAGE: 1 / 60>
+     <IMAGE FOR PAGE: 1 / 60>
 `;
 
 const isPageMarker = (line: string): boolean => /^<PARSED TEXT FOR PAGE:\s*\d+\s*\/\s*\d+>$/.test(line.trim());
@@ -38,7 +51,40 @@ const normalizeWhitespace = (text: string): string =>
     .replace(/[\u2010\u2011\u2012\u2013\u2014]/g, "-")
     .replace(/[\u2018\u2019]/g, "'")
     .replace(/[\u201C\u201D]/g, '"')
-    .replace(/\u00a0/g, " ");
+    .replace(/\u00a0/g, " ")
+    .replace(/\u00b4/g, "'");
+
+const toRawPageText = async (pdfPath: string): Promise<string> => {
+  const data = await Bun.file(pdfPath).arrayBuffer();
+  const loadingTask = getDocument({ data, useWorkerFetch: false, isEvalSupported: false, disableWorker: true });
+  const pdf = await loadingTask.promise;
+  const chunks: string[] = [];
+
+  for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+    const page = await pdf.getPage(pageNumber);
+    const content = await page.getTextContent();
+    const rows = new Map<number, Array<{ x: number; text: string }>>();
+
+    for (const item of content.items) {
+      if (!("str" in item) || !("transform" in item)) continue;
+      const text = item.str?.trim();
+      if (!text) continue;
+      const x = item.transform[4] ?? 0;
+      const y = Math.round(item.transform[5] ?? 0);
+      const row = rows.get(y) ?? [];
+      row.push({ x, text });
+      rows.set(y, row);
+    }
+
+    const pageLines = [...rows.entries()]
+      .sort((a, b) => b[0] - a[0])
+      .map(([, row]) => row.sort((a, b) => a.x - b.x).map(({ text }) => text).join(" "));
+
+    chunks.push(`<PARSED TEXT FOR PAGE: ${pageNumber} / ${pdf.numPages}>`, "", ...pageLines, "");
+  }
+
+  return `${chunks.join("\n")}\n`;
+};
 
 const splitPages = (text: string): string[][] => {
   const pages: string[][] = [];
@@ -125,14 +171,17 @@ const args = Bun.argv.slice(2);
 if (args.includes("--help") || args.includes("-h")) {
   await Bun.write(Bun.stdout, usage);
 } else {
-  const [input, output] = args;
+  const input = args[0] ? path.resolve(process.cwd(), args[0]) : defaultInput;
+  const output = args[1] ? path.resolve(process.cwd(), args[1]) : defaultOutput;
 
-  if (!input || !output) {
+  if (!(await Bun.file(input).exists())) {
     await Bun.write(Bun.stderr, usage);
-    throw new Error("Missing required arguments: <input.txt> <output.txt>");
+    throw new Error(`Input file not found: ${input}`);
   }
 
-  const source = await Bun.file(input).text();
+  const source = input.toLowerCase().endsWith(".pdf")
+    ? await toRawPageText(input)
+    : await Bun.file(input).text();
   const pages = splitPages(source);
   const keptPages: string[][] = [];
   let skippingContents = false;
