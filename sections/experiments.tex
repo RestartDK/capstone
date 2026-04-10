@@ -1,13 +1,16 @@
 \pagestyle{fancy}
 \section{Implementation}\label{sec:implementation}
 
-The previous section defined the conceptual framework, the artifact's purpose as a research instrument, and the evaluation design that structures the comparative study. This section describes how those ideas were translated into a working system. The goal is not to document every engineering decision, but to make the technical design legible enough that the reader can assess whether the artifact faithfully operationalises the framework and whether the instrumentation is sufficient to support the evaluation.
+% TODO: de aied paragraph
+The previous section defines the framework and theory of how the artifact will be used to evaluate the comparative study. The following section provides the technical breakdown of how the artifact will actually be made. The goal is to explain the technical design legible enough for the reader to assess whether the artifact can use the framework and instrumentation sufficiently for the evaluation.
 
 \subsection{Architecture Overview}
 
-The artifact is built as a full-stack web application using the Next.js App Router with TypeScript \parencite{Nextjs}. The server layer exposes a set of API routes that handle participant management, trial orchestration, event logging, questionnaire storage, and ephemeral support generation. Persistent data is stored in a PostgreSQL database. The ephemeral support system relies on Google Gemini, accessed through the Vercel AI~SDK, to produce structured interface specifications from the current task state \parencite{GoogleGemini,VercelAISDK}.
+% TODO: de aied paragraph
+The artifact is a web app built with Next.js and Typescript \parencite{Nextjs}. It has API routes for managing participants, trials, event logging, and metadata for ephemeral UI. Persistent data is stored in a PostgreSQL database. Then, the ephemeral UI engine uses the Google Gemini API through the Vercel AI SDK to ensure structured data outputs from the LLM based on the current task state \parencite{GoogleGemini,VercelAISDK}.
 
-These choices reflect the requirements of a research instrument rather than a production application. Next.js \parencite{Nextjs} was selected because its App Router collocates server-side logic and client rendering in the same project, which simplifies the instrumentation of both request handling and user interaction. TypeScript and Zod provide compile-time and runtime type safety across the generation pipeline, which is critical when validating AI-generated output against a constrained specification. PostgreSQL and Drizzle offer relational integrity and migration tooling appropriate for structured experimental data. The Vercel AI~SDK \parencite{VercelAISDK} abstracts provider-specific details while supporting structured output modes, which allows the generation step to request JSON that conforms to a predefined schema rather than parsing free-form text.
+% TODO: de aied paragraph
+The choices made are based on the scope of only the research done in the capstone rather than made for a real production deployment. Next.js was used as it's trivial to spin up a colocated backend and frontend for fast deployment, which simplifies the instrumentation of generating the ephemeral UI and handling user interactions. Typescript and Zod were used for compile and runtime safety of the generated objects from the generative AI pipeline to make sure that all outputs are validated with respect to a specification. Therefore, we could ensure a level of deterministic behaviour in the algorithm. PostgreSQL offered the relational integrity for the structured experimental data. The Vercel AI SDK \parencite{VercelAISDK} abstracts all the LLM's provider specific details when trying to have structured outputs, resulting in the deterministic JSON output that can be used to render the UI on the web app.
 
 \begin{figure}[htbp]
     \centering
@@ -18,13 +21,16 @@ These choices reflect the requirements of a research instrument rather than a pr
 
 \subsection{Participant Flow and Session Management}
 
-The study procedure described in the methodology is implemented as a linear state machine that determines which page the participant should see at any point during the session. When a participant first opens the website, they are presented with the study information and consent form. Providing consent creates a participant record in the database and sets an HTTP-only session cookie that associates all subsequent requests with that record. No traditional authentication is required because the study collects no directly identifying personal data; the cookie serves only to link a browser session to its corresponding participant row.
+% TODO: de aied paragraph
+The artifact described in the methodology has a linear workflow that the participant must follow to finish it. When they first open the website information about the capstone is provided with a consent form. Once consent is givven, a participant record is created in the database and sets a session cookie that associates all subsequent requests with it for an identifiable session. No traditional authentication is used to preserve the anonymity of the participant. 
 
-After consenting, the participant completes a short background questionnaire covering age range, occupation, familiarity with web applications, and familiarity with AI-assisted tools. Submitting the background questionnaire acknowledges the study instructions and triggers the creation of the first trial row. From this point forward, a server-side state resolution function inspects the participant's record, their trial rows, and their questionnaire responses to determine the current study step. The possible steps form a fixed sequence: \emph{background}, \emph{study} (an active trial), \emph{post-trial questionnaire}, \emph{final questionnaire}, and \emph{complete}. The client-side routing function maps each step to the corresponding page, so that refreshing the browser or navigating away always returns the participant to the correct point in the procedure.
+% TODO: de aied paragraph
+Once the participant has consented, they follow a short background questionnaire including their age, occupation, familiarity with web applications, and familiarity with AI-assisted tools. After subbmiting their response, it creates the first trial row in the database. From here on, a backend process determines the current state the user is in. These possible states contain a fixed sequence of \emph{background}, \emph{study}, \emph{post-trial}, \emph{questionnaire}, \emph{final questionnaire}, \emph{complete}. Each route in the app is mapped to every state so reloading the page persists the current state the user is in.
 
 Trial rows are created incrementally rather than all at once. The first trial is created when the participant acknowledges the instructions. Each subsequent trial is created only after the previous trial has been completed and its post-trial questionnaire has been submitted. This ensures that the participant cannot skip ahead or access later trials before finishing earlier ones.
 
-Counterbalancing is implemented at the participant level. When a participant record is created, a boolean flag is randomly set to determine whether the baseline condition corresponds to Version~A or Version~B. The trial plan then assigns conditions to version labels using this flag, so that one participant may encounter the baseline first while another encounters the ephemeral condition first, both under the neutral label ``Version~A.'' The content variant for each condition is assigned by hashing the participant and scenario identifiers, so the baseline and ephemeral trials use different slide decks.
+% TODO: de aied paragraph
+To make sure that results are counterbalanced between participants, when a participant record is created a boolean flag raandomly determins whether the baseline is Version~A or Version~B. Then, then the trial assigns conditions the version labels from this boolean flag so that one participant could get the baseline version first or the ephemeral version under the label ``Version~A.'' The content variant for each condition is determined by hashing the participant and scenario identifiers, resulting in distinct slide decks for the baseline and ephemeral trials.
 
 \subsection{Data Model}
 
@@ -58,7 +64,7 @@ The database schema consists of five tables designed to capture the behavioural 
     \draw[->, semithick, dashed] (T.east) -- node[card, below, midway] {1:N\textsuperscript{*}} (Q.west);
     \end{tikzpicture}%
     }
-    \caption{Entity--relationship diagram of the study database. Directed edges are labelled with cardinalities: one participant to many trials; one trial to many events and many support records; one participant to many questionnaire rows. The dashed edge indicates an optional foreign key: \texttt{trial\_id} is \texttt{NULL} for final-questionnaire rows.}
+    \caption{Entity--relationship diagram of the study database.}
     \label{fig:data-model-erd}
 \end{figure}
 
@@ -67,7 +73,7 @@ The database schema consists of five tables designed to capture the behavioural 
     \small
     \caption{Summary of each table's role relative to the evaluation measures.}
     \label{tab:schema}
-    \begin{tabular}{@{}p{0.28\textwidth}p{0.62\textwidth}@{}}
+    \begin{tabular}{@{}p{0.30\textwidth}p{0.60\textwidth}@{}}
         \toprule
         Table & Role in the study \\
         \midrule
@@ -82,23 +88,30 @@ The database schema consists of five tables designed to capture the behavioural 
 
 The schema preserves referential integrity and supports the study queries needed for export and analysis.
 
+% TODO: de aied paragraph
 \subsection{Task Scenario Implementation}
 
-The study evaluates one scenario, the slide-reordering task described in the methodology. The implementation uses a scenario registry where each scenario's metadata is defined, including its taxonomy category, correct answer, allowed ephemeral targets, task prompts, and a function that builds the initial task state. This registry-based design means that adding a new scenario requires only a new registry entry rather than changes to the study flow or state machine.
+The study evaluates a single scenario where the user reorders slides based from the methodology. The implemmentation uses a registry of scenarios where each scenario has its own taxonomy, correct answer, allowlist of ephemeral targets, task context, and function for initial task state. Thus, the design allows the ease of adding new scenarios when needed without changing the rest of the app.
 
-The slide-reordering scenario presents participants with a short deck of four slides whose order has been intentionally scrambled. The main canvas area displays a read-only preview of the currently selected slide, while the actual task interaction occurs through a horizontal strip of draggable thumbnail cards. Drag-and-drop is implemented using the \texttt{@dnd-kit} library, which provides accessible keyboard and pointer-based reordering with sortable constraints. Participants reorder the strip and submit when they believe the sequence is correct.
+% TODO: de aied paragraph
+Furthermore, the scenario provides participants a minimal four slide deck intentionally scrambled. The main content area shows a read-only preview for every slide, while the actual interaction happens underneath the preview of the slide through a horizontal strip of draggable cards. Drag and drop was implemented using the \texttt{@dnd-kit} npm package \parencite{DndKit}, which provides an abstraction over pointer-based reordering. The main goal of the scenario is for the participants to reorder the slides and submit what they think is correct relative to the context of the scenario's question.
 
-Correctness is evaluated by comparing the submitted slide order against a predefined canonical order. Each scenario variant defines its own canonical sequence: variant~A follows a corporate readout structure (title, problem, metrics, ask), while variant~B follows a committee funding structure (meeting frame, policy, proof, ballot items). The variant assignment uses a deterministic hash of the participant identifier and scenario identifier to assign variant~A or variant~B to the baseline condition, with the opposite variant assigned to the ephemeral condition. This ensures that each participant encounters two different slide decks across the two trials, preventing familiarity effects from the task content while keeping the task structure identical.
+% TODO: de aied paragraph
+A submission from the participant is valid if the order they chose is equal to exact predefined order from the given variant. If they are not exactly the same, it is not correct. Variant A is a pitch deck with the slides of title, problem, metrics, and ask. While, variant B is a committee funding slide deck with slides of meeting, policy, proof, ballot items. Both variant A and B use a a deterministic has of the participant identifier to the baseline condition, with the opposite variant for the ephemeral condition. So, each person will see the two scenarios in a random order, which will keep them from getting used to the task content and keep the task structure the same.
 
-Both conditions share the same task component, the same interaction mechanics, and the same submission logic. The only difference is whether the ephemeral support layer is active. This design isolates the effect of ephemeral augmentation from other variables.
+% TODO: de aied paragraph
+Both variations share the exact same interaction mechanics and submission logic. The main difference between either are whether ephemeral support is active or not. Thus, it isolates the effect of using ephemeral UI from other possible variables.
 
 \subsection{Ephemeral Support System}
 
-The ephemeral support system is the core technical contribution of the artifact. It translates the framework's concepts of taxonomy, lifecycle, and design principles into a constrained generative pipeline that produces temporary interface overlays without replacing the host application. This subsection describes the three layers of the system: the specification model that defines what can be generated, the pipeline that produces and validates specifications, and the rendering layer that displays them.
+
+% TODO: de aied paragraph
+The generative AI pipeline that makes the temporary overlays is the main technical contribution of the artifact, by using the framwework's taxonomy, lifecycle, and design principles. The following subsection defines the three layers of how the system works: the specification model of how it can be generated, the pipeline that creates and validates specifications, and the rendering layer that displays them.
 
 \subsubsection{Component Specification Model}
 
-Ephemeral support is represented as a typed tree structure called an \texttt{EphemeralSpec}. Each specification contains a version number, a root node, and metadata indicating whether the overlay is dismissible. Nodes are recursive: each node has a type, a property bag validated against a per-type schema, and optional children. The tree is constrained to a maximum depth of four levels and a maximum of six children per node. The decision to use JSON as the intermediate structure for these specifications was inspired by JSON Render, which similarly demonstrates how interface descriptions can be expressed declaratively and then rendered from structured data \parencite{JsonRender}.
+% TODO: de aied paragraph
+Ephemeral support is shown as a typed tree structure as \texttt{EphemeralSpec}. Each element has a version number, a root node, and metadata that tells you if the overlay can be removed or not. All nodes are recursive, so each node has a type, property bag validated against a typed schema, and optional children. Additonally, the tree is constrained to a maximum depth of four levels and six children per node. The decision to use JSON as the intermediate structure for these specifications was inspired by JSON Render, which similarly demonstrates how interface descriptions can be expressed declaratively and then rendered from structured data \parencite{JsonRender}.
 
 The component catalog defines seventeen component types, organised into five functional categories. Table~\ref{tab:component-catalog} lists the types and their roles. Visual cue components draw attention to specific interface elements without adding content. Anchored annotation components attach textual or rich content near a target element. Relational components connect or compare two or more targets to support reasoning across elements. Layout containers position children within the viewport or relative to a target. Rich content components render sanitised HTML and inline SVG for more expressive explanations such as flow diagrams or annotated illustrations.
 
@@ -136,28 +149,31 @@ The component catalog defines seventeen component types, organised into five fun
     \end{tabular}
 \end{table}
 
-Each component type is associated with a Zod schema that validates its properties at runtime. These schemas enforce constraints such as maximum string lengths, numeric ranges, and required fields. For example, an \texttt{InspectPanel} requires a target identifier, a title of at most 120~characters, a summary of at most 280~characters, and optionally up to four detail lines of at most 200~characters each. These limits prevent the model from generating excessively long or unbounded output while leaving enough room for contextually relevant content.
+% TODO: de aied paragraph
+Each component type has a Zod schema that validates its properties at runtime. These schemas limit variables like the maximum length of strings, the range of numbers, and the fields that must be filled out. For example, an \texttt{InspectPanel} ephemeral component that explains to a participant why the order of the slides in a pitch deck is wrong still needs to include a target identifier, a title of no more than 120 characters, a summary of no more than 280 characters, and up to four detail lines of 200 characters each. These limits stop the model from making components that are not design and situation relevant.
 
-The catalog is versioned so that changes to the available component types or their constraints can be tracked across study sessions.
+The catalogue is versioned so that you can keep track of changes to the types of components that are available and their restrictions over time.
 
 \subsubsection{Generation and Validation Pipeline}\label{sec:pipeline}
 
-When ephemeral support is requested during a trial, the system executes a multi-stage pipeline that generates a specification, validates it against the catalog and scenario constraints, and either accepts it or falls back to a deterministic alternative. Figure~\ref{fig:ephemeral-pipeline-impl} illustrates this pipeline.
+% TODO: de aied paragraph
+When ephemeral UI is needed during a trial, the system runs the pipeline to make a specification validating it through the catalogue and scenario constraints. It either accepts it or falls back to deterministic alternative. Figure~\ref{fig:ephemeral-pipeline-impl} illustrates this pipeline.
 
-The generation step constructs two prompts. The system prompt describes the specification schema, lists all available component types with their property schemas, states the allowed target identifiers for the current scenario, provides taxonomy-specific guidance (such as which components are most appropriate for refinement support), and enumerates the design rules that constrain output structure. The user prompt includes the current task state, including slide order, deck metadata, and review goals, together with an optional participant interaction snapshot that reflects the participant's progress at the moment support was requested. This snapshot allows the model to tailor its output to what the participant has already done rather than generating generic first-visit guidance.
+% TODO: de aied paragraph
+To generate the UI components dynamically prompt engineering is required. Two prompts were used in the system. Firstly, the system prompt includes the specification schema, component types with their property schemas, target identifier states, taxonomy, and design rules. Then, the user prompt contains the information of the participant. That includes task state, order of the slides with metadata, review goals, and an optional snapshot of participant interaction. The snapshot is the participant's progress the moment ephemeral support was requested. It allows the model to tailour the output of what the user has already done instead of assuming it's the user's first interaction with the interface.
 
-The system sends these prompts to Google Gemini using the Vercel AI~SDK's structured output mode \parencite{GoogleGemini,VercelAISDK}, which constrains the model to produce JSON conforming to a provided Zod schema. The schema used for model output is a simplified subset of the full specification schema, designed to avoid compatibility issues with the provider's structured output implementation while remaining strict enough to prevent most structural errors at generation time.
+% TODO: de aied paragraph
+Thereafter, Vercel AI~SDK's structured output sends these prompts to the Google Gemini API \parencite{GoogleGemini,VercelAISDK}, following the Zod schema that was given. The output from the model is then processed several validation stages:
 
-The model's output then passes through a series of server-side validation stages:
-
+% TODO: de aied paragraph
 \begin{enumerate}
-    \item \textbf{Envelope parsing.} The top-level structure is checked for a valid version number, root node, and metadata.
-    \item \textbf{Node tree parsing.} The root and its descendants are recursively validated for correct node shape, child count limits, and maximum depth.
-    \item \textbf{Per-component property validation.} Each node's properties are validated against its type-specific Zod schema, enforcing field types, string lengths, and numeric ranges.
-    \item \textbf{Target allowlisting.} Every target identifier referenced in the specification is checked against the scenario's predefined list of allowed targets. Any reference to an interface element not declared in the scenario registry causes the specification to be rejected.
-    \item \textbf{Structural container rules.} Layout containers are checked to ensure they contain at least one child. This applies to \texttt{Stack}, \texttt{ViewportPanel}, and \texttt{TargetOffsetPanel}.
-    \item \textbf{Ancestry constraints.} \texttt{FlowHtml} nodes are permitted only within a \texttt{ViewportPanel} subtree, preventing free-floating rich HTML from appearing anywhere in the interface.
-    \item \textbf{HTML sanitisation.} Any HTML content in \texttt{FlowHtml}, \texttt{AnchoredHtml}, or \texttt{SideNote} nodes is passed through a server-side sanitisation step using DOMPurify with a strict allowlist of tags and attributes. This prevents injection of scripts, event handlers, or disallowed elements while permitting semantic HTML and inline SVG for diagrams.
+    \item \textbf{Envelope parsing.} Validates structure to make sure it has a valid version number, root node, and metadata.
+    \item \textbf{Node tree parsing.} The root and its children are checked recursively to make sure they are the right shape, have the right number of children, and with reasonable depth.
+    \item \textbf{Per-component property validation.} Each node's properties are validated against its Zod schema.
+    \item \textbf{Target allowlisting.} Every target identifier is checked against the list of targets that are allowed. If an interface element isn't listed in the scenario registry, it will fail.
+    \item \textbf{Structural container rules.} Layout containers are verified to make sure they have at least one child. This is true for \texttt{Stack}, \texttt{ViewportPanel}, and \texttt{TargetOffsetPanel}.
+    \item \textbf{Ancestry constraints.} Only \texttt{FlowHtml} nodes are allowed in a \texttt{ViewportPanel} subtree. This stops rich HTML from being able to float around anywhere in the interface.
+    \item \textbf{HTML sanitisation.} DOMPurify cleans up any HTML in \texttt{FlowHtml}, \texttt{AnchoredHtml}, or \texttt{SideNote} nodes by letting you specify which tags and attributes to use. This stops harmful JavaScript code from being injected while letting semantic HTML and inline SVG for diagrams.
 \end{enumerate}
 
 If any stage rejects the output, the system falls back to a deterministic, hardcoded specification for the current scenario. Fallback specifications are defined per scenario and per variant, ensuring that every participant in the ephemeral condition receives some form of support regardless of model behaviour. The fallback specifications use the same component types and target identifiers as model-generated output, so they appear visually consistent with the rest of the ephemeral experience.
@@ -236,15 +252,19 @@ To verify the implementation end-to-end outside the aggregate study analysis, a 
 
 Accepted specifications are rendered as a temporary overlay above the existing application interface using a React portal \parencite{ReactCreatePortal}. The overlay component receives the validated specification tree and recursively dispatches each node to its corresponding catalog component based on the node's type. A concrete generated example is shown in Appendix~\ref{app:local-generation-trace}. This dispatch model means that the renderer does not need to know about the content of any particular specification; it only needs to map types to components and pass through validated properties.
 
-Components that reference target elements, such as \texttt{HighlightRing}, \texttt{AnchoredTooltip}, or \texttt{ConnectorLine}, resolve their targets by looking up DOM elements by identifier. A custom hook observes the target element's bounding rectangle and updates the overlay position when the layout changes, for example when the browser is resized or when other elements shift. A viewport clamping utility ensures that anchored components remain visible even when their target is near the edge of the screen.
+% TODO: de aied paragraph
+\texttt{HighlightRing}, \texttt{AnchoredTooltip}, and \texttt{ConnectorLine} reference target elements by looking up DOM elementts by identifier. Then a custom hook is used to watch the container and updates the overlay position if layout changes.  For example, if any elements were to shift the layout like toggling a sidebar the overlay would update its position as well. Also, the clamping utility ensures that elements remain visible in the viewport even if the target is atthe end of the screen.
 
-The overlay respects the lifecycle stage of dismissal defined in the framework. When the specification's metadata marks the overlay as dismissible, a close control is rendered that allows the participant to remove the support at any time. Dismissal fires a logged event so that the analysis can distinguish between support that was actively used and support that was dismissed without engagement. The overlay does not persist across page navigations or trial boundaries, which enforces the ephemerality principle at the session level.
+% TODO: de aied paragraph
+Overlays respect the lifecycle stage of dismissal defined in methodology. If the specification of metadata says it can be dismissiable, it provides commonlly a button to let the particpant remove the ephemeral support whenever they chosen. Also, these dismissals are logged to understand the difference between support that was used and support that was removed as it was disturbing the user. The overlay does not persist between pages so ephemerality is preserved.
 
 \subsection{Instrumentation and Logging}
 
-The evaluation design in the methodology specifies several behavioural and self-reported measures. The artifact implements a corresponding instrumentation layer that captures the data needed for each measure.
+% TODO: de aied paragraph
+The evaluation within the methodology specifies several behavioural and self-reported measures the participants complete during the trial. The artifact implements the needed instrumentation to capture the relevant data for each measure.
 
-Client-side interaction events are sent to a logging API endpoint that inserts rows into the \texttt{trial\_events} table. Each event includes a type label and a JSON payload with contextual details. A predefined set of event types is recognised as countable interactions, and the trial's running interaction count is incremented automatically when one of these events is recorded.
+% TODO: de aied paragraph
+All interactions on the client are sent to a logging API endpoint on the web app that inserts rows into the \texttt{trial\_events} PostgreSQL table. Each event includes a label with a specific event type and JSON payload of specific details from a given particpant. The actual types of events come from a predefined set for recognisable interactions. Also, an interaction count is incremented for whenever these events are recorded.
 
 \begin{table}[htbp]
     \centering
@@ -271,8 +291,11 @@ Client-side interaction events are sent to a logging API endpoint that inserts r
     \end{tabular}
 \end{table}
 
-For the ephemeral condition, additional data is captured beyond interaction events. Each call to the support generation endpoint persists the full input state (task state and participant snapshot), the model name, and the complete output specification to the \texttt{support\_outputs} table. This allows the analysis to examine not only whether support was shown and used, but also what the system produced and why, including whether a fallback was triggered.
+% TODO: de aied paragraph
+Importantly, more data is captured for the ephemeral condition than just interaction events. Every time the support generation endpoint is called the full input state with the task state, current participant snapshot, and output specifiction gets written into the \texttt{support\_outputs} table. Thus, it's possible to analyse whether the support was actually used, what the system produced and why, and if a fallback was triggered or not due to the limitations of the LLM model.
 
-Questionnaire responses are stored as individual question--response pairs rather than as monolithic form submissions. Post-trial ratings for intrusiveness, perceived control, and helpfulness are linked to the specific trial they follow, while final comparative questions are linked only to the participant. This structure supports direct joins between behavioural data and subjective ratings at the trial level.
+% TODO: de aied paragraph
+Regarding the structure of the questionnaire responses from the participants, it is stored as question response pairs. For the specific trial post-trial ratings for instrusiveness, perceived control, and helpfullness are linked. On the other hand, comparative questions are linked to only the participant. By having this structure, it allows for direct joins between the behavioural data and subjective ratings at the trail level.
 
-A data export endpoint produces a structured bundle of all study data, protected by a server-side secret. The export includes participant records, trial summaries with performance metrics, event logs, questionnaire responses, and support generation outputs, providing the complete dataset needed for the analysis plan described in the methodology.
+% TODO: de aied paragraph
+Finally, to export the results for data analysis there is an export endpoint for participant records, performance metrics, event logs, questionnaire responses and ephemeral UI generation outputs. As a result, providing the full dataset needed to analyse and evalute the final results described in the methodology.
