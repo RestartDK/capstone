@@ -24,7 +24,7 @@ Once the participant has consented, they follow a short background questionnaire
 
 Trial rows are created incrementally rather than all at once. The first trial is created when the participant acknowledges the instructions. Each subsequent trial is created only after the previous trial has been completed and its post-trial questionnaire has been submitted. This ensures that the participant cannot skip ahead or access later trials before finishing earlier ones.
 
-To make sure that results are counterbalanced between participants, when a participant record is created a boolean flag randomly determines whether the baseline is Version~A or Version~B. Then, then the trial assigns conditions the version labels from this boolean flag so that one participant could get the baseline version first or the ephemeral version under the label ``Version~A.'' The content variant for each condition is determined by hashing the participant and scenario identifiers, resulting in distinct slide decks for the baseline and ephemeral trials.
+To make sure that results are counterbalanced between participants, when a participant record is created a boolean flag randomly determines whether the baseline is Version~A or Version~B. Then the trial assigns conditions the version labels from this boolean flag so that one participant could get the baseline version first or the ephemeral version under the label ``Version~A.'' The content variant for each condition is determined by hashing the participant and scenario identifiers, resulting in distinct slide decks for the baseline and ephemeral trials.
 
 \subsection{Data Model}
 
