@@ -27,7 +27,7 @@ The following listings were selected because they show the most thesis-relevant 
 
 Listing~\ref{lst:valid-participants} shows the reusable SQL filter used throughout the analysis. A participant was included only if they completed both task trials and answered all four final comparison questions. This ensured that all reported measures were computed from a consistent completer sample.
 
-\begin{listing}[htbp]
+\begin{listing}[p]
 \caption{SQL logic used to define the valid participant sample.}
 \label{lst:valid-participants}
 \begin{minted}[fontsize=\small,breaklines]{sql}
@@ -176,11 +176,9 @@ writeFileSync(OUT_TEX, lines.join("\n") + "\n", "utf-8");
 
 In addition to the aggregate study dataset analysed in Section~4, I captured a local end-to-end validation trace from the implemented support pipeline itself. This trace was taken from the real \texttt{/api/support} route rather than the development-only playground endpoint, so it exercised the same request handling, prompt construction, validation stages, PostgreSQL persistence, and client-facing response path used during the study. The selected example below is the locally persisted record with \texttt{support\_output\_id = 103}, captured on 2026-04-04 during a hesitation-triggered \texttt{slides-outline-refine} trial.
 
-\begin{listing}[htbp]
-\caption{Condensed excerpt of a locally captured support-generation record persisted to \texttt{support\_outputs}.}
+\captionof{listing}{Condensed excerpt of a locally captured support-generation record.}
 \label{lst:local-support-trace}
-\inputminted[fontsize=\scriptsize,breaklines]{json}{evidence/local-support-validation-2026-04-04.json}
-\end{listing}
+\inputminted[fontsize=\tiny,breaklines,breakanywhere]{json}{evidence/local-support-validation-2026-04-04.json}
 
 \subsection{Participant Flow Screenshots}
 
